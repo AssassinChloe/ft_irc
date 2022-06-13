@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/13 10:41:27 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:25:23 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,12 @@
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <poll.h>
-# include "string.h"
+# include <string.h>
 # include <iostream>
 # include <csignal>
+# include <errno.h> 
+# include <stdio.h> 
+# include <vector>
 
 
 #endif
