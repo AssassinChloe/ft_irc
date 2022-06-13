@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 16:39:38 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/10 16:40:14 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/13 10:50:31 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
+
+int stop = 0;
 
 void ft_error(std::string str)
 {
@@ -18,10 +20,17 @@ void ft_error(std::string str)
     exit(1);
 }
 
+void sighandler(int sig) { 
+    if (sig == SIGINT)
+        stop = 1; 
+    if (sig == SIGPIPE)
+        stop = 2;
+    }
+
 /*
-    waaaah le beau serveeeeeur oulalala!
+    waaaah le beau serveeeeeur oulalala! C'EST CLAIR !!!!
 */
-int main()
+int main(int argc, char **argv)
 {
     int sockfd, newfd, read_ret;
     int opt = 1;
@@ -30,6 +39,17 @@ int main()
     char buff[BUFFER_SIZE] = {0};
     
     struct sockaddr_in  distaddr;
+    
+    // pour lancement du programme suivant le sujet, a voir plus tard
+    // if (argc != 3)
+	// {
+	// 	std::cout << "./ircserv <port> <password>" << std::endl;
+	// 	return 1;
+	// }
+    
+    // attention pour l'instant je ne sais pas du tout ce qu'il faut faire en cas de SIGPIPE
+	signal(SIGINT, sighandler);
+    signal(SIGPIPE, sighandler);
     
     //l'instanciation de la struc sockaddr_in pour se connecter au port 8080 (MYPORT define dans le fichier .hpp)
     localaddr.sin_family = AF_INET;
@@ -55,7 +75,7 @@ int main()
         ft_error("error listen()");
 
     //boucle server    
-    while (1)
+    while (stop == 0)
     {
         //on accept la connexion entrante et on la stocke dans distaddr
         if ((newfd = accept(sockfd, (struct sockaddr *)&distaddr, &size)) < 0)

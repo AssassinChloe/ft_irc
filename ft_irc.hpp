@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/10 16:27:23 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/13 10:41:27 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <poll.h>
 # include "string.h"
 # include <iostream>
+# include <csignal>
 
 
 #endif
