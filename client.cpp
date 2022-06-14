@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:16:06 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/13 14:48:40 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/14 11:35:53 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int main(int ac, char **av)
 
     //l'instanciation de la struc sockaddr_in pour se connecter au port 8080 ecoute par le server
     localaddr.sin_family = AF_INET;
-    localaddr.sin_port = htons(MYPORT);
+    localaddr.sin_port = htons(8080);
     localaddr.sin_addr.s_addr = INADDR_ANY;
     bzero(localaddr.sin_zero, 8);
     

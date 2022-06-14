@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 16:39:38 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/13 17:35:19 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/14 11:57:06 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void sighandler(int sig) {
 */
 void *get_in_addr(struct sockaddr *sa)
 {
-
     return &(((struct sockaddr_in*)sa)->sin_addr);
 }
 
@@ -42,7 +41,7 @@ void add_to_pfds(struct pollfd **pfds, int newfd, int *fd_count, int *fd_size)
     if (*fd_count == *fd_size) {
         *fd_size *= 2; // Double it
 
-        *pfds = realloc(*pfds, sizeof(**pfds) * (*fd_size));
+        *pfds = (struct pollfd *)realloc(*pfds, sizeof(**pfds) * (*fd_size));
     }
 
     (*pfds)[*fd_count].fd = newfd;
@@ -59,29 +58,33 @@ void del_from_pfds(struct pollfd *pfds, int i, int *fd_count)
     (*fd_count)--;
 }
 
-int get_listener_socket()
+int get_listener_socket(char *port)
 {
     int listener;     // Listening socket descriptor
     int yes=1;        // For setsockopt() SO_REUSEADDR, below
-    
+    int ret;
     //var pour getaddrinfo
     struct addrinfo hints;
     struct addrinfo *res;
     struct addrinfo *tmp;
-    char host[256] = {0};
-    struct in_addr translate;
+    // char host[256] = {0};
+    // struct in_addr translate;
     
     //Initialisation de addrinfo
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_CANONNAME|AI_PASSIVE;
+    hints.ai_flags = AI_PASSIVE;
           
-    if (getaddrinfo(NULL, PORT, &hints, &res) != 0)
+    if ((ret = getaddrinfo(NULL, port, &hints, &res)) != 0)
+    {
+        std::cout << ret << std::endl;
+        perror("get addr");
         ft_error("error getaddrinfo");
+    }
     for (tmp = res; tmp != NULL; tmp = tmp->ai_next) 
     {
-        listener = socket(AF_INET, SOCK_STREAM, tmp->ai_pr)
+        listener = socket(AF_INET, SOCK_STREAM, tmp->ai_protocol);
         if (listener < 0)
             continue;
         setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
@@ -105,46 +108,41 @@ int get_listener_socket()
     
 }
 
-int main(/*int argc, char **argv*/)
+int main(int argc, char **argv)
 {
-    int i = 0;
-    int sockfd, newfd, read_ret;
-    int opt = 1;
+    int sockfd, newfd;
     struct sockaddr_in  localaddr;
     struct sockaddr distaddr;
     socklen_t size = sizeof(localaddr);
-    char buff[BUFFER_SIZE] = {0};
-    char remoteIP[INET_ADDRSTRLEN];
-    
+    char buff[BUFFER_SIZE] = {0}; 
     
     // var pour poll()
     struct pollfd *fds;
     int fd_size = 5;
-    nfds_t fd_count = 0;
-    int delai = 200;
+    int fd_count = 0;
     int nb_event;
     
     // pour lancement du programme suivant le sujet, a voir plus tard
-    // if (argc != 3)
-	// {
-	// 	std::cout << "./ircserv <port> <password>" << std::endl;
-	// 	return 1;
-	// }
+    if (argc != 3)
+	{
+		std::cout << "./ircserv <port> <password>" << std::endl;
+		return 1;
+	}
     // attention pour l'instant je ne sais pas du tout ce qu'il faut faire en cas de SIGPIPE
 	signal(SIGINT, sighandler);
     signal(SIGPIPE, sighandler);
     
-    fds = malloc(sizeof(*fds) * size_fds);
+    fds = (struct pollfd *)malloc(sizeof(*fds) * fd_size);
     if (!fds)
         ft_error("erreur malloc");
-    listener = get_listener_socket();
-    if (listener < 0)
+    sockfd = get_listener_socket(argv[1]);
+    if (sockfd < 0)
         ft_error("error getting a listening socket");
     
     //initialisation des variable de poll()
-    fds[0]->fd = listener;
-    fds[0]->events = POLLIN;
-    fd_counts++;
+    fds[0].fd = sockfd;
+    fds[0].events = POLLIN;
+    fd_count++;
     
      
     // //l'instanciation de la struc sockaddr_in pour se connecter au port 8080 (MYPORT define dans le fichier .hpp)
@@ -157,9 +155,6 @@ int main(/*int argc, char **argv*/)
     // sockfd = socket(AF_INET, SOCK_STREAM, 0);
     // if  (sockfd < 0)
     //     ft_error("error socket()");
-
-    // //pour rendre accept() non bloquant (whatever it means)
-    // fcntl(sockfd, F_SETFL, O_NONBLOCK);
     
     // //on y mets des option auxquelles je comprends rien
     // if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
@@ -181,57 +176,60 @@ int main(/*int argc, char **argv*/)
     //boucle server    
     while (stop == 0)
     {   
-            nb_event = poll(fds, nfds, -1)
-            if (nb_event < 0)
-            {
-                perror("poll");
-                ft_error("");
-            }
         //tentative mais paul et moi on s'entend pas trop  
+        nb_event = poll(fds, fd_count, -1);
+        if (nb_event < 0)
+        {
+            perror("poll");
+            ft_error("");
+        }
         for(int i = 0; i < fd_count; i++) 
         {
-            if (fds[i].fd == listener) 
+            if (fds[i].revents & POLLIN) 
             {
-                // If listener is ready to read, handle new connection
-                size = sizeof(distaddr);
-                newfd = accept(listener, &distaddr, &size);
-                if (newfd == -1)
-                    ft_error("accept");
+                if (fds[i].fd == sockfd) 
+                {
+                    // If listener is ready to read, handle new connection
+                    size = sizeof(distaddr);
+                    newfd = accept(sockfd, &distaddr, &size);
+                    if (newfd == -1)
+                        ft_error("accept");
+                    else
+                        add_to_pfds(&fds, newfd, &fd_count, &fd_size);
+                }
                 else
-                    add_to_pfds(&fds, newfd, &fd_count, &fd_size);
-            }
-            else
-            {
-                int nbytes = recv(fds[i].fd, buff, sizeof(buff), 0);
-                int sender_fd = fds[i].fd;
-                if (nbytes <= 0) 
                 {
-                        // Got error or connection closed by client
-                        if (nbytes == 0) {
-                            // Connection closed
-                            printf("pollserver: socket %d hung up\n", sender_fd);
-                        } else {
-                            perror("recv");
-                        }
-
-                        close(pfds[i].fd); // Bye!
-
-                        del_from_pfds(pfds, i, &fd_count);
-
-                } 
-                else 
-                {
-                    // We got some good data from a client
-                    for(int j = 0; j < fd_count; j++)
+                    int nbytes = recv(fds[i].fd, buff, sizeof(buff), 0);
+                    int sender_fd = fds[i].fd;
+                    if (nbytes <= 0) 
                     {
-                        // Send to everyone!
-                        int dest_fd = pfds[j].fd;
-                        // Except the listener and ourselves
-                        if (dest_fd != listener && dest_fd != sender_fd)
+                            // Got error or connection closed by client
+                            if (nbytes == 0) {
+                                // Connection closed
+                                printf("pollserver: socket %d hung up\n", sender_fd);
+                            } else {
+                                perror("recv");
+                            }
+
+                            close(fds[i].fd); // Bye!
+
+                            del_from_pfds(fds, i, &fd_count);
+
+                    } 
+                    else 
+                    {
+                        // We got some good data from a client
+                        for(int j = 0; j < fd_count; j++)
                         {
-                            if (send(dest_fd, buf, nbytes, 0) == -1) 
+                            // Send to everyone!
+                            int dest_fd = fds[j].fd;
+                            // Except the listener and ourselves
+                            if (dest_fd != sockfd && dest_fd != sender_fd)
                             {
-                                perror("send");
+                                if (send(dest_fd, buff, nbytes, 0) == -1) 
+                                {
+                                    perror("send");
+                                }
                             }
                         }
                     }
@@ -240,14 +238,15 @@ int main(/*int argc, char **argv*/)
         }
     }
   
-        // on lit et on envoie une confirmation de reception
-        read_ret = recv(newfd, buff, BUFFER_SIZE, 0);
-        if (read_ret < 0)
-            break;
-        send(newfd, "test\n", strlen("test\n"), MSG_NOSIGNAL);
-        std::cout << buff << std::endl;
-        if (i++ == 4)
-            break;
+        // // on lit et on envoie une confirmation de reception
+        // read_ret = recv(newfd, buff, BUFFER_SIZE, 0);
+        // if (read_ret < 0)
+        //     break;
+        // send(newfd, "test\n", strlen("test\n"), MSG_NOSIGNAL);
+        // std::cout << buff << std::endl;
+        // if (i++ == 4)
+        //     break;
     close(sockfd);
+    free(fds);
     std::cout << "end" << std::endl;
 }

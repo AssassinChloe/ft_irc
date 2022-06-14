@@ -6,15 +6,15 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/13 14:25:23 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/14 11:53:08 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_IRC_H
 #define FT_IRC_H
 
-# define MYPORT 8080
-# define BACKLOG 3
+
+# define BACKLOG 10
 # define BUFFER_SIZE 1024
 
 # include <stdlib.h>
