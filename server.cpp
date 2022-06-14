@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 16:39:38 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/14 15:00:05 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/14 16:18:23 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int stop = 0;
 
-//je suis pas sure que exit soit autorise, je suis perdue avec ces histoire de fonction libC autorisees
+//je suis pas sure que exit soit autorise plus la a des fin de debug
 void ft_error(std::string str)
 {
     std::cout << str << std::endl;
@@ -29,20 +29,17 @@ void sighandler(int sig)
         stop = 2;
 }
 
-void *get_in_addr(struct sockaddr *sa)
-{
-    return &(((struct sockaddr_in*)sa)->sin_addr);
-}
-
+// gestion du vector de struct pollfd : ADD (creer une class ?)
 void add_fd(int fd, std::vector<struct pollfd> *fds)
 {
     struct pollfd tmp;
     tmp.fd = fd;
-    tmp.events = POLLIN;
+    tmp.events = POLLIN; // on indique qu'on va s'interesser aux events de type POLLIN (Il y a des données en attente de lecture.)
     fds->push_back(tmp);
 }
 
-void delete_one(std::vector<struct pollfd> *fds, struct pollfd to_erase)
+// gestion du vector de struct pollfd : ERASE (creer une class ?)
+void delete_fd(std::vector<struct pollfd> *fds, struct pollfd to_erase)
 {
     for(std::vector<struct pollfd>::iterator it = fds->begin(); it != fds->end(); it++)
     {
@@ -59,7 +56,6 @@ int get_listener_socket(char *port)
     int listener;     
     int yes=1;        
     int ret;
-
     struct addrinfo hints;
     struct addrinfo *res;
     struct addrinfo *tmp;
@@ -68,33 +64,30 @@ int get_listener_socket(char *port)
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
+    hints.ai_protocol = 0;
           
     if ((ret = getaddrinfo(NULL, port, &hints, &res)) != 0)
-    {
-        std::cout << ret << std::endl;
-        perror("get addr");
         ft_error("error getaddrinfo");
-    }
     for (tmp = res; tmp != NULL; tmp = tmp->ai_next) 
     {
+        std::cout << "for loop listener" << std::endl;
         listener = socket(AF_INET, SOCK_STREAM, tmp->ai_protocol);
         if (listener < 0)
-            continue;
-        setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-        if (bind(listener, tmp->ai_addr, tmp->ai_addrlen) < 0)
+            continue; // si listener < 0, on ne va pas dans le reste de la boucle for et on passe direct a next (incrementation)
+        setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)); // on arrive ici avec un fd valide
+        if (bind(listener, tmp->ai_addr, tmp->ai_addrlen) < 0) 
         {
-            close(listener);
-            continue;
+            close(listener); //donc si bind echoue on close le fd
+            continue; //et on va tester avec le next
         }
-        break;
-    }
+        break; //si socket et bind ont marche on sort du for avec notre fd valide et bind 
+    } // et si on passe jamais par le break on finira par sortir de la boucle for qd tmp == null
     freeaddrinfo(res); 
     if (tmp == NULL)
         return -1;
     if (listen(listener, BACKLOG) == -1)
         return -1;
     return listener;
-    
 }
 
 int main(int argc, char **argv)
@@ -103,7 +96,7 @@ int main(int argc, char **argv)
     struct sockaddr distaddr;
     socklen_t size;
     char buff[BUFFER_SIZE] = {0}; 
-    std::vector<struct pollfd> fds; // vector qui va stocker tous nos socket au fil des connexions des clients
+    std::vector<struct pollfd> fds; // vector qui va stocker tous nos sockets(fd) au fil des connexions des clients
     int nb_event;
     
     if (argc != 3)
@@ -123,19 +116,22 @@ int main(int argc, char **argv)
     //boucle server    
     while (stop == 0)
     {   
-        nb_event = poll(&fds[0], fds.size(), -1);
+        nb_event = poll(&fds[0], fds.size(), -1); //nb event == nombre de fd (mais on sait pas lequels) avec un evenement qui nous interesse (ici POLLIN)
         if (nb_event < 0)
         {
-            if (stop != 0)
+            if (stop != 0) //ici je check si poll renvoie < 0 parce qu'on a intercepte un signal ou si y a eu une erreur de poll (marche avec ctrl+c)
                 break ;
             else
                 ft_error("error poll");
         }
-        for (unsigned long i = 0; i < fds.size(); i++) 
+        for (unsigned long i = 0; i < fds.size(); i++) //on parcourt le vector pour trouver le FD avec un event positif
         {
-            if (fds[i].revents & POLLIN) 
+            if (nb_event == 0)
+                break ;
+            if (fds[i].revents & POLLIN) //on rentre s'il s'agit d'un FD avec des donnees en attente de lecture (POLLIN)
             {
-                if (fds[i].fd == sockfd) 
+                nb_event--; // ici on decremente pour pouvoir quitter la boucle for des qu'on a trouve le(s) fd avec evenement au lieu de parcourir systematiquement l'entierete du vector (avec 3 fd on s'en fout, avec des miliers j'imagine que ca peut aider des fois)
+                if (fds[i].fd == sockfd) // si c'est notre socket d'ecoute qui a des donnees en attente, il s'agit d'une nouvelle connexion
                 {
                     size = sizeof(distaddr);
                     newfd = accept(sockfd, &distaddr, &size);
@@ -144,20 +140,20 @@ int main(int argc, char **argv)
                     else
                         add_fd(newfd, &fds);
                 }
-                else if (fds.size() >= 1)// est ce que avant d'envoyer il faut check si POLLOUT est up ?
+                else // sinon c'est que c'est un client deja connecte qui nous dit qu'on a des trucs a lire
                 {
                     int nbytes = recv(fds[i].fd, buff, sizeof(buff), 0);
-                    int sender_fd = fds[i].fd;
-                    if (nbytes <= 0) 
+                    int sender_fd = fds[i].fd; //sert que pour le message de fermeture d'un fd
+                    if (nbytes <= 0)
                     {
-                        if (nbytes == 0)
+                        if (nbytes == 0) // si y a rien a lire c'est que le client s'est deconnecte 
                             printf("pollserver: socket %d hung up\n", sender_fd);
                         else
                             perror("recv");
                         close(fds[i].fd);
-                        delete_one(&fds, fds[i]);
+                        delete_fd(&fds, fds[i]); //on close et on supprime le fd bugue ou desormais invalide du tableau
                     } 
-                    else 
+                    else // sinon on renvoie les donnees a tous les fd sauf celui d'ecoute et celui d'ou provient le message
                     {
                         for(unsigned long j = 0; j < fds.size(); j++)
                         {
@@ -176,3 +172,4 @@ int main(int argc, char **argv)
     close(sockfd);
     std::cout << "end" << std::endl;
 }
+//voila
