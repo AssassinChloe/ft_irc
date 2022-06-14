@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 16:39:38 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/14 16:18:23 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/14 17:16:21 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int get_listener_socket(char *port)
 
 int main(int argc, char **argv)
 {
-    int sockfd, newfd;
+    int sockfd, newfd, nbytes;
     struct sockaddr distaddr;
     socklen_t size;
     char buff[BUFFER_SIZE] = {0}; 
@@ -138,11 +138,37 @@ int main(int argc, char **argv)
                     if (newfd == -1)
                         ft_error("accept");
                     else
-                        add_fd(newfd, &fds);
+                    {
+                        //tentative de mdp qui marche pas mais y a de l'idee je crois
+                        // nbytes = recv(newfd, buff, sizeof(buff), 0);
+                        // if (nbytes < 0)
+                        //     perror("recv");
+                        // else 
+                        // {
+                        //     int i = 0;
+                        //     std::cout << "nbytes " << nbytes << std::endl;
+                        //     std::cout << "buff" << buff << std::endl;
+                        //     char **ret = ft_split(buff, (char *)" \n");
+                        //     std::cout << "split ok" << std::endl;
+                        //     while (ret[i] && strcmp(ret[i], "PASS") != 0)
+                        //     {
+                        //         std::cout << ret[i] << std::endl;
+                        //         i++;
+                        //     }
+                        //     if (ret[i] == NULL || (strcmp(ret[i + 1], argv[2]) != 0) )
+                        //     {
+                        //         std::cout << "error invalid password" << std::endl;
+                        //         close(newfd);
+                        //     }
+                        //     else
+                                add_fd(newfd, &fds);
+                        // }
+                        
+                    }
                 }
                 else // sinon c'est que c'est un client deja connecte qui nous dit qu'on a des trucs a lire
                 {
-                    int nbytes = recv(fds[i].fd, buff, sizeof(buff), 0);
+                    nbytes = recv(fds[i].fd, buff, sizeof(buff), 0);
                     int sender_fd = fds[i].fd; //sert que pour le message de fermeture d'un fd
                     if (nbytes <= 0)
                     {

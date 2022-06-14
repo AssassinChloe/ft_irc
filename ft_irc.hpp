@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/14 11:53:08 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/14 16:56:43 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,5 @@
 # include <stdio.h> 
 # include <vector>
 
-
+char	**ft_split(const char *s, char *c);
 #endif
