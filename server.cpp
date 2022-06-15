@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 16:39:38 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/14 17:16:21 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/15 17:43:48 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int get_listener_socket(char *port)
         ft_error("error getaddrinfo");
     for (tmp = res; tmp != NULL; tmp = tmp->ai_next) 
     {
-        std::cout << "for loop listener" << std::endl;
         listener = socket(AF_INET, SOCK_STREAM, tmp->ai_protocol);
         if (listener < 0)
             continue; // si listener < 0, on ne va pas dans le reste de la boucle for et on passe direct a next (incrementation)
@@ -90,6 +89,12 @@ int get_listener_socket(char *port)
     return listener;
 }
 
+void ft_split(std::vector<std::string> *tab, std::string str)
+{
+    std::istringstream iss(str);
+    std::copy(std::istream_iterator<std::string>(iss), std::istream_iterator<std::string>(), std::back_inserter(*tab));
+}
+
 int main(int argc, char **argv)
 {
     int sockfd, newfd, nbytes;
@@ -97,6 +102,7 @@ int main(int argc, char **argv)
     socklen_t size;
     char buff[BUFFER_SIZE] = {0}; 
     std::vector<struct pollfd> fds; // vector qui va stocker tous nos sockets(fd) au fil des connexions des clients
+    std::vector<std::string> test;
     int nb_event;
     
     if (argc != 3)
@@ -133,42 +139,62 @@ int main(int argc, char **argv)
                 nb_event--; // ici on decremente pour pouvoir quitter la boucle for des qu'on a trouve le(s) fd avec evenement au lieu de parcourir systematiquement l'entierete du vector (avec 3 fd on s'en fout, avec des miliers j'imagine que ca peut aider des fois)
                 if (fds[i].fd == sockfd) // si c'est notre socket d'ecoute qui a des donnees en attente, il s'agit d'une nouvelle connexion
                 {
+                    std::cout << "New client wish to connect" << std::endl;
                     size = sizeof(distaddr);
                     newfd = accept(sockfd, &distaddr, &size);
                     if (newfd == -1)
                         ft_error("accept");
                     else
                     {
-                        //tentative de mdp qui marche pas mais y a de l'idee je crois
-                        // nbytes = recv(newfd, buff, sizeof(buff), 0);
-                        // if (nbytes < 0)
-                        //     perror("recv");
-                        // else 
-                        // {
-                        //     int i = 0;
-                        //     std::cout << "nbytes " << nbytes << std::endl;
-                        //     std::cout << "buff" << buff << std::endl;
-                        //     char **ret = ft_split(buff, (char *)" \n");
-                        //     std::cout << "split ok" << std::endl;
-                        //     while (ret[i] && strcmp(ret[i], "PASS") != 0)
-                        //     {
-                        //         std::cout << ret[i] << std::endl;
-                        //         i++;
-                        //     }
-                        //     if (ret[i] == NULL || (strcmp(ret[i + 1], argv[2]) != 0) )
-                        //     {
-                        //         std::cout << "error invalid password" << std::endl;
-                        //         close(newfd);
-                        //     }
-                        //     else
-                                add_fd(newfd, &fds);
-                        // }
+                        nbytes = recv(newfd, buff, sizeof(buff), 0);
+                        ft_split(&test, buff);
+                        std::cout << "taille du vector de string " << test.size() << std::endl;
+                        for (unsigned long k = 0; k < test.size(); k++)
+                        {
+                            std::cout << "test[" << k << "] " << test[k] << std::endl; 
+                            if (test[k] == "NICK")
+                                send(newfd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
+                        }
+                        if (nbytes < 0)
+                            perror("recv");
+                        else 
+                        {
+                            
+                            if (send(newfd, buff, nbytes, 0) == -1) 
+                                    perror("send");
+                            add_fd(newfd, &fds);
+                        }
                         
                     }
                 }
                 else // sinon c'est que c'est un client deja connecte qui nous dit qu'on a des trucs a lire
                 {
+                    std::string your_host = RPL_YOURHOST((std::string)SERVER_NAME, VERSION);
+                    std::string my_info = RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE);
+                    std::string creation = RPL_CREATED((std::string)"15/06/2022");
+                    std::cout << "Client is sending data" << std::endl;
                     nbytes = recv(fds[i].fd, buff, sizeof(buff), 0);
+                    ft_split(&test, buff);
+                    std::cout << "taille du vector de string " << test.size() << std::endl;
+                    for (unsigned long k = 0; k < test.size(); k++)
+                    {
+                        std::cout << "test[" << k << "] " << test[k] << std::endl; 
+                        if (test[k] == "NICK")
+                        {
+                            send(newfd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
+                            std::cout << "rpl welcome sent" << std::endl;
+                            send(newfd, your_host.c_str() , your_host.size(), 0);
+                            std::cout << "rpl yourhost sent" << std::endl;
+                            send(newfd, my_info.c_str(), my_info.size(), 0);
+                            std::cout << "rpl myinfo sent" << std::endl;
+                            send(newfd, creation.c_str(), creation.size(), 0);
+                            std::cout << "rpl created sent" << std::endl;
+                            
+                            
+
+                        }
+                    }
+                    send(fds[i].fd, buff, nbytes, 0);
                     int sender_fd = fds[i].fd; //sert que pour le message de fermeture d'un fd
                     if (nbytes <= 0)
                     {
