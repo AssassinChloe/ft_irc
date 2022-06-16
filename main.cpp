@@ -1,5 +1,7 @@
 #include "ft_irc.hpp"
 
+int stop;
+
 void sighandler(int sig)
 { 
     if (sig == SIGINT)
@@ -15,9 +17,9 @@ int main(int argc, char **argv)
 		std::cout << "./ircserv <port> <password>" << std::endl;
 		return 1;
 	}
+	stop = 0;
 	signal(SIGINT, sighandler);
     signal(SIGPIPE, sighandler); // attention pour l'instant je ne sais pas du tout ce qu'il faut faire en cas de SIGPIPE
-	stop = 0;
     Server server(argv[1], argv[2]);
 	if (server.init() < 0)
 		return (1);

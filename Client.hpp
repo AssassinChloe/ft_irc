@@ -36,7 +36,7 @@ class Client
 		std::string getUsername();
 		std::string getRealname();
 
-        void Client::sendTo(Client &toClient, std::string message);
+        // void Client::sendTo(Client &toClient, std::string message);
 
 };
 
