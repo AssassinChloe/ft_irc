@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/16 13:07:16 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/16 14:49:51 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,13 @@
 # include <errno.h> 
 # include <stdio.h> 
 # include <vector>
+# include <deque>
 # include <sstream>
 # include <iterator>
+# include "Server.hpp"
+# include "Client.hpp"
+
+extern int stop;
 
 # define SERVER_NAME "The Best"
 # define VERSION "0.0"

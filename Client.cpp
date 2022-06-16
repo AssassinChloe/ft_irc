@@ -1,4 +1,5 @@
 #include "Client.hpp"
+Client::Client() { close(fd); }
 
 Client::~Client() { close(fd); }
 

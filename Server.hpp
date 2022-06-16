@@ -3,17 +3,24 @@
 # include "ft_irc.hpp"
 
 
-class server
+class Server
 {
     private:
-        /* data */
+        std::string                 _port;
+        std::string                 _hostname;
+        struct addrinfo             _info;
+        struct pollfd               _socket;
+        std::vector<struct pollfd>  _poll_fd;             
+        
     public:
-        server(/* args */);
-        ~server();
+        Server(std::string port, std::string host);
+        ~Server();
 
-        void init();
+        int init();
         void run();
-        void accept_client();
+        int using_poll();
+        int parse_data(int i);
+        int accept_client(int i);
 };
 
 #endif
