@@ -6,13 +6,12 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/15 17:51:50 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/16 13:07:16 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_IRC_H
 #define FT_IRC_H
-
 
 # define BACKLOG 10
 # define BUFFER_SIZE 1024
@@ -42,5 +41,7 @@
 # define RPL_YOURHOST(servername , version) (": Your host is " + servername + ", running version " + version + "\r\n")
 # define RPL_MYINFO(servername, version, usr_modes, chann_modes) (": " + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
 # define RPL_CREATED(date) (": This server was created " + date + "\r\n");
+# define RPL_TOPIC(channel, topic) (channel + " : " + topic + "\r\n")
+# define RPL_NAMREPLY(channel, nick_list) (channel + " :" + nick_list + "\r\n")
 
 #endif

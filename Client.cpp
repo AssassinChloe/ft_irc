@@ -7,7 +7,7 @@ void Client::setNickname(std::string nickname) { this->nickname = nickname; }
 void Client::setUsername(std::string username) { this->username = username; }
 void Client::setRealname(std::string realname) { this->realname = realname; }
 
-int Client::getFd() { return fd; }
+int Client::getFd() { return fd.fd; }
 std::string Client::getStatus() { return status; }
 std::string Client::getHostname() { return hostname; }
 std::string Client::getNickname() { return nickname; }

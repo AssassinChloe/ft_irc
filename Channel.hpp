@@ -2,7 +2,7 @@
 # define CHANNEL_HPP
 
 # include <string>
-# include <map>
+# include <deque>
 # include <vector>
 
 class Client;
@@ -12,12 +12,13 @@ class Channel
 	private:
 		std::string name;
 		std::string topic;
-		std::map<int, Client *> clients;
+		std::deque<Client *> clients;
 		std::string mode;
 		std::map<int, std::string> client_mode;
 		std::string key;
 		std::string max_clients;
 		std::vector<Client *> invited;
+		std::vector<Client *> banned;
 
 	public:
 		Channel();

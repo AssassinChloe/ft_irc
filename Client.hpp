@@ -13,7 +13,7 @@ class Client
         std::string hostaddr;
 		std::string hostname;
 		std::string realname;
-        int fd;
+        struct pollfd fd;
         void write(std::string message);
 
         
