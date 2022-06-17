@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/15 17:51:50 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/17 16:45:31 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 # define BACKLOG 10
 # define BUFFER_SIZE 1024
+# define DEBUG 1
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -33,6 +34,7 @@
 # include <vector>
 # include <sstream>
 # include <iterator>
+# include "Server.hpp"
 
 # define SERVER_NAME "The Best"
 # define VERSION "0.0"
@@ -43,4 +45,6 @@
 # define RPL_MYINFO(servername, version, usr_modes, chann_modes) (": " + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
 # define RPL_CREATED(date) (": This server was created " + date + "\r\n");
 
+extern int g_stop;
+std::vector<std::string> ftsplit(std::string str, std::string delimiter);
 #endif

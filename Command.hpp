@@ -1,6 +1,7 @@
 #ifndef COMMANDS_HPP
 # define COMMANDS_HPP
 # include "ft_irc.hpp"
+# include <vector>
 
 //define invalid character as for username
 # define NICKNAME_VALID_CHAR "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_[]{}\\`|"
@@ -67,10 +68,10 @@
 /*
 **  reponse for command file
 */
-# define RPL_WELCOME(nick) (":Welcome to the Internet Relay Network " + nick + "\r\n")
-# define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version + "\r\n")
-# define RPL_MYINFO(servername, version, usr_modes, chann_modes) (":" + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
-# define RPL_CREATED(date) (":This server was created " + date + "\r\n");
+// # define RPL_WELCOME(nick) (":Welcome to the Internet Relay Network " + nick + "\r\n")
+// # define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version + "\r\n")
+// # define RPL_MYINFO(servername, version, usr_modes, chann_modes) (":" + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
+// # define RPL_CREATED(date) (":This server was created " + date + "\r\n");
 # define RPL_BOUNCE(server_name, port) ("Try server " + server_name + ", port " + port + "\r\n")
 # define RPL_NONE() ("\r\n") //300
 # define RPL_USERHOST(userhost_list) (userhost_list + "\r\n") //<réponse> ::= <pseudo>['*'] '=' <'+'|'-'><hôte>
@@ -152,40 +153,73 @@
 # define RPL_YOURESERVICE(servicename) (":You are service " + servicename + "\r\n")
 
 
-class server;
-class client;
+class Server;
+class Client;
 
 /*
 ** commands
 */
 
-void	pass_command(const std::string &line, client &cl, server &serv);
-void	ping_command(const std::string &line, client &cl, server &serv);
-void	pong_command(const std::string &line, client &cl, server &serv);
-void	nick_command(const std::string &line, client &cl, server &serv);
-void	user_command(const std::string &line, client &cl, server &serv);
+void	pass_command(const std::string &line, Client &cl, Server &serv);
+void	ping_command(const std::string &line, Client &cl, Server &serv);
+void	pong_command(const std::string &line, Client &cl, Server &serv);
+void	nick_command(const std::string &line, Client &cl, Server &serv);
+void	user_command(const std::string &line, Client &cl, Server &serv);
 
-void	join_command(const std::string &line, client &cl, server &serv);
-void	mode_command(const std::string &line, client &cl, server &serv);
-void	cap_command(const std::string &line, client &cl, server &serv);
-void	quit_command(const std::string &line, client &cl, server &serv);
-void	invite_command(const std::string &line, client &cl, server &serv);
+void	join_command(const std::string &line, Client &cl, Server &serv);
+void	mode_command(const std::string &line, Client &cl, Server &serv);
+void	cap_command(const std::string &line, Client &cl, Server &serv);
+void	quit_command(const std::string &line, Client &cl, Server &serv);
+void	invite_command(const std::string &line, Client &cl, Server &serv);
 
-void	list_command(const std::string &line, client &cl, server &serv);
-void	part_command(const std::string &line, client &cl, server &serv);
-void	privmsg_command(const std::string &line, client &cl, server &serv);
+void	list_command(const std::string &line, Client &cl, Server &serv);
+void	part_command(const std::string &line, Client &cl, Server &serv);
+void	privmsg_command(const std::string &line, Client &cl, Server &serv);
 
-void	who_command(const std::string &line, client &cl, server &serv);
-void	oper_command(const std::string &line, client &cl, server &serv);
-void	kick_command(const std::string &line, client &cl, server &serv);
-void	topic_command(const std::string &line, client &cl, server &serv);
-void	kill_command(const std::string &line, client &cl, server &serv);
-void	connect_command(const std::string &line, client &cl, server &serv);
-void	rehash_command(const std::string &line, client &cl, server &serv);
-void	admin_command(const std::string &line, client &cl, server &serv);
+void	who_command(const std::string &line, Client &cl, Server &serv);
+void	oper_command(const std::string &line, Client &cl, Server &serv);
+void	kick_command(const std::string &line, Client &cl, Server &serv);
+void	topic_command(const std::string &line, Client &cl, Server &serv);
+void	kill_command(const std::string &line, Client &cl, Server &serv);
+void	connect_command(const std::string &line, Client &cl, Server &serv);
+void	rehash_command(const std::string &line, Client &cl, Server &serv);
+void	admin_command(const std::string &line, Client &cl, Server &serv);
 
-void	reply_code(const std::string &line, client &cl, server &serv);
+void	reply_code(const std::string &line, Client &cl, Server &serv);
 
+
+class Command
+{
+	private:
+		Client *client;
+		Server *server;
+
+		std::string prefix;
+		std::vector<std::string> parameters;
+		std::string trailer; // ?
+		std::string query; 
+
+		bool st;
+
+		std::string getReplies(unsigned short code, std::string arg1, std::string arg2, std::string arg3, std::string arg4, std::string arg5, std::string arg6, std::string arg7);
+
+	public:
+		Command(Client *client, Server *server, std::string message);
+
+		Client &getClient();
+		Server &getServer();
+
+		std::string getPrefix();
+		std::vector<std::string> getParameters();
+		std::string getTrailer();
+		std::string getQuery();
+
+		void setStop(bool st);
+		bool getStop();
+
+		// void reply(Client &user, unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
+		// void reply(unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
+};
 
 
 #endif

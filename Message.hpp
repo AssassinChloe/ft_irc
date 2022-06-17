@@ -11,8 +11,8 @@ class message
         /* data */
     public:
 
-        client sender;
-        client receiver;
+        Client sender;
+        Client receiver;
         std::string command_call;
         message(/* args */);
         ~message();
