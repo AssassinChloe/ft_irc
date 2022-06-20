@@ -186,6 +186,6 @@ void	admin_command(const std::string &line, client &cl, server &serv);
 
 void	reply_code(const std::string &line, client &cl, server &serv);
 
-
+void welcome(int fd, std::string prefixe, std::string nickname);
 
 #endif

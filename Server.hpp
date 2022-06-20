@@ -25,6 +25,8 @@ class Server
         int accept_client(int i);
 
         void ft_split(std::vector<std::string> *tab, std::string str);
+
+        Client &getClient(int fd);
 };
 
 #endif

@@ -8,14 +8,14 @@ class Client
 {
     private:
         Client();
-        std::string username;
-        std::string nickname;
-        std::string status; // normal ou operator par exemple
-        std::string hostaddr;
-		std::string hostname;
-		std::string realname;
-        bool        pass_checked;
-        struct pollfd fd;
+        std::string     username;
+        std::string     nickname;
+        std::string     status; // normal ou operator par exemple
+        std::string     hostaddr;
+		std::string     hostname;
+        bool            pass_checked;
+        struct pollfd   fd;
+
         void write(std::string message);
 
         
@@ -42,7 +42,7 @@ class Client
         bool getCheckPass();
 
         // void Client::sendTo(Client &toClient, std::string message);
-
+        std::string getPrefixe();
 };
 
 #endif

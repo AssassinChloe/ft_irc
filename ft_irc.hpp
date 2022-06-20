@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/20 14:21:14 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:32:20 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@
 # include "Command.hpp"
 
 extern int stop;
-
-# define SERVER_NAME "Ganesh"
-# define VERSION "0.1"
-# define USER_MODE " une lettre au pif"
-# define CHAN_MODE " une info serieuse"
-# define CREATION "aujourd'hui vers maintenant"
+# define HOST "localhost"
+# define SERVER_NAME " Ganesh's Daugthers"
+# define VERSION " 0.1 "
+# define USER_MODE " une lettre au pif "
+# define CHAN_MODE " une info serieuse "
+# define CREATION " aujourd'hui vers maintenant "
 
 
 #endif

@@ -1,4 +1,4 @@
-SRCS		:=  main.cpp Server.cpp Client.cpp
+SRCS		:=  main.cpp Server.cpp Client.cpp Command.cpp
 HEAD		:=	ft_irc.hpp
 OBJS		:= $(SRCS:.cpp=.o)
 NAME		:= ircserv

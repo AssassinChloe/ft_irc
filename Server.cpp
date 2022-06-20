@@ -52,7 +52,7 @@ int Server::accept_client(int i)
     int newfd;
     struct sockaddr distaddr;
     socklen_t size = sizeof (distaddr);
-
+    
     std::vector<std::string> test;
     char buff[BUFFER_SIZE] = {0};
 
@@ -81,16 +81,28 @@ int Server::accept_client(int i)
             {
                 if (test[k] == "PASS" && test[k + 1] == this->_password)
                 {
-                    send(newfd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
-                    send(newfd, RPL_YOURHOST((std::string)SERVER_NAME, VERSION).c_str() , RPL_YOURHOST((std::string)SERVER_NAME, VERSION).size(), 0);
-                    send(newfd, RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE).c_str(), RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE).size(), 0);
-                    send(newfd, creation.c_str(), creation.size(), 0);
+                    std::cout << "valid password" << std::endl;
                     newclient.setCheckPass(true);
+                }
+                if (test[k] == "NICK")
+                {
+                    std::cout << "set nickname" << std::endl;
+                    newclient.setNickname(test[k + 1]);
+                }
+                if (test[k] == "USER")
+                {
+                    std::cout << "set username" << std::endl;
+                    newclient.setUsername(test[k + 1]);
                 }
             }
             _clients.insert(std::make_pair(tmp.fd, newclient));
             test.clear();
         }
+        if (this->getClient(_poll_fd[i].fd).getCheckPass() == true && this->getClient(_poll_fd[i].fd).getNickname().size() > 0 && this->getClient(_poll_fd[i].fd).getUsername().size() > 0)
+        {
+            welcome(newfd, this->getClient(newfd).getPrefixe(), this->getClient(newfd).getNickname());
+            this->getClient(newfd).setStatus("welcome");
+        }    
     }
     return (0);
 }
@@ -105,23 +117,26 @@ int Server::parse_data(int i)
 {
     std::vector<std::string> test;
     char buff[BUFFER_SIZE] = {0};
-
-    std::string creation = RPL_CREATED((std::string)CREATION);
+    
 
     std::cout << "Client is sending data" << std::endl;
     int nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
     std::cout << "BUFF PARSE" << std::endl << buff << std::endl;
     ft_split(&test, buff);
-    if ((*(this->_clients.find(_poll_fd[i].fd))).second.getCheckPass() == true)
+    if (this->getClient(_poll_fd[i].fd).getCheckPass() == true)
     {
         for (unsigned long k = 0; k < test.size(); k++)
         {
-            if (test[k] == "NICK")
-            {
-                std::cout << test[k + 1] << " is in da place" << std::endl;
-                (*(this->_clients.find(_poll_fd[i].fd))).second.setNickname(test[k + 1]);
-
-            }
+                if (test[k] == "NICK")
+                {
+                    std::cout << "set nickname" << std::endl;
+                    this->getClient(_poll_fd[i].fd).setNickname(test[k + 1]);
+                }
+                if (test[k] == "USER")
+                {
+                    std::cout << "set username" << std::endl;
+                    this->getClient(_poll_fd[i].fd).setUsername(test[k + 1]);
+                }
         }
     }
     else
@@ -131,23 +146,25 @@ int Server::parse_data(int i)
             if (test[k] == "PASS" && test[k + 1] == this->_password)
             {
                 std::cout << "valid password" << std::endl;
-                send(_poll_fd[i].fd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
-                send(_poll_fd[i].fd, RPL_YOURHOST((std::string)SERVER_NAME, VERSION).c_str() , RPL_YOURHOST((std::string)SERVER_NAME, VERSION).size(), 0);
-                send(_poll_fd[i].fd, RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE).c_str(), RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE).size(), 0);
-                send(_poll_fd[i].fd, creation.c_str(), creation.size(), 0);
-                (*(this->_clients.find(_poll_fd[i].fd))).second.setCheckPass(true);
-                for (unsigned long n = 0; n < test.size(); n++)
-                {
-                    if (test[n] == "NICK")
-                    {
-                        std::cout << test[n + 1] << " is in da place" << std::endl;
-                        (*(this->_clients.find(_poll_fd[i].fd))).second.setNickname(test[n + 1]);
-
-                    }
-                }
+                this->getClient(_poll_fd[i].fd).setCheckPass(true);
+            }
+            if (test[k] == "NICK")
+            {
+                std::cout << "set nickname " << std::endl;
+                this->getClient(_poll_fd[i].fd).setNickname(test[k + 1]);
+            }
+            if (test[k] == "USER")
+            {
+                std::cout << "set username " << std::endl;
+                this->getClient(_poll_fd[i].fd).setUsername(test[k + 1]);
             }
         }
     }
+    if (this->getClient(_poll_fd[i].fd).getCheckPass() == true && this->getClient(_poll_fd[i].fd).getNickname().size() > 0 && this->getClient(_poll_fd[i].fd).getUsername().size() > 0 && this->getClient(_poll_fd[i].fd).getStatus() == "default")
+    {
+        welcome(_poll_fd[i].fd, this->getClient(_poll_fd[i].fd).getPrefixe(), this->getClient(_poll_fd[i].fd).getNickname());
+        this->getClient(_poll_fd[i].fd).setStatus("welcome");
+    } 
     test.clear();
     if (nbytes <= 0)
     {
@@ -208,6 +225,11 @@ void Server::run()
                parse_data(i);
         }
     }
+}
+
+Client &Server::getClient(int fd)
+{
+    return((*(this->_clients.find(fd))).second);
 }
 
 
