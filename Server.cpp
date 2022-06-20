@@ -51,12 +51,12 @@ int Server::accept_client(int i)
 {
     int newfd;
     struct sockaddr distaddr;
+    socklen_t size = sizeof (distaddr);
+
     std::vector<std::string> test;
     char buff[BUFFER_SIZE] = {0};
-    std::string your_host = RPL_YOURHOST((std::string)SERVER_NAME, VERSION);
-    std::string my_info = RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE);
-    std::string creation = RPL_CREATED((std::string)"15/06/2022");
-    socklen_t size = sizeof (distaddr);
+
+    std::string creation = RPL_CREATED((std::string)CREATION);
 
     if (_poll_fd[i].fd == this->_socket.fd) 
     {
@@ -72,23 +72,23 @@ int Server::accept_client(int i)
             tmp.fd = newfd;
             tmp.events = POLLIN;
             _poll_fd.push_back(tmp);
+
             recv(newfd, buff, sizeof(buff), 0);
             std::cout << "BUFF ACCEPT" << std::endl << buff << std::endl;
                 ft_split(&test, buff);
+            Client newclient(tmp);
             for (unsigned long k = 0; k < test.size(); k++)
             {
                 if (test[k] == "PASS" && test[k + 1] == this->_password)
                 {
                     send(newfd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
-                    std::cout << "rpl welcome sent" << std::endl;
-                    send(newfd, your_host.c_str() , your_host.size(), 0);
-                    std::cout << "rpl yourhost sent" << std::endl;
-                    send(newfd, my_info.c_str(), my_info.size(), 0);
-                    std::cout << "rpl myinfo sent" << std::endl;
+                    send(newfd, RPL_YOURHOST((std::string)SERVER_NAME, VERSION).c_str() , RPL_YOURHOST((std::string)SERVER_NAME, VERSION).size(), 0);
+                    send(newfd, RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE).c_str(), RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE).size(), 0);
                     send(newfd, creation.c_str(), creation.size(), 0);
-                    std::cout << "rpl created sent" << std::endl;
+                    newclient.setCheckPass(true);
                 }
             }
+            _clients.insert(std::make_pair(tmp.fd, newclient));
             test.clear();
         }
     }
@@ -105,18 +105,47 @@ int Server::parse_data(int i)
 {
     std::vector<std::string> test;
     char buff[BUFFER_SIZE] = {0};
-    std::string your_host = RPL_YOURHOST((std::string)SERVER_NAME, VERSION);
-    std::string my_info = RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE);
-    std::string creation = RPL_CREATED((std::string)"15/06/2022");
+
+    std::string creation = RPL_CREATED((std::string)CREATION);
+
     std::cout << "Client is sending data" << std::endl;
     int nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
     std::cout << "BUFF PARSE" << std::endl << buff << std::endl;
     ft_split(&test, buff);
-    for (unsigned long k = 0; k < test.size(); k++)
+    if ((*(this->_clients.find(_poll_fd[i].fd))).second.getCheckPass() == true)
     {
-        if (test[k] == "NICK")
+        for (unsigned long k = 0; k < test.size(); k++)
         {
-            std::cout << test[k + 1] << " is in da place" << std::endl;
+            if (test[k] == "NICK")
+            {
+                std::cout << test[k + 1] << " is in da place" << std::endl;
+                (*(this->_clients.find(_poll_fd[i].fd))).second.setNickname(test[k + 1]);
+
+            }
+        }
+    }
+    else
+    {
+        for (unsigned long k = 0; k < test.size(); k++)
+        {
+            if (test[k] == "PASS" && test[k + 1] == this->_password)
+            {
+                std::cout << "valid password" << std::endl;
+                send(_poll_fd[i].fd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
+                send(_poll_fd[i].fd, RPL_YOURHOST((std::string)SERVER_NAME, VERSION).c_str() , RPL_YOURHOST((std::string)SERVER_NAME, VERSION).size(), 0);
+                send(_poll_fd[i].fd, RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE).c_str(), RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE).size(), 0);
+                send(_poll_fd[i].fd, creation.c_str(), creation.size(), 0);
+                (*(this->_clients.find(_poll_fd[i].fd))).second.setCheckPass(true);
+                for (unsigned long n = 0; n < test.size(); n++)
+                {
+                    if (test[n] == "NICK")
+                    {
+                        std::cout << test[n + 1] << " is in da place" << std::endl;
+                        (*(this->_clients.find(_poll_fd[i].fd))).second.setNickname(test[n + 1]);
+
+                    }
+                }
+            }
         }
     }
     test.clear();

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/16 14:49:51 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:21:14 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,20 @@
 # include <stdio.h> 
 # include <vector>
 # include <deque>
+# include <map>
 # include <sstream>
 # include <iterator>
 # include "Server.hpp"
 # include "Client.hpp"
+# include "Command.hpp"
 
 extern int stop;
 
-# define SERVER_NAME "The Best"
-# define VERSION "0.0"
-# define USER_MODE "what"
-# define CHAN_MODE "plop"
-# define RPL_WELCOME(nick) (": Welcome to the Internet Relay Network " + nick + "\r\n")
-# define RPL_YOURHOST(servername , version) (": Your host is " + servername + ", running version " + version + "\r\n")
-# define RPL_MYINFO(servername, version, usr_modes, chann_modes) (": " + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
-# define RPL_CREATED(date) (": This server was created " + date + "\r\n");
-# define RPL_TOPIC(channel, topic) (channel + " : " + topic + "\r\n")
-# define RPL_NAMREPLY(channel, nick_list) (channel + " :" + nick_list + "\r\n")
+# define SERVER_NAME "Ganesh"
+# define VERSION "0.1"
+# define USER_MODE " une lettre au pif"
+# define CHAN_MODE " une info serieuse"
+# define CREATION "aujourd'hui vers maintenant"
+
 
 #endif

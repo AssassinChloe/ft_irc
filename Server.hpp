@@ -2,6 +2,7 @@
 # define SERVER_HPP
 # include "ft_irc.hpp"
 
+class Client;
 
 class Server
 {
@@ -11,7 +12,8 @@ class Server
         struct addrinfo             _info;
         struct pollfd               _socket;
         std::vector<struct pollfd>  _poll_fd;             
-        
+        std::map<int, Client>       _clients;
+
     public:
         Server(std::string port, std::string pass);
         ~Server();

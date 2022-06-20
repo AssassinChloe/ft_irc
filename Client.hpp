@@ -7,12 +7,14 @@
 class Client 
 {
     private:
+        Client();
         std::string username;
         std::string nickname;
         std::string status; // normal ou operator par exemple
         std::string hostaddr;
 		std::string hostname;
 		std::string realname;
+        bool        pass_checked;
         struct pollfd fd;
         void write(std::string message);
 
@@ -20,21 +22,24 @@ class Client
     public:
         // lien avec poll
         // liste des channel
-        Client(/* args */);
+        Client(struct pollfd newfd);
         ~Client();
+
         void setNickname(std::string new_nick);
         void setStatus(std::string new_status);
-        std::string get_statut();
-        int getFd();
 		void setUsername(std::string username);
 		void setRealname(std::string realname);
+        void setCheckPass(bool checked);
 
+        std::string get_statut();
+        int getFd();
         std::string getStatus();
 		std::string getHostaddr();
 		std::string getHostname();
 		std::string getNickname();
 		std::string getUsername();
 		std::string getRealname();
+        bool getCheckPass();
 
         // void Client::sendTo(Client &toClient, std::string message);
 
