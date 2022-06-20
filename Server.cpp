@@ -201,11 +201,11 @@ void Server::run()
     int nb_event = poll(&_poll_fd[0], _poll_fd.size(), -1);
     if (nb_event < 0)
     {
-        if (stop != 0)
+        if (g_stop != 0)
             return ;
         else
         {
-            stop = 3;
+           g_stop = 3;
             std::cerr << "Error poll" << std::endl;
             return ;
         }

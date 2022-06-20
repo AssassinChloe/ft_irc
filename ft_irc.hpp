@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/20 16:52:29 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/20 17:00:02 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@
 # include "Client.hpp"
 # include "Command.hpp"
 
-extern int stop;
 # define HOST "localhost"
 # define SERVER_NAME " Ganesh's Daugthers"
 # define VERSION " 0.1 "

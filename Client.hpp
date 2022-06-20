@@ -39,7 +39,7 @@ class Client
 		std::string getHostaddr();
 		std::string getHostname();
         bool getCheckPass();
-        struct pollfd getFd();
+        int getFd();
 
         // void Client::sendTo(Client &toClient, std::string message);
         std::string getPrefixe();
