@@ -114,12 +114,26 @@ void Server::ft_split(std::vector<std::string> *tab, std::string str)
 int Server::parse_data(int i)
 {
     std::vector<std::string> test;
+    std::vector<std::string> lines;
+
     char buff[BUFFER_SIZE] = {0};
     
 
     std::cout << "Client is sending data" << std::endl;
     int nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
     std::cout << "BUFF PARSE" << std::endl << buff << std::endl;
+
+//decoupe en ligne et redirection des lignes isolees vers execcommand
+    lines = ftsplit(buff, "\n");
+    int j = lines.size();
+    if (j == 1) // and setpass OK
+    {
+        std::string str = lines[0];
+        Client user = Server::getClient(_poll_fd[i].fd);
+        Command command_line(user, str);
+        command_line.execCommand();
+    }
+
     ft_split(&test, buff);
     if (this->getClient(_poll_fd[i].fd).getCheckPass() == true)
     {
