@@ -1,7 +1,7 @@
 #include "Server.hpp"
 #include "ft_irc.hpp"
 
-Server::Server(std::string port, std::string host): _port(port), _hostname(host)
+Server::Server(std::string port, std::string pass): _port(port), _password(pass)
 {
     memset(&_info, 0, sizeof(struct addrinfo));
     _info.ai_family = AF_INET;
@@ -77,7 +77,7 @@ int Server::accept_client(int i)
                 ft_split(&test, buff);
             for (unsigned long k = 0; k < test.size(); k++)
             {
-                if (test[k] == "NICK")
+                if (test[k] == "PASS" && test[k + 1] == this->_password)
                 {
                     send(newfd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
                     std::cout << "rpl welcome sent" << std::endl;
@@ -90,7 +90,7 @@ int Server::accept_client(int i)
                 }
             }
             test.clear();
-        }     
+        }
     }
     return (0);
 }
@@ -116,14 +116,7 @@ int Server::parse_data(int i)
     {
         if (test[k] == "NICK")
         {
-            send(_poll_fd[i].fd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
-            std::cout << "rpl welcome sent" << std::endl;
-            send(_poll_fd[i].fd, your_host.c_str() , your_host.size(), 0);
-            std::cout << "rpl yourhost sent" << std::endl;
-            send(_poll_fd[i].fd, my_info.c_str(), my_info.size(), 0);
-            std::cout << "rpl myinfo sent" << std::endl;
-            send(_poll_fd[i].fd, creation.c_str(), creation.size(), 0);
-            std::cout << "rpl created sent" << std::endl;
+            std::cout << test[k + 1] << " is in da place" << std::endl;
         }
     }
     test.clear();

@@ -7,13 +7,13 @@ class Server
 {
     private:
         std::string                 _port;
-        std::string                 _hostname;
+        std::string                 _password;
         struct addrinfo             _info;
         struct pollfd               _socket;
         std::vector<struct pollfd>  _poll_fd;             
         
     public:
-        Server(std::string port, std::string host);
+        Server(std::string port, std::string pass);
         ~Server();
 
         int init();
