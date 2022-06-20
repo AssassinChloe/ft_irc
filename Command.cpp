@@ -32,11 +32,12 @@ Command::Command(Client &client, std::string line)
 	}
 
 	parameters = ftsplit(line, " ");
-	prefix = *(parameters.begin());
+	cmdType = *(parameters.begin());
 	parameters.erase(parameters.begin());
 
-	for (size_t index = 0; index < prefix.length(); ++index)
-		prefix[index] = std::toupper(prefix[index]);
+
+	for (size_t x = 0; x < cmdType.length(); ++x)
+		cmdType[x] = std::toupper(cmdType[x]);
 }
 
 Client &Command::getClient() { return *client; }
@@ -65,17 +66,8 @@ int	get_cmd_id(const std::string s)
 void Command::execCommand()
 {
 
-	int nb = parameters[0].size();
-	char  str[nb + 1];
-	for (int x=0; x<nb; x++)
-		str[x]=toupper(parameters[0][x]);
-    str[nb] = '\0';
-    std::cout << str << std::endl;
-	// std::transform(str.begin(), str.end(),str.begin(), ::toupper);
 	
-	// std::string name_cmd = toupper(this->parameters[0]);
-	
-	switch (get_cmd_id(str)){
+	switch (get_cmd_id(cmdType)){
 		case PING:
 			std::cout << "case ping" << std::endl;
 			break;

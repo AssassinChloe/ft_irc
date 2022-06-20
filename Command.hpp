@@ -194,7 +194,7 @@ class Command
 		Client *client;
 		Server *server;
 
-		std::string prefix;
+		std::string cmdType;
 		std::vector<std::string> parameters;
 		std::string argLine; // ?
 		std::string query; 
@@ -209,7 +209,7 @@ class Command
 		Client &getClient();
 		// Server &getServer();
 
-		std::string getPrefix();
+		std::string getCmdType();
 		std::vector<std::string> getParameters();
 		std::string getArgLine();
 		std::string getQuery();
@@ -222,6 +222,6 @@ class Command
 		// void reply(unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
 };
 
-void welcome(int fd, std::string prefixe, std::string nickname);
+void welcome(int fd, std::string cmdType, std::string nickname);
 
 #endif
