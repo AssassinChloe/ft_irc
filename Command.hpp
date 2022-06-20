@@ -192,11 +192,10 @@ class Command
 {
 	private:
 		Client *client;
-		Server *server;
 
 		std::string prefix;
 		std::vector<std::string> parameters;
-		std::string trailer; // ?
+		std::string arg_line; // ?
 		std::string query; 
 
 		bool st;
@@ -204,10 +203,9 @@ class Command
 		std::string getReplies(unsigned short code, std::string arg1, std::string arg2, std::string arg3, std::string arg4, std::string arg5, std::string arg6, std::string arg7);
 
 	public:
-		Command(Client *client, Server *server, std::string message);
+		Command(Client &client, std::string message);
 
 		Client &getClient();
-		Server &getServer();
 
 		std::string getPrefix();
 		std::vector<std::string> getParameters();
@@ -216,6 +214,7 @@ class Command
 
 		void setStop(bool st);
 		bool getStop();
+		void execCommand();
 
 		// void reply(Client &user, unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
 		// void reply(unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
