@@ -1,7 +1,7 @@
 #include "Server.hpp"
 #include "ft_irc.hpp"
 
-Server::Server(std::string port, std::string host): _port(port), _hostname(host)
+Server::Server(std::string port, std::string pass): _port(port), _password(pass)
 {
     memset(&_info, 0, sizeof(struct addrinfo));
     _info.ai_family = AF_INET;
@@ -51,12 +51,10 @@ int Server::accept_client(int i)
 {
     int newfd;
     struct sockaddr distaddr;
+    socklen_t size = sizeof (distaddr);
+    
     std::vector<std::string> test;
     char buff[BUFFER_SIZE] = {0};
-    std::string your_host = RPL_YOURHOST((std::string)SERVER_NAME, VERSION);
-    std::string my_info = RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE);
-    std::string creation = RPL_CREATED((std::string)"15/06/2022");
-    socklen_t size = sizeof (distaddr);
 
     if (_poll_fd[i].fd == this->_socket.fd) 
     {
@@ -72,25 +70,37 @@ int Server::accept_client(int i)
             tmp.fd = newfd;
             tmp.events = POLLIN;
             _poll_fd.push_back(tmp);
+
             recv(newfd, buff, sizeof(buff), 0);
             std::cout << "BUFF ACCEPT" << std::endl << buff << std::endl;
                 ft_split(&test, buff);
+            Client newclient(tmp);
             for (unsigned long k = 0; k < test.size(); k++)
             {
+                if (test[k] == "PASS" && test[k + 1] == this->_password)
+                {
+                    std::cout << "valid password" << std::endl;
+                    newclient.setCheckPass(true);
+                }
                 if (test[k] == "NICK")
                 {
-                    send(newfd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
-                    std::cout << "rpl welcome sent" << std::endl;
-                    send(newfd, your_host.c_str() , your_host.size(), 0);
-                    std::cout << "rpl yourhost sent" << std::endl;
-                    send(newfd, my_info.c_str(), my_info.size(), 0);
-                    std::cout << "rpl myinfo sent" << std::endl;
-                    send(newfd, creation.c_str(), creation.size(), 0);
-                    std::cout << "rpl created sent" << std::endl;
+                    std::cout << "set nickname" << std::endl;
+                    newclient.setNickname(test[k + 1]);
+                }
+                if (test[k] == "USER")
+                {
+                    std::cout << "set username" << std::endl;
+                    newclient.setUsername(test[k + 1]);
                 }
             }
+            _clients.insert(std::make_pair(tmp.fd, newclient));
             test.clear();
-        }     
+        }
+        if (this->getClient(_poll_fd[i].fd).getCheckPass() == true && this->getClient(_poll_fd[i].fd).getNickname().size() > 0 && this->getClient(_poll_fd[i].fd).getUsername().size() > 0)
+        {
+            welcome(newfd, this->getClient(newfd).getPrefixe(), this->getClient(newfd).getNickname());
+            this->getClient(newfd).setStatus("welcome");
+        }    
     }
     return (0);
 }
@@ -104,54 +114,55 @@ void Server::ft_split(std::vector<std::string> *tab, std::string str)
 int Server::parse_data(int i)
 {
     std::vector<std::string> test;
-    std::vector<std::string> lines;
-    std::vector<std::string> args;
     char buff[BUFFER_SIZE] = {0};
-    std::string your_host = RPL_YOURHOST((std::string)SERVER_NAME, VERSION);
-    std::string my_info = RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE);
-    std::string creation = RPL_CREATED((std::string)"15/06/2022");
+    
+
     std::cout << "Client is sending data" << std::endl;
     int nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
     std::cout << "BUFF PARSE" << std::endl << buff << std::endl;
-std::cout << "--> buff: " << buff << "<-- end buff" << std::endl;
     ft_split(&test, buff);
-
-// test de ftsplit
-    lines = ftsplit(buff, "\n");
-    int j = lines.size();
-    std::cout << "--> test decoupe buffer, lines.size = " << j << std::endl;
-    for (int k = 0; k<j; k++) 
-        std::cout << lines[k] << std::endl;
-    std::cout << "<-- fin test decoupe buffer en lignes" << std::endl;
-
-// redecoupe des lines en arg (est-ce qu'il y a d'autres cas que la connection initiale ou client envoie plusieurs lignes ?)
-    if (j == 1)
+    if (this->getClient(_poll_fd[i].fd).getCheckPass() == true)
     {
-    args = ftsplit(lines[0], " ");
-    int l = args.size();
-    std::cout << "--> test decoupe line en args, args.size = " << l << std::endl;
-    for (int k = 0; k<l; k++) 
-        std::cout << args[k] << std::endl;
-    std::cout << "<-- fin test decoupe line en args" << std::endl;
-
-    // switch en fonction de arg[0] pour redirection sur les fonctions ? mais ou je sais qui m'envoie ?
-    }
-
-std::cout << "test.size = " << test.size() << std::endl;
-    for (unsigned long k = 0; k < test.size(); k++)
-    {
-        if (test[k] == "NICK")
+        for (unsigned long k = 0; k < test.size(); k++)
         {
-            send(_poll_fd[i].fd, RPL_WELCOME(test[k+1]).c_str(), RPL_WELCOME(test[k+1]).size(), 0);
-            std::cout << "rpl welcome sent" << std::endl;
-            send(_poll_fd[i].fd, your_host.c_str() , your_host.size(), 0);
-            std::cout << "rpl yourhost sent" << std::endl;
-            send(_poll_fd[i].fd, my_info.c_str(), my_info.size(), 0);
-            std::cout << "rpl myinfo sent" << std::endl;
-            send(_poll_fd[i].fd, creation.c_str(), creation.size(), 0);
-            std::cout << "rpl created sent" << std::endl;
+                if (test[k] == "NICK")
+                {
+                    std::cout << "set nickname" << std::endl;
+                    this->getClient(_poll_fd[i].fd).setNickname(test[k + 1]);
+                }
+                if (test[k] == "USER")
+                {
+                    std::cout << "set username" << std::endl;
+                    this->getClient(_poll_fd[i].fd).setUsername(test[k + 1]);
+                }
         }
     }
+    else
+    {
+        for (unsigned long k = 0; k < test.size(); k++)
+        {
+            if (test[k] == "PASS" && test[k + 1] == this->_password)
+            {
+                std::cout << "valid password" << std::endl;
+                this->getClient(_poll_fd[i].fd).setCheckPass(true);
+            }
+            if (test[k] == "NICK")
+            {
+                std::cout << "set nickname " << std::endl;
+                this->getClient(_poll_fd[i].fd).setNickname(test[k + 1]);
+            }
+            if (test[k] == "USER")
+            {
+                std::cout << "set username " << std::endl;
+                this->getClient(_poll_fd[i].fd).setUsername(test[k + 1]);
+            }
+        }
+    }
+    if (this->getClient(_poll_fd[i].fd).getCheckPass() == true && this->getClient(_poll_fd[i].fd).getNickname().size() > 0 && this->getClient(_poll_fd[i].fd).getUsername().size() > 0 && this->getClient(_poll_fd[i].fd).getStatus() == "default")
+    {
+        welcome(_poll_fd[i].fd, this->getClient(_poll_fd[i].fd).getPrefixe(), this->getClient(_poll_fd[i].fd).getNickname());
+        this->getClient(_poll_fd[i].fd).setStatus("welcome");
+    } 
     test.clear();
     if (nbytes <= 0)
     {
@@ -190,11 +201,11 @@ void Server::run()
     int nb_event = poll(&_poll_fd[0], _poll_fd.size(), -1);
     if (nb_event < 0)
     {
-        if (g_stop != 0)
+        if (stop != 0)
             return ;
         else
         {
-            g_stop = 3;
+            stop = 3;
             std::cerr << "Error poll" << std::endl;
             return ;
         }
@@ -213,3 +224,11 @@ void Server::run()
         }
     }
 }
+
+Client &Server::getClient(int fd)
+{
+    return((*(this->_clients.find(fd))).second);
+}
+
+
+
