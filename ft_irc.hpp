@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/20 17:00:02 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/20 17:14:25 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # include <map>
 # include <sstream>
 # include <iterator>
+# include <fstream>
 # include "Server.hpp"
 # include "Client.hpp"
 # include "Command.hpp"
