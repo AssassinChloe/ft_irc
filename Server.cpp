@@ -106,12 +106,13 @@ int Server::parse_data(int i)
     std::vector<std::string> test;
     std::vector<std::string> lines;
     std::vector<std::string> args;
+    // Command command_line;
     char buff[BUFFER_SIZE] = {0};
     std::string your_host = RPL_YOURHOST((std::string)SERVER_NAME, VERSION);
     std::string my_info = RPL_MYINFO((std::string)SERVER_NAME, VERSION, USER_MODE, CHAN_MODE);
     std::string creation = RPL_CREATED((std::string)"15/06/2022");
     std::cout << "Client is sending data" << std::endl;
-    int nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
+    int nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0); //_poll_fd[i].fd a recuperer
     std::cout << "BUFF PARSE" << std::endl << buff << std::endl;
 std::cout << "--> buff: " << buff << "<-- end buff" << std::endl;
     ft_split(&test, buff);
@@ -125,14 +126,19 @@ std::cout << "--> buff: " << buff << "<-- end buff" << std::endl;
     std::cout << "<-- fin test decoupe buffer en lignes" << std::endl;
 
 // redecoupe des lines en arg (est-ce qu'il y a d'autres cas que la connection initiale ou client envoie plusieurs lignes ?)
-    if (j == 1)
+    if (j == 1) // and setpass OK
     {
-    args = ftsplit(lines[0], " ");
-    int l = args.size();
-    std::cout << "--> test decoupe line en args, args.size = " << l << std::endl;
-    for (int k = 0; k<l; k++) 
-        std::cout << args[k] << std::endl;
-    std::cout << "<-- fin test decoupe line en args" << std::endl;
+        std::string str = lines[0];
+        Client user = Server::getClient(_poll_fd[i].fd);
+        Command command_line(user, str);
+        command_line.execCommand();
+
+    // args = ftsplit(lines[0], " ");
+    // int l = args.size();
+    // std::cout << "--> test decoupe line en args, args.size = " << l << std::endl;
+    // for (int k = 0; k<l; k++) 
+    //     std::cout << args[k] << std::endl;
+    // std::cout << "<-- fin test decoupe line en args" << std::endl;
 
     // switch en fonction de arg[0] pour redirection sur les fonctions ? mais ou je sais qui m'envoie ?
     }
