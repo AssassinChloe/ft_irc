@@ -1,7 +1,4 @@
 #include "Command.hpp"
-#include <iostream>
-#include <cstring>
-
 
 #define NICK 1
 #define JOIN 2
@@ -17,9 +14,10 @@
 #define KICK 12
 #define PRIVMSG 13
 #define KILL 14
+#define PASS 15
 
-Command::Command(Client &client, std::string line)
-	: client(&client), query(line)
+Command::Command(Client &client, Server *ganesh, std::string line)
+	: client(&client), server(ganesh), query(line)
 {
 	std::string delimiter(":");
 	size_t position;
@@ -41,6 +39,7 @@ Command::Command(Client &client, std::string line)
 }
 
 Client &Command::getClient() { return *client; }
+
 std::vector<std::string> Command::getParameters() { return parameters; }
 
 
@@ -60,6 +59,7 @@ int	get_cmd_id(const std::string s)
 	else if (s == "KICK")		return KICK;
 	else if (s == "PRIVMSG")	return PRIVMSG;
 	else if (s == "KILL")		return KILL;
+	else if (s == "PASS")		return PASS;
 	return 0;
 }
 
@@ -73,13 +73,13 @@ void Command::execCommand()
 			Command::Ping();
 			break;
 		case NICK:
-			std::cout << "case nick" << std::endl;
+			this->nick();
 			break;
 		case JOIN:
 			std::cout << "case join" << std::endl;
 			break;
 		case USER:
-			std::cout << "case user" << std::endl;
+			this->user();
 			break;	
 		case OPER: 
 			std::cout << "case oper" << std::endl;
@@ -92,6 +92,7 @@ void Command::execCommand()
 			break;
 		case PONG:
 			std::cout << "case pong" << std::endl;
+			// Command::Pong();
 			break;
 		case MODE:
 			std::cout << "case mode" << std::endl;
@@ -106,7 +107,10 @@ void Command::execCommand()
 			std::cout << "case kick" << std::endl;
 			break;
 		case PRIVMSG:
-			std::cout << "case PRIVNSG" << std::endl;
+			std::cout << "case PRIVMSG" << std::endl;
+			break;
+		case PASS:
+			this->pass();
 			break;
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;

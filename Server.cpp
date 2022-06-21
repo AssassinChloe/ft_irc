@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/21 16:55:07 by cassassi          #+#    #+#             */
+/*   Updated: 2022/06/21 16:55:08 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Server.hpp"
-#include "ft_irc.hpp"
 
 Server::Server(std::string port, std::string pass): _port(port), _password(pass)
 {
@@ -53,7 +64,6 @@ int Server::accept_client(int i)
     struct sockaddr distaddr;
     socklen_t size = sizeof (distaddr);
     
-    std::vector<std::string> test;
     char buff[BUFFER_SIZE] = {0};
 
     if (_poll_fd[i].fd == this->_socket.fd) 
@@ -71,148 +81,35 @@ int Server::accept_client(int i)
             tmp.events = POLLIN;
             _poll_fd.push_back(tmp);
 
-            recv(newfd, buff, sizeof(buff), 0);
-            std::cout << "BUFF ACCEPT" << std::endl << buff << std::endl << "END BUFF ACCEPT" << std::endl;
-                ft_split(&test, buff);
+            int nbytes = recv(newfd, buff, sizeof(buff), 0);
+            if (nbytes <= 0)
+                return (this->retRecv(i, nbytes));  
+            // std::cout << "BUFF ACCEPT" << std::endl << buff << std::endl << "END BUFF ACCEPT" << std::endl;
             Client newclient(tmp);
-            for (unsigned long k = 0; k < test.size(); k++)
-            {
-                if (test[k] == "PASS" && test[k + 1] == this->_password)
-                {
-                    std::cout << "valid password" << std::endl;
-                    newclient.setCheckPass(true);
-                }
-                if (test[k] == "NICK")
-                {
-                    std::cout << "set nickname" << std::endl;
-                    newclient.setNickname(test[k + 1]);
-                }
-                if (test[k] == "USER")
-                {
-                    std::cout << "set username" << std::endl;
-                    newclient.setUsername(test[k + 1]);
-                }
-            }
+            this->dispatch(newclient, buff);
             _clients.insert(std::make_pair(tmp.fd, newclient));
-            test.clear();
         }
-        if (this->getClient(_poll_fd[i].fd).getCheckPass() == true && this->getClient(_poll_fd[i].fd).getNickname().size() > 0 && this->getClient(_poll_fd[i].fd).getUsername().size() > 0)
-        {
-            welcome(newfd, this->getClient(newfd).getPrefixe(), this->getClient(newfd).getNickname());
-            this->getClient(newfd).setStatus("welcome");
-        }    
     }
     return (0);
 }
 
-void Server::ft_split(std::vector<std::string> *tab, std::string str)
+int Server::handle_client_request(int i)
 {
-    std::istringstream iss(str);
-    std::copy(std::istream_iterator<std::string>(iss), std::istream_iterator<std::string>(), std::back_inserter(*tab));
-}
-
-int Server::parse_data(int i)
-{
-    std::vector<std::string> test;
-    std::vector<std::string> lines;
-
     char buff[BUFFER_SIZE] = {0};
+    int nbytes;
     
-
-    std::cout << "Client is sending data" << std::endl;
-    int nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
-    std::cout << "BUFF PARSE" << std::endl << buff << std::endl << "END BUF PARSE" << std::endl;
-
-//decoupe en ligne et redirection des lignes isolees vers execcommand
-    lines = ftsplit(buff, "\n");
-    int j = lines.size();
-    if (j == 1) // and setpass OK
-    {
-        std::string str = lines[0];
-        Client user = Server::getClient(_poll_fd[i].fd);
-        Command command_line(user, str);
-        command_line.execCommand();
-    }
-
-    ft_split(&test, buff);
-    if (this->getClient(_poll_fd[i].fd).getCheckPass() == true)
-    {
-        for (unsigned long k = 0; k < test.size(); k++)
-        {
-                if (test[k] == "NICK")
-                {
-                    std::cout << "set nickname" << std::endl;
-                    this->getClient(_poll_fd[i].fd).setNickname(test[k + 1]);
-                }
-                if (test[k] == "USER")
-                {
-                    std::cout << "set username" << std::endl;
-                    this->getClient(_poll_fd[i].fd).setUsername(test[k + 1]);
-                }
-        }
-    }
-    else
-    {
-        for (unsigned long k = 0; k < test.size(); k++)
-        {
-            if (test[k] == "PASS" && test[k + 1] == this->_password)
-            {
-                std::cout << "valid password" << std::endl;
-                this->getClient(_poll_fd[i].fd).setCheckPass(true);
-            }
-            if (test[k] == "NICK")
-            {
-                std::cout << "set nickname " << std::endl;
-                this->getClient(_poll_fd[i].fd).setNickname(test[k + 1]);
-            }
-            if (test[k] == "USER")
-            {
-                std::cout << "set username " << std::endl;
-                this->getClient(_poll_fd[i].fd).setUsername(test[k + 1]);
-            }
-        }
-    }
-    if (this->getClient(_poll_fd[i].fd).getCheckPass() == true && this->getClient(_poll_fd[i].fd).getNickname().size() > 0 && this->getClient(_poll_fd[i].fd).getUsername().size() > 0 && this->getClient(_poll_fd[i].fd).getStatus() == "default")
-    {
-        welcome(_poll_fd[i].fd, this->getClient(_poll_fd[i].fd).getPrefixe(), this->getClient(_poll_fd[i].fd).getNickname());
-        this->getClient(_poll_fd[i].fd).setStatus("welcome");
-    } 
-    test.clear();
+    nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
     if (nbytes <= 0)
-    {
-        if (nbytes == 0)
-            this->deleteClient(i);
-        else
-            perror("recv");
-        close(_poll_fd[i].fd);
-        for(std::vector<struct pollfd>::iterator it = _poll_fd.begin(); it != _poll_fd.end(); it++)
-        {
-            if ((*it).fd == _poll_fd[i].fd)
-            {
-                _poll_fd.erase(it);
-                break ;
-            }
-        }
-        return (-1);
-    } 
+        return (this->retRecv(i, nbytes));
     else
-    {
-        for(unsigned long j = 0; j < _poll_fd.size(); j++)
-        {
-            int dest_fd = _poll_fd[j].fd;
-            if (dest_fd != _socket.fd && dest_fd != _poll_fd[i].fd)
-            {
-                if (send(dest_fd, buff, nbytes, 0) == -1) 
-                    return (-1);
-            }
-        }
-    }
+        this->dispatch(this->getClient(_poll_fd[i].fd), buff);
     return (0);
 }
 
 void Server::deleteClient(int i)
 {
     std::cout << "pollserver: socket " << _poll_fd[i].fd << " hung up" << std::endl;
+    close(_poll_fd[i].fd);
     _clients.erase(_poll_fd[i].fd);
     for (std::vector<struct pollfd>::iterator it = _poll_fd.begin(); it != _poll_fd.end(); it++)
     {
@@ -248,7 +145,7 @@ void Server::run()
             if (_poll_fd[i].fd == this->_socket.fd)
                 accept_client(i);
             else
-               parse_data(i);
+                handle_client_request(i);
         }
     }
 }
@@ -258,5 +155,39 @@ Client &Server::getClient(int fd)
     return((*(this->_clients.find(fd))).second);
 }
 
+std::string Server::getPass()
+{
+    return (this->_password);
+}
 
+void Server::dispatch(Client &client, char *buff)
+{
+    std::vector<std::string> lines;
+
+    lines = ftsplit(buff, "\r\n");
+    for (unsigned long k = 0; k < lines.size(); k++)
+    {
+        Command command_line(client, this, lines[k]);
+        command_line.execCommand();
+    }
+    lines.clear();
+    if (client.getStatus() == "default" && client.getCheckPass() == true
+        && client.getNickname().size() > 0 && client.getUsername().size() > 0)
+    {
+        welcome(client.getFd(), client.getPrefixe(), client.getNickname());
+        client.setStatus("welcome");
+    } 
+}
+
+int Server::retRecv(int i, int nbytes)
+{
+    if (nbytes == 0)
+        this->deleteClient(i);
+    else
+    {
+        this->deleteClient(i);
+        perror("recv");
+    }
+    return (-1);
+}
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/21 16:55:12 by cassassi          #+#    #+#             */
+/*   Updated: 2022/06/21 16:55:13 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SERVER_HPP
 # define SERVER_HPP
 # include "ft_irc.hpp"
@@ -21,12 +33,13 @@ class Server
         int init();
         void run();
         int using_poll();
-        int parse_data(int i);
+        int handle_client_request(int i);
         int accept_client(int i);
         void deleteClient(int fd);
-        void ft_split(std::vector<std::string> *tab, std::string str);
-
+        void dispatch(Client &client, char *buff);
+        int retRecv(int i, int nbytes);
         Client &getClient(int fd);
+        std::string getPass();
 };
 
 #endif
