@@ -10,11 +10,8 @@ void Command::Ping()
 		// return command->reply(409);
 	int fd_client = this->getClient().getFd();
 	std::string buffer;
-	buffer = (this->getClient().getPrefixe() + "PONG :" + this->getParameters()[0]);
+	buffer = (this->getClient().getPrefixe() + "PONG :" + this->getParameters()[0] + "\r\n");
 	send(fd_client, buffer.c_str(), buffer.size(), 0);
-	// std::string test = "test";
-	// send(fd_client, test.c_str(), test.size(), 0);
-	// send(fd_client, (this->getClient().getPrefixe() + " PONG :" + this->getParameters()[0]).c_str(), (" PONG :" + this->getParameters()[0]).size(), 0);
 	std::cout << "fd: "<< fd_client << ", buf Ping: " << buffer << std::endl;
 	// command->getClient().sendTo(command->getClient(), "PONG :" + command->getParameters()[0]);
 }
