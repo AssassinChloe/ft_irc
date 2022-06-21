@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/21 16:56:04 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/21 17:43:19 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # define BACKLOG 10
 # define BUFFER_SIZE 1024
+# define MAXCHANNEL 10
 # define DEBUG 1
 
 # include <stdlib.h>
@@ -40,6 +41,7 @@
 # include <ctime>
 # include "Server.hpp"
 # include "Client.hpp"
+# include "Channel.hpp"
 # include "Command.hpp"
 
 # define HOST "localhost"

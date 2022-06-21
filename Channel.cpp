@@ -1,5 +1,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Server.hpp"
+#include "ft_irc.hpp"
 #include <algorithm>
 
 
@@ -34,8 +36,10 @@ int Channel::formatName(std::string name)
 Channel::Channel(std::string name)
 	: mode("n") {
 		if (formatName(name))
+		{
+			// Server::addChannel(name); //pourquoi il n'en veut pas ??
 			std::cout << "channel added to chan list" << std::endl;
-			//add in channel list dans le server
+		}
 		else
 			std::cout << "bad channel name" << std::endl;
 	}

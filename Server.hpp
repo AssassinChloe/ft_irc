@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:12 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/21 16:55:13 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/21 17:48:18 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class Server
         struct pollfd               _socket;
         std::vector<struct pollfd>  _poll_fd;             
         std::map<int, Client>       _clients;
+        std::vector<class Channel>        _channels;
 
     public:
         Server(std::string port, std::string pass);
@@ -40,6 +41,8 @@ class Server
         int retRecv(int i, int nbytes);
         Client &getClient(int fd);
         std::string getPass();
+        // int getNbChannel(); // voir si on veut un nb max de channels
+        void addChannel(std::string chanName);
 };
 
 #endif

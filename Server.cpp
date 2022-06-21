@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:07 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/21 16:55:08 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/21 17:50:22 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,3 +191,8 @@ int Server::retRecv(int i, int nbytes)
     return (-1);
 }
 
+
+// void Server::addChannel(std::string chanName)
+// {
+//     _channels.push_back(chanName);
+// }
