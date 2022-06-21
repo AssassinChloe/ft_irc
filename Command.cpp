@@ -70,6 +70,7 @@ void Command::execCommand()
 	switch (get_cmd_id(cmdType)){
 		case PING:
 			std::cout << "case ping" << std::endl;
+			Command::Ping();
 			break;
 		case NICK:
 			std::cout << "case nick" << std::endl;
@@ -80,13 +81,13 @@ void Command::execCommand()
 		case USER:
 			std::cout << "case user" << std::endl;
 			break;	
-		case OPER:
+		case OPER: 
 			std::cout << "case oper" << std::endl;
 			break;
 		case QUIT:
 			std::cout << "case quit" << std::endl;
 			break;
-		case CAP:
+		case CAP: // pas a gerer 
 			std::cout << "case cap" << std::endl;
 			break;
 		case PONG:
