@@ -72,7 +72,7 @@ int Server::accept_client(int i)
             _poll_fd.push_back(tmp);
 
             recv(newfd, buff, sizeof(buff), 0);
-            std::cout << "BUFF ACCEPT" << std::endl << buff << std::endl;
+            std::cout << "BUFF ACCEPT" << std::endl << buff << std::endl << "END BUFF ACCEPT" << std::endl;
                 ft_split(&test, buff);
             Client newclient(tmp);
             for (unsigned long k = 0; k < test.size(); k++)
@@ -121,7 +121,7 @@ int Server::parse_data(int i)
 
     std::cout << "Client is sending data" << std::endl;
     int nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
-    std::cout << "BUFF PARSE" << std::endl << buff << std::endl;
+    std::cout << "BUFF PARSE" << std::endl << buff << std::endl << "END BUF PARSE" << std::endl;
 
 //decoupe en ligne et redirection des lignes isolees vers execcommand
     lines = ftsplit(buff, "\n");
