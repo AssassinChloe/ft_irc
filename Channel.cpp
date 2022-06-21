@@ -2,16 +2,60 @@
 #include "Client.hpp"
 #include <algorithm>
 
-Channel::Channel()
-	: mode("n") {}
 
-void Channel::setName(std::string name) { this->name = name; }
+// Channels names are strings (beginning with a '&', '#', '+' or '!'
+//    character) of length up to fifty (50) characters.  Channel names are
+//    case insensitive.
+
+//    Apart from the the requirement that the first character being either
+//    '&', '#', '+' or '!' (hereafter called "channel prefix"). The only
+//    restriction on a channel name is that it SHALL NOT contain any spaces
+//    (' '), a control G (^G or ASCII 7), a comma (',' which is used as a
+//    list item separator by the protocol).  Also, a colon (':') is used as
+//    a delimiter for the channel mask.  The exact syntax of a channel name
+//    is defined in "IRC Server Protocol" 
+
+int Channel::formatName(std::string name)
+{
+	if (name[0] != '#' && name[0] != '&' && name[0] != '+' && name[0] != '!')
+		return (0);
+	int length = name.length();
+	if (length > 50)
+		return (0);
+	for (int i = 1; i< length; i++)
+	{
+		if (name[i] == ' ' || (name[i] == '^' && name[i+1] && name[i+1] == 'G') 
+			|| name[i] == ',' || name[i] == ':')
+			return (0);
+	}
+	return (1);
+}
+
+Channel::Channel(std::string name)
+	: mode("n") {
+		if (formatName(name))
+			std::cout << "channel added to chan list" << std::endl;
+			//add in channel list dans le server
+		else
+			std::cout << "bad channel name" << std::endl;
+	}
+
+// void Channel::setName(std::string name) { this->name = name; }
 std::string Channel::getName() { return name; }
 
 void Channel::setTopic(std::string topic) { this->topic = topic; }
 std::string Channel::getTopic() { return topic; }
 
-void Channel::addClient(Client &client) { clients[client.getFd()] = &client; }
+int Channel::getNbClients(){
+return this->clients.size();
+};
+
+void Channel::addClient(Client &client) { 
+	if (this->clients.size() < max_clients)
+		clients[client.getFd()] = &client; 
+	else
+		std::cout << "max number of clients on " << name << " channel reached" << std::endl;
+}
 void Channel::removeClient(Client &client) { clients.erase(clients.find(client.getFd())); }
 void Channel::removeClient(std::string const &nick)
 {
@@ -47,24 +91,24 @@ std::string Channel::getMode() { return mode; }
 void Channel::setClientMode(Client &client, std::string mode) { client_mode[client.getFd()] = mode; }
 std::string Channel::getClientMode(Client &client) { return client_mode[client.getFd()]; }
 
-void Channel::setKey(std::string key) { this->key = key; }
-std::string Channel::getKey() { return key; }
+// void Channel::setKey(std::string key) { this->key = key; }
+// std::string Channel::getKey() { return key; }
 
-void Channel::setMaxClients(std::string max_users) { this->max_clients = max_clients; }
-std::string Channel::getMaxClients() { return max_clients; }
+void Channel::setMaxClients(int max_users) { this->max_clients = max_clients; }
+int Channel::getMaxClients() { return max_clients; }
 
-void Channel::addInvited(Client &user) { invited.push_back(&user); }
-bool Channel::isInvited(Client &user) { return std::find(invited.begin(), invited.end(), &user) != invited.end(); }
-void Channel::removeInvited(Client &user)
-{
-	std::vector<Client *>::iterator it = std::find(invited.begin(), invited.end(), &user);
-	if (it != invited.end())
-		invited.erase(it);
-}
+// void Channel::addInvited(Client &user) { invited.push_back(&user); }
+// bool Channel::isInvited(Client &user) { return std::find(invited.begin(), invited.end(), &user) != invited.end(); }
+// void Channel::removeInvited(Client &user)
+// {
+// 	std::vector<Client *>::iterator it = std::find(invited.begin(), invited.end(), &user);
+// 	if (it != invited.end())
+// 		invited.erase(it);
+// }
 
-void Channel::broadcast(Client &client, std::string message)
-{
-	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
-		client.sendTo(*it->second, message);
-}
+// void Channel::broadcast(Client &client, std::string message)
+// {
+// 	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
+// 		client.sendTo(*it->second, message);
+// }
 

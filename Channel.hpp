@@ -13,18 +13,17 @@ class Channel
 	private:
 		std::string name;
 		std::string topic;
-		std::deque<Client *> clients;
+		std::map<int, Client *> clients;
 		std::string mode;
 		std::map<int, std::string> client_mode;
-		std::string key;
-		std::string max_clients;
-		std::vector<Client *> invited;
-		std::vector<Client *> banned;
+		// std::string key;
+		int max_clients;
+
 
 	public:
-		Channel();
+		Channel(std::string name);
 
-		void setName(std::string name);
+		// void setName(std::string name);
 		std::string getName();
 
 		void setTopic(std::string topic);
@@ -43,15 +42,13 @@ class Channel
 		void setClientMode(Client &client, std::string mode);
 		std::string getClientMode(Client &client);
 
-		void setKey(std::string key);
-		std::string getKey();
+		// void setKey(std::string key);
+		// std::string getKey();
 
-		void setMaxClients(std::string max);
-		std::string getMaxClients();
-
-		void addInvited(Client &client);
-		bool isInvited(Client &client);
-		void removeInvited(Client &client);
+		void setMaxClients(int max);
+		int getMaxClients();
+		int getNbClients(); 
+		int formatName(std::string name);
 
 		void broadcast(Client &client, std::string message);
 
