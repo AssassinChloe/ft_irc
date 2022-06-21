@@ -8,6 +8,7 @@ std::vector<std::string>		ftsplit(std::string s, std::string splitter)
 	std::string					tmp;
 	size_t						ret = 0;
 	size_t						k = 0;
+	// size_t						i;
 
 	ret = 0;
 	if (splitter.empty())
@@ -33,5 +34,11 @@ std::vector<std::string>		ftsplit(std::string s, std::string splitter)
 			break;
 		ret += splitter.length();
 	}
+	// i = now.size();
+	// for (size_t j=i; j>=0; j--)
+	// {
+	// 	tmp = now[j];
+	// 	now[j] = tmp + "\0";
+	// }
 	return (now);
 }
