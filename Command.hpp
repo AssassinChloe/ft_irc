@@ -62,16 +62,20 @@
 # define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
 # define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask\r\n")
 # define ERR_ALREADYBAN(channel, user) (channel + " " + user + " b :Channel " + channel + " list already contains " + user + "\r\n")
-# define ERR_SERVERISFULL(serv_name) (serv_name + " Server is full\r\n");
+# define ERR_SERVERISFULL(serv_name) (serv_name + " Server is full\r\n")
 # define ERR_KILLDENY(mssg) (":" + mssg + "\r\n")
 
 /*
 **  reponse for command file
 */
-# define RPL_WELCOME(nick) (":Welcome to the Internet Relay Network " + nick + "\r\n")
-# define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version + "\r\n")
-# define RPL_MYINFO(servername, version, usr_modes, chann_modes) (":" + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
-# define RPL_CREATED(date) (":This server was created " + date + "\r\n");
+# define RPL_WELCOME(nickname, prefixe) (prefixe + "001 " + nickname + " :Welcome to the Internet Relay Network " + prefixe + "\r\n")
+# define RPL_YOURHOST(prefixe, nickname, servername, version) (prefixe + "002 " + nickname + " Your host is " + servername + ", running version " + version + "\r\n")
+# define RPL_MYINFO(prefixe, nickname, servername, version, usr_modes, chann_modes) (prefixe + "003 " + nickname + " :" + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
+# define RPL_CREATED(prefixe, nickname, date) (prefixe + "004 " + nickname + " :This server was created " + date + "\r\n")
+// # define RPL_WELCOME(nick) (":Welcome to the Internet Relay Network " + nick + "\r\n")
+// # define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version + "\r\n")
+// # define RPL_MYINFO(servername, version, usr_modes, chann_modes) (":" + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
+// # define RPL_CREATED(date) (":This server was created " + date + "\r\n")
 # define RPL_BOUNCE(server_name, port) ("Try server " + server_name + ", port " + port + "\r\n")
 # define RPL_NONE() ("\r\n") //300
 # define RPL_USERHOST(userhost_list) (userhost_list + "\r\n") //<réponse> ::= <pseudo>['*'] '=' <'+'|'-'><hôte>

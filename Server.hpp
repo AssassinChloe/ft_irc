@@ -23,7 +23,7 @@ class Server
         int using_poll();
         int parse_data(int i);
         int accept_client(int i);
-
+        void deleteClient(int fd);
         void ft_split(std::vector<std::string> *tab, std::string str);
 
         Client &getClient(int fd);

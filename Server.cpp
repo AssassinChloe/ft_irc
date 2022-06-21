@@ -181,7 +181,7 @@ int Server::parse_data(int i)
     if (nbytes <= 0)
     {
         if (nbytes == 0)
-            std::cout << "pollserver: socket " << _poll_fd[i].fd << " hung up" << std::endl;
+            this->deleteClient(i);
         else
             perror("recv");
         close(_poll_fd[i].fd);
@@ -208,6 +208,20 @@ int Server::parse_data(int i)
         }
     }
     return (0);
+}
+
+void Server::deleteClient(int i)
+{
+    std::cout << "pollserver: socket " << _poll_fd[i].fd << " hung up" << std::endl;
+    _clients.erase(_poll_fd[i].fd);
+    for (std::vector<struct pollfd>::iterator it = _poll_fd.begin(); it != _poll_fd.end(); it++)
+    {
+        if ((*it).fd == _poll_fd[i].fd)
+        {
+            _poll_fd.erase(it);
+            return ;
+        }
+    }
 }
 
 void Server::run()
