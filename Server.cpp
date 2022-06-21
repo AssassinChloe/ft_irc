@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/21 16:55:07 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/21 17:50:22 by vmercier         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "Server.hpp"
 
@@ -99,6 +88,7 @@ int Server::handle_client_request(int i)
     int nbytes;
     
     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
+    std::cout << "BUFF " << std::endl << buff << std::endl << "END BUFF" << std::endl;
     if (nbytes <= 0)
         return (this->retRecv(i, nbytes));
     else
