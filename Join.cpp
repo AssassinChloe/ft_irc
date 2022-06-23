@@ -51,7 +51,7 @@ void Command::Join()
     }
     if (channelExist(this->server, parameters[0]))
     {
-        // server->getChannel(parameters[0]).addClient(this->client);
+        // server->getChannel(parameters[0]).addClient(this->getClient()); // pbl dans le get channel avec string
         std::cout << "client a ajouter dans channel" << std::endl;
         std::cout << "broadcast d'arrivee du client aux autres connectes du channel" << std::endl;
     }
@@ -63,3 +63,8 @@ void Command::Join()
     // maintenant si channel existe enregistre le client dans le channel
     // si d'autres clients sur ce channel : diffuse info
 }
+
+
+// Note that this command also accepts the special argument of ("0", 0x30) instead of any of the usual parameters, 
+// which requests that the sending client leave all channels they are currently connected to. 
+// The server will process this command as though the client had sent a PART command for each channel they are a member of.

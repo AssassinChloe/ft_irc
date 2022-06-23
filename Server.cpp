@@ -224,15 +224,16 @@ Channel &Server::getChannel(int i)
     return((_channels[i]));
 }
 
-// Channel &Server::getChannel(std::string chanName)
-// {
-//     int nb = getChannelSize();
-//     for (int i = 0; i < nb; i++)
-//     {
-//         if (_channels[i].getName() == chanName)
-//             return (_channels[i]);
-//     }
-// }
+Channel &Server::getChannel(std::string chanName)
+{
+    int nb = getChannelSize();
+    for (int i = 0; i < nb; i++)
+    {
+        if (_channels[i].getCName() == chanName)
+            return (_channels[i]);
+    }
+    return (_channels[0]); // attention a modifier !!!
+}
 
 int Server::getChannelSize()
 {

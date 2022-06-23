@@ -60,6 +60,9 @@ return this->clients.size();
 void Channel::addClient(Client &client) { 
 	// if (this->clients.size() < max_clients)
 		clients[client.getFd()] = &client; 
+		int nb = getNbClients();
+		for(int i=0; i<nb; i++)
+			std::cout << "client " << i << ": " << clients[i]->getUsername() << std::endl;
 	// else
 	// 	std::cout << "max number of clients on " << name << " channel reached" << std::endl;
 }
