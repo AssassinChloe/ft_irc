@@ -26,7 +26,7 @@ class Channel
 		Channel (std::string name); //(Server *server, std::string name);
 
 		// void setName(std::string name);
-		std::string getName();
+		std::string getCName();
 
 		void setTopic(std::string topic);
 		std::string getTopic();

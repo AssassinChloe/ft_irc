@@ -186,9 +186,17 @@ void Server::addChannel(std::string chanName)
 {
     std::cout << "debut du add channel" << std::endl;
     Channel NewChan(chanName);//(this, chanName);
-    std::cout << "channel cree" << std::endl;
-    _channels.push_back(NewChan);
-    std::cout << "channel ajoute a la liste" << std::endl;
+    if (NewChan.getCName() != "")
+    {
+        std::cout << "channel cree" << std::endl;
+        _channels.push_back(NewChan);
+        std::cout << "channel ajoute a la liste" << std::endl;
+    }
+
+// petite verif
+    // int nb = getChannelSize();
+    // for (int i=0; i<nb; i++)
+    // std::cout << i << " : " <<_channels[i].getCName() << std::endl;
 }
 
 Channel &Server::getChannel(int i)
@@ -213,5 +221,5 @@ int Server::getChannelSize()
 
 std::string Server::getChannelName(int index)
 {
-    return (_channels[index].getName());
+    return (_channels[index].getCName());
 }

@@ -40,7 +40,7 @@ Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
 	{
 		if (formatName(namechan))
 		{
-			// server->addChannel(namechan); //pourquoi il n'en veut pas ??
+			name = namechan;
 			std::cout << "channel added to chan list of server " << std::endl;
 		}
 		else
@@ -48,7 +48,7 @@ Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
 	}
 
 // void Channel::setName(std::string name) { this->name = name; }
-std::string Channel::getName() { return name; }
+std::string Channel::getCName() { return name; }
 
 void Channel::setTopic(std::string topic) { this->topic = topic; }
 std::string Channel::getTopic() { return topic; }
@@ -117,7 +117,10 @@ std::string Channel::getClientMode(Client &client) { return client_mode[client.g
 
 // void Channel::broadcast(Client &client, std::string message)
 // {
-// 	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
-// 		client.sendTo(*it->second, message);
+
+// //get number of clients du chnnel
+// // boucle for pour chaque client du channel:
+// // 	si le client est different du clientBroadcast (?), alors envoi du message
 // }
+
 

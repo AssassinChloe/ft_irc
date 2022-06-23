@@ -15,6 +15,7 @@
 #define PRIVMSG 13
 #define KILL 14
 #define PASS 15
+#define PART 16
 
 Command::Command(Client &client, Server *ganesh, std::string line)
 	: client(&client), server(ganesh), query(line)
@@ -60,6 +61,7 @@ int	get_cmd_id(const std::string s)
 	else if (s == "PRIVMSG")	return PRIVMSG;
 	else if (s == "KILL")		return KILL;
 	else if (s == "PASS")		return PASS;
+	else if (s == "PART")		return PART;
 	return 0;
 }
 
@@ -68,18 +70,20 @@ void Command::execCommand()
 
 	
 	switch (get_cmd_id(cmdType)){
-		case PING:
+		case PING: // attendre un pong
 			std::cout << "case ping" << std::endl;
 			Command::Ping();
 			break;
-		case NICK:
+		case NICK: // changer nickname
 			this->nick();
 			break;
-		case JOIN:
+		case JOIN: // rejoindre un channel
 			// if client status == welcome
 			std::cout << "case join" << std::endl;
 			Command::Join();
 			break;
+		case PART: // sortir d'un channel
+			std::cout << "case part" << std::endl;
 		case USER:
 			this->user();
 			break;	
