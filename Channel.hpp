@@ -8,6 +8,8 @@
 
 class Client;
 
+class Server;
+
 class Channel
 {
 	private:
@@ -17,11 +19,11 @@ class Channel
 		std::string mode;
 		std::map<int, std::string> client_mode;
 		// std::string key;
-		int max_clients;
+		unsigned int max_clients;
 
 
 	public:
-		Channel(std::string name);
+		Channel(Server *server, std::string name);
 
 		// void setName(std::string name);
 		std::string getName();

@@ -19,11 +19,13 @@
 
 int Channel::formatName(std::string name)
 {
+	int length = name.length();
+	if (length < 2 || length > 50)
+		return (0);
+
 	if (name[0] != '#' && name[0] != '&' && name[0] != '+' && name[0] != '!')
 		return (0);
-	int length = name.length();
-	if (length > 50)
-		return (0);
+
 	for (int i = 1; i< length; i++)
 	{
 		if (name[i] == ' ' || (name[i] == '^' && name[i+1] && name[i+1] == 'G') 
@@ -33,11 +35,11 @@ int Channel::formatName(std::string name)
 	return (1);
 }
 
-Channel::Channel(std::string name)
+Channel::Channel(Server *server, std::string namechan)
 	: mode("n") {
-		if (formatName(name))
+		if (formatName(namechan))
 		{
-			// Server::addChannel(name); //pourquoi il n'en veut pas ??
+			server->addChannel(namechan); //pourquoi il n'en veut pas ??
 			std::cout << "channel added to chan list" << std::endl;
 		}
 		else
@@ -55,13 +57,15 @@ return this->clients.size();
 };
 
 void Channel::addClient(Client &client) { 
-	if (this->clients.size() < max_clients)
+	// if (this->clients.size() < max_clients)
 		clients[client.getFd()] = &client; 
-	else
-		std::cout << "max number of clients on " << name << " channel reached" << std::endl;
+	// else
+	// 	std::cout << "max number of clients on " << name << " channel reached" << std::endl;
 }
-void Channel::removeClient(Client &client) { clients.erase(clients.find(client.getFd())); }
-void Channel::removeClient(std::string const &nick)
+void Channel::removeClient(Client &client) { clients.erase(clients.find(client.getFd())); 
+// rajouter un check pour voir s'il n'y a plus de client -> effcaer le channel ?
+}
+void Channel::removeClient(std::string const &nick) // idem ci dessus
 {
 	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
@@ -98,8 +102,8 @@ std::string Channel::getClientMode(Client &client) { return client_mode[client.g
 // void Channel::setKey(std::string key) { this->key = key; }
 // std::string Channel::getKey() { return key; }
 
-void Channel::setMaxClients(int max_users) { this->max_clients = max_clients; }
-int Channel::getMaxClients() { return max_clients; }
+// void Channel::setMaxClients(int max_users) { this->max_clients = max_clients; }
+// int Channel::getMaxClients() { return max_clients; }
 
 // void Channel::addInvited(Client &user) { invited.push_back(&user); }
 // bool Channel::isInvited(Client &user) { return std::find(invited.begin(), invited.end(), &user) != invited.end(); }

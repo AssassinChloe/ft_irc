@@ -182,7 +182,8 @@ int Server::retRecv(int i, int nbytes)
 }
 
 
-// void Server::addChannel(std::string chanName)
-// {
-//     _channels.push_back(chanName);
-// }
+void Server::addChannel(std::string chanName)
+{
+    Channel NewChan(this, chanName);
+    _channels.push_back(NewChan);
+}
