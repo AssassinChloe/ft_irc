@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/21 16:55:12 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/23 14:21:55 by cassassi         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef SERVER_HPP
 # define SERVER_HPP
 # include "ft_irc.hpp"
@@ -47,6 +35,7 @@ class Server
         // int getNbChannel(); // voir si on veut un nb max de channels
         void addChannel(std::string chanName);
         Channel &getChannel(int i);
+        Channel &getChannel(std::string chanName);
         int getChannelSize();
         std::string getChannelName(int index);
 };

@@ -189,14 +189,27 @@ int Server::retRecv(int i, int nbytes)
 
 void Server::addChannel(std::string chanName)
 {
-    Channel NewChan(this, chanName);
+    std::cout << "debut du add channel" << std::endl;
+    Channel NewChan(chanName);//(this, chanName);
+    std::cout << "channel cree" << std::endl;
     _channels.push_back(NewChan);
+    std::cout << "channel ajoute a la liste" << std::endl;
 }
 
 Channel &Server::getChannel(int i)
 {
     return((_channels[i]));
 }
+
+// Channel &Server::getChannel(std::string chanName)
+// {
+//     int nb = getChannelSize();
+//     for (int i = 0; i < nb; i++)
+//     {
+//         if (_channels[i].getName() == chanName)
+//             return (_channels[i]);
+//     }
+// }
 
 int Server::getChannelSize()
 {
