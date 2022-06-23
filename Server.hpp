@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:12 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/21 17:48:18 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/06/23 12:10:54 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ class Server
         std::string getPass();
         // int getNbChannel(); // voir si on veut un nb max de channels
         void addChannel(std::string chanName);
+        Channel &getChannel(int i);
+        int getChannelSize();
+        std::string getChannelName(int index);
 };
 
 #endif

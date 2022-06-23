@@ -76,7 +76,9 @@ void Command::execCommand()
 			this->nick();
 			break;
 		case JOIN:
+			// if client status == welcome
 			std::cout << "case join" << std::endl;
+			Command::Join();
 			break;
 		case USER:
 			this->user();

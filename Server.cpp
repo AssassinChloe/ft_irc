@@ -187,3 +187,18 @@ void Server::addChannel(std::string chanName)
     Channel NewChan(this, chanName);
     _channels.push_back(NewChan);
 }
+
+Channel &Server::getChannel(int i)
+{
+    return((_channels[i]));
+}
+
+int Server::getChannelSize()
+{
+    return (_channels.size());
+}
+
+std::string Server::getChannelName(int index)
+{
+    return (_channels[index].getName());
+}
