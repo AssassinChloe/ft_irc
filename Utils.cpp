@@ -58,3 +58,10 @@ void welcome(int fd, std::string prefixe, std::string nickname)
 		send(fd, (prefixe + " 372 " + nickname + " :" + line + "\n").c_str(), (prefixe + " 372 " + nickname + " :" + line + "\n").size(), 0);
 	}
 }
+
+std::string check_params(std::string param)
+{
+	if (param.size() != 0)
+		return (param);
+	return("default");
+}

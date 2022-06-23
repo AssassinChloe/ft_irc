@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/21 16:55:12 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/23 14:27:03 by vmercier         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef SERVER_HPP
 # define SERVER_HPP
 # include "ft_irc.hpp"
@@ -42,7 +30,8 @@ class Server
         void dispatch(Client &client, char *buff);
         int retRecv(int i, int nbytes);
         Client &getClient(int fd);
-        std::string getPass();
+        std::map<int, Client> &getClientList();
+        std::string getPass() const;
         // int getNbChannel(); // voir si on veut un nb max de channels
         void addChannel(std::string chanName);
         Channel &getChannel(int i);
