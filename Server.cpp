@@ -1,7 +1,7 @@
 
 #include "Server.hpp"
 
-Server::Server(std::string port, std::string pass): _port(port), _password(pass)
+Server::Server(std::string port, std::string pass): _creation(time(0)), _port(port), _password(pass)
 {
     memset(&_info, 0, sizeof(struct addrinfo));
     _info.ai_family = AF_INET;
@@ -52,8 +52,6 @@ int Server::accept_client(int i)
     int newfd;
     struct sockaddr distaddr;
     socklen_t size = sizeof (distaddr);
-    
-    char buff[BUFFER_SIZE] = {0};
 
     if (_poll_fd[i].fd == this->_socket.fd) 
     {
@@ -69,30 +67,42 @@ int Server::accept_client(int i)
             tmp.fd = newfd;
             tmp.events = POLLIN;
             _poll_fd.push_back(tmp);
-
-            int nbytes = recv(newfd, buff, sizeof(buff), 0);
-            if (nbytes <= 0)
-                return (this->retRecv(i, nbytes));  
-            // std::cout << "BUFF ACCEPT" << std::endl << buff << std::endl << "END BUFF ACCEPT" << std::endl;
             Client newclient(tmp);
-            this->dispatch(newclient, buff);
+            handle_client_request((_poll_fd.size() - 1), newclient);
             _clients.insert(std::make_pair(tmp.fd, newclient));
         }
     }
     return (0);
 }
 
-int Server::handle_client_request(int i)
+int Server::handle_client_request(int i, Client &client)
+{
+    std::string buffer;
+
+    if (this->reception_concatenation(i, &buffer) < 0)
+        return -1;
+    this->dispatch(client, buffer);
+    return (0);
+}
+
+int Server::reception_concatenation(int i, std::string *buffer)
 {
     char buff[BUFFER_SIZE] = {0};
     int nbytes;
-    
+    size_t position;
+
     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
-    std::cout << "BUFF " << std::endl << buff << std::endl << "END BUFF" << std::endl;
+    *buffer = static_cast<std::string>(buff);
     if (nbytes <= 0)
         return (this->retRecv(i, nbytes));
     else
-        this->dispatch(this->getClient(_poll_fd[i].fd), buff);
+    {
+        while ((position = buffer->find("\n")) == std::string::npos)
+        {
+            nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
+            *buffer += static_cast<std::string>(buff);
+        } 
+    }
     return (0);
 }
 
@@ -135,7 +145,7 @@ void Server::run()
             if (_poll_fd[i].fd == this->_socket.fd)
                 accept_client(i);
             else
-                handle_client_request(i);
+                handle_client_request(i, this->getClient(_poll_fd[i].fd));
         }
     }
 }
@@ -155,10 +165,10 @@ std::string Server::getPass() const
     return (this->_password);
 }
 
-void Server::dispatch(Client &client, char *buff)
+void Server::dispatch(Client &client, std::string buff)
 {
     std::vector<std::string> lines;
-
+    
     lines = ftsplit(buff, "\r\n");
     for (unsigned long k = 0; k < lines.size(); k++)
     {
@@ -169,7 +179,8 @@ void Server::dispatch(Client &client, char *buff)
     if (client.getStatus() == "default" && client.getCheckPass() == true
         && client.getNickname().size() > 0 && client.getUsername().size() > 0)
     {
-        welcome(client.getFd(), client.getPrefixe(), client.getNickname());
+        Command command_line(client, this, "WELCOME");
+        command_line.execCommand();
         client.setStatus("welcome");
     } 
 }
@@ -186,6 +197,10 @@ int Server::retRecv(int i, int nbytes)
     return (-1);
 }
 
+std::string Server::getCreation() const
+{
+    return(ctime(&this->_creation));
+}
 
 void Server::addChannel(std::string chanName)
 {

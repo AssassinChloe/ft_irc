@@ -15,6 +15,7 @@
 #define PRIVMSG 13
 #define KILL 14
 #define PASS 15
+#define WELCOME 16
 
 Command::Command(Client &client, Server *ganesh, std::string line)
 	: client(&client), server(ganesh), query(line)
@@ -60,6 +61,7 @@ int	get_cmd_id(const std::string s)
 	else if (s == "PRIVMSG")	return PRIVMSG;
 	else if (s == "KILL")		return KILL;
 	else if (s == "PASS")		return PASS;
+	else if (s == "WELCOME")    return WELCOME;
 	return 0;
 }
 
@@ -113,6 +115,9 @@ void Command::execCommand()
 			break;
 		case PASS:
 			this->pass();
+			break;
+		case WELCOME:
+			this->welcome();
 			break;
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;
