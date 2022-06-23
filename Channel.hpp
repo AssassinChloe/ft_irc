@@ -23,7 +23,7 @@ class Channel
 
 
 	public:
-		Channel(Server *server, std::string name);
+		Channel (std::string name); //(Server *server, std::string name);
 
 		// void setName(std::string name);
 		std::string getName();

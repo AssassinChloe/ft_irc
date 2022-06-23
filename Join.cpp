@@ -11,6 +11,8 @@ bool channelExist(Server *server, std::string chanName)
 
     for (int i = 0; i<nb; i++)
     {
+        std::cout << "i=" << i << "chaname = " << server->getChannel(i).getName() << std::endl;
+        std::cout << "blob" << server->getChannel(0).getName()<< std::endl;
         if (server->getChannel(i).getName() == chanName)
             return (true);
     }
@@ -25,10 +27,12 @@ void Command::Join()
     if (!channelExist(this->server, parameters[0]))
     {
         std::cout << "channel a creer" << std::endl;
+        server->addChannel(parameters[0]);
 
     }
     if (channelExist(this->server, parameters[0]))
     {
+        // server->getChannel(parameters[0]).addClient(this->client);
         std::cout << "client a ajouter dans channel" << std::endl;
         std::cout << "broadcast d'arrivee du client aux autres connectes du channel" << std::endl;
     }

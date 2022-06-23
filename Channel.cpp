@@ -35,12 +35,13 @@ int Channel::formatName(std::string name)
 	return (1);
 }
 
-Channel::Channel(Server *server, std::string namechan)
-	: mode("n") {
+Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
+	: mode("n") 
+	{
 		if (formatName(namechan))
 		{
-			server->addChannel(namechan); //pourquoi il n'en veut pas ??
-			std::cout << "channel added to chan list" << std::endl;
+			// server->addChannel(namechan); //pourquoi il n'en veut pas ??
+			std::cout << "channel added to chan list of server " << std::endl;
 		}
 		else
 			std::cout << "bad channel name" << std::endl;
