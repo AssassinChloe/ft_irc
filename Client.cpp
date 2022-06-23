@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/21 16:56:13 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/23 15:23:57 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ std::string Client::getUsername() { return username; }
 bool Client::getCheckPass() {return pass_checked; }
 std::string Client::getPrefixe()
 {
-    std::string ret = ":" + this->nickname + "!" + this->username + "@" + this->hostaddr + " ";
+    std::string ret = ":" + check_params(this->nickname) + "!" + check_params(this->username) + "@" + this->hostaddr + " ";
     return (ret);
 }
 //void Client::write(std::string message) { waitingToSend.push_back(message); }

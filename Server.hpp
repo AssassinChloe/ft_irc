@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:12 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/23 12:10:54 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/06/23 14:21:55 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ class Server
         void dispatch(Client &client, char *buff);
         int retRecv(int i, int nbytes);
         Client &getClient(int fd);
-        std::string getPass();
+        std::map<int, Client> &getClientList();
+        std::string getPass() const;
         // int getNbChannel(); // voir si on veut un nb max de channels
         void addChannel(std::string chanName);
         Channel &getChannel(int i);

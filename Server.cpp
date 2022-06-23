@@ -140,12 +140,17 @@ void Server::run()
     }
 }
 
-Client &Server::getClient(int fd)
+Client & Server::getClient(int fd)
 {
     return((*(this->_clients.find(fd))).second);
 }
 
-std::string Server::getPass()
+std::map<int, Client> & Server::getClientList()
+{
+    return (this->_clients);
+}
+
+std::string Server::getPass() const
 {
     return (this->_password);
 }
