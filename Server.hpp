@@ -42,6 +42,7 @@ class Server
         Channel &getChannel(std::string chanName);
         int getChannelSize();
         std::string getChannelName(int index);
+        int getChannelIndex(std::string chanName);
 };
 
 #endif

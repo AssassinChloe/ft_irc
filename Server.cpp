@@ -111,14 +111,7 @@ void Server::deleteClient(int i)
     std::cout << "pollserver: socket " << _poll_fd[i].fd << " hung up" << std::endl;
     close(_poll_fd[i].fd);
     _clients.erase(_poll_fd[i].fd);
-    for (std::vector<struct pollfd>::iterator it = _poll_fd.begin(); it != _poll_fd.end(); it++)
-    {
-        if ((*it).fd == _poll_fd[i].fd)
-        {
-            _poll_fd.erase(it);
-            return ;
-        }
-    }
+    
 }
 
 void Server::run()
@@ -224,21 +217,34 @@ Channel &Server::getChannel(int i)
     return((_channels[i]));
 }
 
-Channel &Server::getChannel(std::string chanName)
-{
-    int nb = getChannelSize();
-    for (int i = 0; i < nb; i++)
-    {
-        if (_channels[i].getCName() == chanName)
-            return (_channels[i]);
-    }
-    return (_channels[0]); // attention a modifier !!!
-}
 
 int Server::getChannelSize()
 {
     return (_channels.size());
 }
+
+int Server::getChannelIndex(std::string chanName)
+{
+    int nb = getChannelSize();
+    for (int i = 0; i < nb; i++)
+    {
+        if (_channels[i].getCName() == chanName)
+            return (i);
+    }
+    return (-1); // 
+}
+
+// Channel &Server::getChannel(std::string chanName)
+// {
+//     int nb = getChannelSize();
+//     for (int i = 0; i < nb; i++)
+//     {
+//         if (_channels[i].getCName() == chanName)
+//             return (_channels[i]);
+//     }
+//     return (_channels[0]); // attention a modifier !!!
+// }
+
 
 std::string Server::getChannelName(int index)
 {

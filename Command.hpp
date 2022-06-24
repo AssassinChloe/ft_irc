@@ -40,7 +40,7 @@
 // # define ERR_SUMMONDISABLED() (":SUMMON has been disabled\r\n")
 // # define ERR_USERSDISABLED() (":USERS has been disabled\r\n")
 // # define ERR_NOTREGISTERED() (":You have not registered\r\n")
-// # define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters\r\n")
+# define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters\r\n") // utilise dans join (mais peut etre commente ici)
 # define ERR_ALREADYREGISTRED(prefixe, nick) (prefixe + "462 " + nick + " :You may not reregister\r\n")
 // # define ERR_NOPERMFORHOST() (":Your host isn't among the privileged\r\n")
 # define ERR_PASSWDMISMATCH(prefixe, nick) (prefixe + "464 " + nick + " :Password incorrect\r\n")
@@ -59,7 +59,7 @@
 // # define ERR_USERSDONTMATCH() (":Cannot change mode for other users\r\n")
 // # define ERR_INVALIDCAP(command) (command + " :Invalid CAP command\r\n")
 // # define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
-// # define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask\r\n")
+# define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask\r\n") // utilise dans join (mais peut etre commente ici)
 // # define ERR_ALREADYBAN(channel, user) (channel + " " + user + " b :Channel " + channel + " list already contains " + user + "\r\n")
 // # define ERR_SERVERISFULL(serv_name) (serv_name + " Server is full\r\n")
 // # define ERR_KILLDENY(mssg) (":" + mssg + "\r\n")
@@ -92,15 +92,15 @@
 // # define RPL_LIST(channel, topic) (channel + " :" + topic + "\r\n")
 // # define RPL_LISTEND() (":End of LIST\r\n")
 // # define RPL_CHANNELMODEIS(channel, mode, params) (channel + " " + mode + " " + params + "\r\n")
-// # define RPL_NOTOPIC(channel) (channel + " :No topic is set\r\n")
-// # define RPL_TOPIC(channel, subject) (channel + " :" + subject + "\r\n")
+# define RPL_NOTOPIC(channel) (channel + " :No topic is set\r\n") // 331 utilise dans topic (mais peut etre commente ici)
+# define RPL_TOPIC(channel, subject) (channel + " :" + subject + "\r\n") // 332 utilise dans join et topic (mais peut etre commente ici)
 // # define RPL_INVITING(channel, pseudo) (channel + " " + pseudo + "\r\n")
 // # define RPL_SUMMONING(user) (user + " :Summoning user to IRC\r\n")
 // # define RPL_VERSION(version, debuglevel, server, comment) (version + "." + debuglevel + " " + server + " :" + comment + "\r\n")
 // //# define RPL_WHOREPLY(channel, user, host, server, pseudo) (channel + " " + user + " " + host + " " + server + " " + pseudo + " <H|G>[*][@|+] :<compteur de distance> <vrai nom>\r\n")
 // # define RPL_ENDOFWHO(name) (name + " :End of WHO list\r\n")
-// # define RPL_NAMREPLY(channel, nick_list) (channel + " :" + nick_list + "\r\n") //modif_ici
-// # define RPL_ENDOFNAMES(channel) (channel + " :End of NAMES list\r\n")
+# define RPL_NAMREPLY(channel, nick_list) (channel + " :" + nick_list + "\r\n") //modif_ici // utilise dans join (mais peut etre commente ici)
+# define RPL_ENDOFNAMES(channel) (channel + " :End of NAMES list\r\n") // utilise dans join (mais peut etre commente ici)
 // # define RPL_LINKS(mask, server_name, hopcount, info) (mask + " " + server_name + " " + hopcount + " " + info + "\r\n")
 // # define RPL_ENDOFLINKS(mask) (mask + " :End of LINKS list\r\n")
 // # define RPL_BANLIST(mssg) (mssg + "\r\n")
@@ -186,6 +186,7 @@ void	rehash_command(const std::string &line, Client &cl, Server &serv);
 void	admin_command(const std::string &line, Client &cl, Server &serv);
 
 void	reply_code(const std::string &line, Client &cl, Server &serv);
+void	send_message(Client &cl, std::string message);
 
 
 class Command

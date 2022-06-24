@@ -10,6 +10,11 @@
 // - nb max de channel qu'un client peut rejoindre
 // - nb max de clients sur un channel
 
+// a faire :
+// - RPL -> faire liste des users
+// - si parameters[0] == 0 (part all)
+// - broadcast de l'info aux autres du channel
+
 
 bool channelExist(Server *server, std::string chanName)
 {
@@ -41,30 +46,57 @@ bool channelExist(Server *server, std::string chanName)
 
 void Command::Join()
 {
-    // check si le nom du serveur existe deja
-     // cree le server si non existant
+
+    if (this->getParameters().size() == 0)
+    {
+        std::string message = "JOIN :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
+        send_message(*this->client, message);
+        return;
+    }
+		
+	if (this->getParameters()[0] == "0")
+    {
+        // return leaveAllChannels(command); (cf Part.cpp)
+        return;
+    }
+		
     if (!channelExist(this->server, parameters[0]))
     {
-        std::cout << "channel a creer" << std::endl;
+        // std::cout << "channel a creer" << std::endl;
         server->addChannel(parameters[0]);
 
     }
     if (channelExist(this->server, parameters[0]))
-    {
-        // server->getChannel(parameters[0]).addClient(this->getClient()); // pbl dans le get channel avec string
-        std::cout << "client a ajouter dans channel" << std::endl;
-        std::cout << "broadcast d'arrivee du client aux autres connectes du channel" << std::endl;
+    { 
+        int index = server->getChannelIndex(parameters[0]);
+        server->getChannel(index).addClient(this->getClient());
+
+        std::string message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
+        send_message(*this->client, message);
+        
+        message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
+        send_message(*this->client, message);
+
+        message = this->client->getPrefixe() + "353" + this->client->getUsername() + " = " + parameters[0] + " :";
+        message = message + this->client->getNickname(); // en attendant d'arriver a faire la liste par une boucle !!!!
+        message = message + "\r\n";
+        send_message(*this->client, message);
+
+        message = parameters[0] + " :End of NAMES list\r\n"; // #366 RPL_ENDOFNAMES
+        send_message(*this->client, message);
+
     }
     else{
-        std::cout << "channel non cree, client non ajoute" << std::endl;
+        std::cout << "channel non cree, client non ajoute" << std::endl; // reply 476 ERR_BADCHANMASK
+        std::string message = parameters[0] + " :Bad Channel Mask\r\n";
+        send_message(*this->client, message);
+        // std::string ERR_BADCHANMASK(std::string channel) { return channel + " :Bad Channel Mask"; }
     }
-    // voir le retour si channel impossible a creer (genre bad name)
-   
-    // maintenant si channel existe enregistre le client dans le channel
-    // si d'autres clients sur ce channel : diffuse info
+    
 }
 
 
 // Note that this command also accepts the special argument of ("0", 0x30) instead of any of the usual parameters, 
 // which requests that the sending client leave all channels they are currently connected to. 
 // The server will process this command as though the client had sent a PART command for each channel they are a member of.
+

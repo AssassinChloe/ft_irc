@@ -17,7 +17,7 @@ class Channel
 		std::string topic;
 		std::map<int, Client *> clients;
 		std::string mode;
-		std::map<int, std::string> client_mode;
+		std::map<int, std::string> client_mode; // voir si pas plutot client, std::string
 		// std::string key;
 		unsigned int max_clients;
 
@@ -43,6 +43,7 @@ class Channel
 
 		void setClientMode(Client &client, std::string mode);
 		std::string getClientMode(Client &client);
+		std::map<int, Client*> getClientMap();
 
 		// void setKey(std::string key);
 		// std::string getKey();

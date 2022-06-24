@@ -59,10 +59,11 @@ return this->clients.size();
 
 void Channel::addClient(Client &client) { 
 	// if (this->clients.size() < max_clients)
+		std::cout << "entree dans add client" << std::endl;
 		clients[client.getFd()] = &client; 
 		int nb = getNbClients();
-		for(int i=0; i<nb; i++)
-			std::cout << "client " << i << ": " << clients[i]->getUsername() << std::endl;
+		std::cout << "mb cleints dans channel" << nb << std::endl;
+
 	// else
 	// 	std::cout << "max number of clients on " << name << " channel reached" << std::endl;
 }
@@ -102,6 +103,8 @@ std::string Channel::getMode() { return mode; }
 
 void Channel::setClientMode(Client &client, std::string mode) { client_mode[client.getFd()] = mode; }
 std::string Channel::getClientMode(Client &client) { return client_mode[client.getFd()]; }
+
+std::map<int, Client*> Channel::getClientMap() { return clients;}
 
 // void Channel::setKey(std::string key) { this->key = key; }
 // std::string Channel::getKey() { return key; }

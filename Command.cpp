@@ -80,9 +80,11 @@ void Command::execCommand()
 			this->nick();
 			break;
 		case JOIN: // rejoindre un channel
-			// if client status == welcome
+			// if (this->client.getStatus() == "welcome")
+			{
 			std::cout << "case join" << std::endl;
 			Command::Join();
+			}
 			break;
 		case PART: // sortir d'un channel
 			std::cout << "case part" << std::endl;
@@ -129,4 +131,7 @@ void Command::execCommand()
 
 }
 
-
+void	send_message(Client &cl, std::string message)
+{
+	send(cl.getFd(), message.c_str(), message.size(), 0);
+}

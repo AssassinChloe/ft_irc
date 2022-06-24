@@ -39,3 +39,5 @@
 
 //   TOPIC #test                     ; Checking the topic for "#test"
 
+// # define RPL_NOTOPIC(channel) (channel + " :No topic is set\r\n") // 331 
+// # define RPL_TOPIC(channel, subject) (channel + " :" + subject + "\r\n") // 332 
