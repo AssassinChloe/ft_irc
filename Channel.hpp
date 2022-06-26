@@ -24,6 +24,9 @@ class Channel
 
 	public:
 		Channel (std::string name); //(Server *server, std::string name);
+		~Channel();
+		Channel(const Channel &src);
+		Channel &operator=(Channel const &rhs);
 
 		// void setName(std::string name);
 		std::string getCName();

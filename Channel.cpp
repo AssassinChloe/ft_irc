@@ -36,7 +36,7 @@ int Channel::formatName(std::string name)
 }
 
 Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
-	: mode("n") 
+	: topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
 	{
 		if (formatName(namechan))
 		{
@@ -48,6 +48,29 @@ Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
 	}
 
 // void Channel::setName(std::string name) { this->name = name; }
+Channel::~Channel() { }
+
+Channel::Channel(const Channel &src)
+{
+    *this = src;
+    return;
+}
+
+Channel &      Channel::operator=(Channel const &rhs)
+{
+    if(this != &rhs)
+    {
+        this->name = rhs.name;
+        this->topic = rhs.topic;
+		this->clients = rhs.clients;
+		this->mode = rhs.mode;
+		this->client_mode = rhs.client_mode;
+		this->max_clients = rhs.max_clients;
+    }
+    return *this;
+}
+
+
 std::string Channel::getCName() { return name; }
 
 void Channel::setTopic(std::string topic) { this->topic = topic; }

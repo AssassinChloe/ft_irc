@@ -206,6 +206,7 @@ class Command
 
 	public:
 		Command(Client &client, Server *ganesh, std::string line);
+		~Command();
 
 		Client &getClient();
 		// Server &getServer();

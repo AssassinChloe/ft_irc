@@ -39,6 +39,7 @@ Command::Command(Client &client, Server *ganesh, std::string line)
 	for (size_t x = 0; x < cmdType.length(); ++x)
 		cmdType[x] = std::toupper(cmdType[x]);
 }
+Command::~Command() { }
 
 Client &Command::getClient() { return *client; }
 
@@ -88,6 +89,7 @@ void Command::execCommand()
 			break;
 		case PART: // sortir d'un channel
 			std::cout << "case part" << std::endl;
+			break;
 		case USER:
 			this->user();
 			break;	
