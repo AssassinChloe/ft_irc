@@ -92,6 +92,7 @@ int Server::reception_concatenation(int i, std::string *buffer)
     size_t position;
 
     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
+    std::cout << "---BUFFER----" << buff << std::endl;
     *buffer = static_cast<std::string>(buff);
     if (nbytes <= 0)
         return (this->retRecv(i, nbytes));

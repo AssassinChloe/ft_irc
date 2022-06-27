@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/23 15:23:57 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/27 14:48:32 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void Client::setLastPing(time_t lastping) { this->last_ping = lastping; }
 int Client::getFd() { return fd.fd; }
 std::string Client::getStatus() { return status; }
 std::string Client::getHostname() { return hostname; }
+std::string Client::getHostaddr() { return hostaddr; }
 std::string Client::getNickname() { return nickname; }
 std::string Client::getUsername() { return username; }
 

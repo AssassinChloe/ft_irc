@@ -160,30 +160,30 @@ class Client;
 ** commands
 */
 
-void	pass_command(const std::string &line, Client &cl, Server &serv);
-void	ping_command(const std::string &line, Client &cl, Server &serv);
-void	pong_command(const std::string &line, Client &cl, Server &serv);
-void	nick_command(const std::string &line, Client &cl, Server &serv);
-void	user_command(const std::string &line, Client &cl, Server &serv);
+// void	pass_command(const std::string &line, Client &cl, Server &serv);
+// void	ping_command(const std::string &line, Client &cl, Server &serv);
+// void	pong_command(const std::string &line, Client &cl, Server &serv);
+// void	nick_command(const std::string &line, Client &cl, Server &serv);
+// void	user_command(const std::string &line, Client &cl, Server &serv);
 
-void	join_command(const std::string &line, Client &cl, Server &serv);
-void	mode_command(const std::string &line, Client &cl, Server &serv);
-void	cap_command(const std::string &line, Client &cl, Server &serv);
-void	quit_command(const std::string &line, Client &cl, Server &serv);
-void	invite_command(const std::string &line, Client &cl, Server &serv);
+// void	join_command(const std::string &line, Client &cl, Server &serv);
+// void	mode_command(const std::string &line, Client &cl, Server &serv);
+// void	cap_command(const std::string &line, Client &cl, Server &serv);
+// void	quit_command(const std::string &line, Client &cl, Server &serv);
+// void	invite_command(const std::string &line, Client &cl, Server &serv);
 
-void	list_command(const std::string &line, Client &cl, Server &serv);
-void	part_command(const std::string &line, Client &cl, Server &serv);
-void	privmsg_command(const std::string &line, Client &cl, Server &serv);
+// void	list_command(const std::string &line, Client &cl, Server &serv);
+// void	part_command(const std::string &line, Client &cl, Server &serv);
+// void	privmsg_command(const std::string &line, Client &cl, Server &serv);
 
-void	who_command(const std::string &line, Client &cl, Server &serv);
-void	oper_command(const std::string &line, Client &cl, Server &serv);
-void	kick_command(const std::string &line, Client &cl, Server &serv);
-void	topic_command(const std::string &line, Client &cl, Server &serv);
-void	kill_command(const std::string &line, Client &cl, Server &serv);
-void	connect_command(const std::string &line, Client &cl, Server &serv);
-void	rehash_command(const std::string &line, Client &cl, Server &serv);
-void	admin_command(const std::string &line, Client &cl, Server &serv);
+// void	who_command(const std::string &line, Client &cl, Server &serv);
+// void	oper_command(const std::string &line, Client &cl, Server &serv);
+// void	kick_command(const std::string &line, Client &cl, Server &serv);
+// void	topic_command(const std::string &line, Client &cl, Server &serv);
+// void	kill_command(const std::string &line, Client &cl, Server &serv);
+// void	connect_command(const std::string &line, Client &cl, Server &serv);
+// void	rehash_command(const std::string &line, Client &cl, Server &serv);
+// void	admin_command(const std::string &line, Client &cl, Server &serv);
 
 void	reply_code(const std::string &line, Client &cl, Server &serv);
 void	send_message(Client &cl, std::string message);
@@ -226,6 +226,9 @@ class Command
 		void pass();
 		void Join();
 		void welcome();
+		void Mode();
+		void Who();
+		void Privmsg();
 		// void reply(Client &user, unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
 		// void reply(unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
 };

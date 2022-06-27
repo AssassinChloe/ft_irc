@@ -17,6 +17,7 @@
 #define PASS 15
 #define PART 16
 #define WELCOME 17
+#define WHO 18
 
 Command::Command(Client &client, Server *ganesh, std::string line)
 	: client(&client), server(ganesh), query(line)
@@ -65,6 +66,7 @@ int	get_cmd_id(const std::string s)
 	else if (s == "PASS")		return PASS;
 	else if (s == "PART")		return PART;
 	else if (s == "WELCOME")    return WELCOME;
+	else if (s == "WHO")   		return WHO;
 	return 0;
 }
 
@@ -107,6 +109,7 @@ void Command::execCommand()
 			// Command::Pong();
 			break;
 		case MODE:
+			Command::Mode();
 			std::cout << "case mode" << std::endl;
 			break;
 		case TOPIC:
@@ -119,6 +122,7 @@ void Command::execCommand()
 			std::cout << "case kick" << std::endl;
 			break;
 		case PRIVMSG:
+			Command::Privmsg();
 			std::cout << "case PRIVMSG" << std::endl;
 			break;
 		case PASS:
@@ -126,6 +130,10 @@ void Command::execCommand()
 			break;
 		case WELCOME:
 			this->welcome();
+			break;
+		case WHO:
+			Command::Who();
+			std::cout << "case who" << std::endl;
 			break;
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;

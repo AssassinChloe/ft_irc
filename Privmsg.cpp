@@ -1,3 +1,34 @@
+#include "Command.hpp"
+#include "Client.hpp"
+#include "Server.hpp"
+#include "Channel.hpp"
+#include "ft_irc.hpp"
+
+
+void    Command::Privmsg()
+{
+    // int index = server->getChannelIndex(parameters[0]);
+    // mettre ca dans une voucle pour chaque user du channel, le prefix et tout doit 
+
+    if (parameters[0][0] == '#')
+    {
+        std::cout << "parameter1: " << parameters[1] << std::endl;
+        
+        std::string message = this->client->getPrefixe() + " PRIVMSG " +  parameters[0] + " ";
+        int param_size = this->getParameters().size();
+        for (int i=1; i<param_size; i++)
+        {
+            message = message + parameters[i] +" ";
+            std::cout << "parameter[" << i << "]: " << parameters[i] << std::endl;
+        }
+        message = message + "\r\n" ;
+        std::cout << message << std::endl;
+        send_message(*this->client, message);
+        
+    }
+}
+
+
 // PRIVMSG message
 
 //      Command: PRIVMSG
