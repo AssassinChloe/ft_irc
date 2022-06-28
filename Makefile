@@ -1,6 +1,8 @@
 SRCS		:=  main.cpp Server.cpp Command.cpp Client.cpp Message.cpp Utils.cpp Channel.cpp\
-				Join.cpp nick.cpp PingPong.cpp welcome.cpp Mode.cpp Who.cpp Privmsg.cpp
+				Join.cpp nick.cpp PingPong.cpp welcome.cpp Mode.cpp Who.cpp Privmsg.cpp oper.cpp\
+
 HEAD		:=	ft_irc.hpp Command.hpp Client.hpp Message.hpp Channel.hpp
+
 OBJS		:= $(SRCS:.cpp=.o)
 NAME		:= ircserv
 CC			:= c++

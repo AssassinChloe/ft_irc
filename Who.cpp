@@ -31,7 +31,7 @@ void    Command::Who()
             send_message(*this->client, message);
         }
            
-        std::string message2 = this->client->getPrefixe() + "315 " +  this->client->getNickname() + " " + this->client->getUsername() + " :End of /WHO list" +" \r\n";
+        std::string message2 = this->client->getPrefixe() + "315 " +  this->parameters[0] + /*this->client->getNickname() + " " + this->client->getUsername() +*/ " :End of /WHO list";
         send_message(*this->client, message2);
         std::cout << "----message----" << message2 << std::endl;
         return;
