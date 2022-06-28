@@ -12,18 +12,25 @@ void    Command::Privmsg()
 
     if (parameters[0][0] == '#')
     {
+        std::cout << "parameter0: " << parameters[0] << std::endl;
         std::cout << "parameter1: " << parameters[1] << std::endl;
-        
-        std::string message = this->client->getPrefixe() + " PRIVMSG " +  parameters[0] + " ";
-        int param_size = this->getParameters().size();
-        for (int i=1; i<param_size; i++)
-        {
-            message = message + parameters[i] +" ";
-            std::cout << "parameter[" << i << "]: " << parameters[i] << std::endl;
-        }
-        message = message + "\r\n" ;
+        std::cout << "parameters.size: " << parameters.size() << std::endl;
+
+        std::string message = this->client->getPrefixe() + "PRIVMSG " +  parameters[0] + " :" + this->getArgLine() + " \r\n";
         std::cout << message << std::endl;
         send_message(*this->client, message);
+        // std::cout << "parameter1: " << parameters[1] << std::endl;
+        
+        // std::string message = this->client->getPrefixe() + " PRIVMSG " +  parameters[0] + " ";
+        // int param_size = this->getParameters().size();
+        // for (int i=1; i<param_size; i++)
+        // {
+        //     message = message + parameters[i] +" ";
+        //     std::cout << "parameter[" << i << "]: " << parameters[i] << std::endl;
+        // }
+        // message = message + "\r\n" ;
+        // std::cout << message << std::endl;
+        // send_message(*this->client, message);
         
     }
 }

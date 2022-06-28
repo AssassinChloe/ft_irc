@@ -45,7 +45,7 @@ Command::~Command() { }
 Client &Command::getClient() { return *client; }
 
 std::vector<std::string> Command::getParameters() { return parameters; }
-
+std::string Command::getArgLine() { return argLine; }
 
 int	get_cmd_id(const std::string s)
 {
