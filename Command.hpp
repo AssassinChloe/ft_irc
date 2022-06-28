@@ -197,7 +197,7 @@ class Command
 
 		std::string cmdType;
 		std::vector<std::string> parameters;
-		std::string argLine; // ?
+		std::string argLine; 
 		std::string query; 
 
 		bool st;
