@@ -18,7 +18,22 @@ void    Command::Privmsg()
 
         std::string message = this->client->getPrefixe() + "PRIVMSG " +  parameters[0] + " :" + this->getArgLine() + " \r\n";
         std::cout << message << std::endl;
-        send_message(*this->client, message);
+
+        int index = server->getChannelIndex(parameters[0]);
+        std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+        for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+        {
+            if (this->client != (*it).second)
+                {
+                    int id = (*it).second->getFd();
+                    send(id, message.c_str(), message.size(), 0);
+                }
+                // send_message((*it).second, message);
+        }
+
+
+        // send_message(*this->client, message);
+
         // std::cout << "parameter1: " << parameters[1] << std::endl;
         
         // std::string message = this->client->getPrefixe() + " PRIVMSG " +  parameters[0] + " ";
