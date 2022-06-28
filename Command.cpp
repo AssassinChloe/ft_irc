@@ -95,7 +95,8 @@ void Command::execCommand()
 		case USER:
 			this->user();
 			break;	
-		case OPER: 
+		case OPER:
+			this->oper(); 
 			std::cout << "case oper" << std::endl;
 			break;
 		case QUIT:
