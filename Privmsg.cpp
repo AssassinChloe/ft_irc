@@ -12,9 +12,9 @@ void    Command::Privmsg()
 
     if (parameters[0][0] == '#')
     {
-        std::cout << "parameter0: " << parameters[0] << std::endl;
-        std::cout << "parameter1: " << parameters[1] << std::endl;
-        std::cout << "parameters.size: " << parameters.size() << std::endl;
+        // std::cout << "parameter0: " << parameters[0] << std::endl;
+        // std::cout << "parameter1: " << parameters[1] << std::endl;
+        // std::cout << "parameters.size: " << parameters.size() << std::endl;
 
         std::string message = this->client->getPrefixe() + "PRIVMSG " +  parameters[0] + " :" + this->getArgLine() + " \r\n";
         std::cout << message << std::endl;

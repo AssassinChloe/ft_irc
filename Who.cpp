@@ -27,13 +27,13 @@ void    Command::Who()
             std::string message = this->client->getPrefixe() + "352 " +  this->client->getNickname() + " " + parameters[0] + " ";
             message = message + (*it).second->getUsername() + " " +(*it).second->getHostaddr()+ " " + (*it).second->getNickname() + " H :0 realname" +" \r\n";
             // attention a changer avec mode client (H par default, si mode a alors G), + realname ou name server 
-            std::cout << "----message----" << message << std::endl;
+            // std::cout << "----message----" << message << std::endl;
             send_message(*this->client, message);
         }
            
-        std::string message2 = this->client->getPrefixe() + "315 " +  this->parameters[0] + /*this->client->getNickname() + " " + this->client->getUsername() +*/ " :End of /WHO list";
+        std::string message2 = this->client->getPrefixe() + "315 " +  this->client->getNickname() + " " + this->client->getUsername() + " :End of /WHO list \r\n";
         send_message(*this->client, message2);
-        std::cout << "----message----" << message2 << std::endl;
+        // std::cout << "----message----" << message2 << std::endl;
         return;
     }
     return;
