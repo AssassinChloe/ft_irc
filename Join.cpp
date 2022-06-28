@@ -1,8 +1,4 @@
 #include "Command.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-#include "ft_irc.hpp"
-#include <ctime>
 
 // non gere :
 // - rejoidreplusieurs channels dans une seule commande

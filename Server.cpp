@@ -1,4 +1,3 @@
-
 #include "Server.hpp"
 
 Server::Server(std::string port, std::string pass): _creation(time(0)), _port(port), _password(pass)

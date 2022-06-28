@@ -90,8 +90,10 @@ void Channel::addClient(Client &client) {
 	// else
 	// 	std::cout << "max number of clients on " << name << " channel reached" << std::endl;
 }
-void Channel::removeClient(Client &client) { clients.erase(clients.find(client.getFd())); 
-// rajouter un check pour voir s'il n'y a plus de client -> effcaer le channel ?
+void Channel::removeClient(Client &client) 
+{ 
+	clients.erase(clients.find(client.getFd()));
+	// rajouter un check pour voir s'il n'y a plus de client -> effcaer le channel ?
 }
 void Channel::removeClient(std::string const &nick) // idem ci dessus
 {

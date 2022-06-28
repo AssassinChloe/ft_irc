@@ -2,8 +2,6 @@
 # define MESSAGE_HPP
 
 # include "ft_irc.hpp"
-# include "Client.hpp"
-# include "Server.hpp"
 
 class message 
 {

@@ -5,11 +5,6 @@
 //  { return channel + " " + user + " " + host + " " + server + " " + nick + " " + state + " :0 " + real; }
 
 #include "Command.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-#include "Channel.hpp"
-#include "ft_irc.hpp"
-
 
 void    Command::Who()
 {

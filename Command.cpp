@@ -91,13 +91,14 @@ void Command::execCommand()
 			break;
 		case PART: // sortir d'un channel
 			std::cout << "case part" << std::endl;
+			this->part();
 			break;
 		case USER:
 			this->user();
 			break;	
 		case OPER:
-			this->oper(); 
 			std::cout << "case oper" << std::endl;
+			this->oper(); 
 			break;
 		case QUIT:
 			std::cout << "case quit" << std::endl;
@@ -110,8 +111,8 @@ void Command::execCommand()
 			// Command::Pong();
 			break;
 		case MODE:
-			Command::Mode();
 			std::cout << "case mode" << std::endl;
+			Command::Mode();
 			break;
 		case TOPIC:
 			std::cout << "case topic" << std::endl;
@@ -123,8 +124,8 @@ void Command::execCommand()
 			std::cout << "case kick" << std::endl;
 			break;
 		case PRIVMSG:
-			Command::Privmsg();
 			std::cout << "case PRIVMSG" << std::endl;
+			Command::Privmsg();
 			break;
 		case PASS:
 			this->pass();
@@ -133,12 +134,13 @@ void Command::execCommand()
 			this->welcome();
 			break;
 		case WHO:
-			Command::Who();
 			std::cout << "case who" << std::endl;
+			Command::Who();
 			break;
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;
 	}
+	std::cout << "." << std::endl;
 
 }
 

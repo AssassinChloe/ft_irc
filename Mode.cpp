@@ -37,9 +37,6 @@
 // when sending the mode changes.
 
 #include "Command.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-#include "ft_irc.hpp"
 
 void    Command::Mode()
 {
