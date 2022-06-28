@@ -46,7 +46,7 @@ void    Command::Mode()
     if (this->getParameters().size() == 1) // a modifier pour user mode ou channel mode
     {
         // a changer si le ;ode du user du channel peut etre modifie
-        std::string message = this->client->getPrefixe() + "324 " +  this->client->getNickname() + parameters[0] + " +n \r\n" ;
+        std::string message = this->client->getPrefixe() + "324 " +  this->client->getNickname() + " " + parameters[0] + " +n \r\n" ;
         std::cout << message << std::endl;
         send_message(*this->client, message);
         return;

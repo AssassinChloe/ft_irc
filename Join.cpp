@@ -82,13 +82,25 @@ void Command::Join()
 
         // message users connectes
         message = this->client->getPrefixe() + "353 " + this->client->getUsername() + " = " + parameters[0] + " :@";
-
+        std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+        for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+        {
+            std::cout << "----plop----" << (*it).second->getUsername() << std::endl;
+            message = message + (*it).second->getNickname() + " ";
+        }
+            // message = message + this->client->getNickname(); // en attendant d'arriver a faire la liste par une boucle !!!!
+        message = message + "\r\n";
+        std::cout << "----plop----" << message << std::endl;
+        send_message(*this->client, message);
         
 
         // message end of list user
         message = this->client->getPrefixe() + "366 " + this->client->getUsername() + " " + parameters[0] + " :End of NAMES list\r\n"; // #366 RPL_ENDOFNAMES
         send_message(*this->client, message);
         // :vmercier!vmercier@localhost 366 vmercier #test :End of /NAMES list
+
+        // message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
+        // send_message(*this->client, message);
 
     }
     else{

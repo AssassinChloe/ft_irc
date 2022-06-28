@@ -24,15 +24,16 @@ void    Command::Who()
         std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
         for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
         {
-            std::string message = this->client->getPrefixe() + "352 " +  this->client->getNickname() + parameters[0];
-            message = message + (*it).second->getUsername() + " " +(*it).second->getHostaddr()+ "  " + (*it).second->getNickname() + " H :0 realname" +" \r\n";
+            std::string message = this->client->getPrefixe() + "352 " +  this->client->getNickname() + " " + parameters[0] + " ";
+            message = message + (*it).second->getUsername() + " " +(*it).second->getHostaddr()+ " " + (*it).second->getNickname() + " H :0 realname" +" \r\n";
             // attention a changer avec mode client (H par default, si mode a alors G), + realname ou name server 
             std::cout << "----message----" << message << std::endl;
             send_message(*this->client, message);
         }
            
-        std::string message2 = this->client->getPrefixe() + "315 " +  this->client->getNickname() + " " + this->client->getNickname() + ":End of /WHO list";
+        std::string message2 = this->client->getPrefixe() + "315 " +  this->client->getNickname() + " " + this->client->getUsername() + " :End of /WHO list";
         send_message(*this->client, message2);
+        std::cout << "----message----" << message2 << std::endl;
         return;
     }
     return;
