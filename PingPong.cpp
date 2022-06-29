@@ -1,7 +1,4 @@
 #include "Command.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-#include <ctime>
 
 void Command::Ping()
 {

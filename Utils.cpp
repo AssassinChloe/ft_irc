@@ -1,4 +1,3 @@
-
 #include "ft_irc.hpp"
 
 std::vector<std::string>		ftsplit(std::string s, std::string splitter)

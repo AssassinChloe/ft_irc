@@ -37,9 +37,6 @@
 // when sending the mode changes.
 
 #include "Command.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-#include "ft_irc.hpp"
 
 void    Command::Mode()
 {
@@ -47,7 +44,7 @@ void    Command::Mode()
     {
         // a changer si le ;ode du user du channel peut etre modifie
         std::string message = this->client->getPrefixe() + "324 " +  this->client->getNickname() + " " + parameters[0] + " +n \r\n" ;
-        std::cout << message << std::endl;
+        // std::cout << message << std::endl;
         send_message(*this->client, message);
         return;
     }

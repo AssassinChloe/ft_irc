@@ -1,8 +1,4 @@
 #include "Command.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-#include "ft_irc.hpp"
-#include <ctime>
 
 // non gere :
 // - rejoidreplusieurs channels dans une seule commande
@@ -77,7 +73,7 @@ void Command::Join()
         
         // message topic
         message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
-        std::cout << "message TOPIC :" << message <<std::endl;
+        // std::cout << "message TOPIC :" << message <<std::endl;
         send_message(*this->client, message);
 
         // message users connectes
@@ -85,12 +81,12 @@ void Command::Join()
         std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
         for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
         {
-            std::cout << "----plop----" << (*it).second->getUsername() << std::endl;
+            // std::cout << "----plop----" << (*it).second->getUsername() << std::endl;
             message = message + (*it).second->getNickname() + " ";
         }
             // message = message + this->client->getNickname(); // en attendant d'arriver a faire la liste par une boucle !!!!
         message = message + "\r\n";
-        std::cout << "----plop----" << message << std::endl;
+        // std::cout << "----plop----" << message << std::endl;
         send_message(*this->client, message);
         
 
@@ -99,8 +95,16 @@ void Command::Join()
         send_message(*this->client, message);
         // :vmercier!vmercier@localhost 366 vmercier #test :End of /NAMES list
 
-        // message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
-        // send_message(*this->client, message);
+        message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
+        for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+        {
+            if (this->client != (*it).second)
+                {
+                    int id = (*it).second->getFd();
+                    send(id, message.c_str(), message.size(), 0);
+                }
+                // send_message((*it).second, message);
+        }
 
     }
     else{

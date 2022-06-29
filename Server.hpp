@@ -1,5 +1,6 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
+
 # include "ft_irc.hpp"
 
 class Client;

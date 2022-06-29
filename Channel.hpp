@@ -1,10 +1,7 @@
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
-# include <string>
-# include <deque>
-# include <vector>
-# include <map>
+# include "ft_irc.hpp"
 
 class Client;
 
