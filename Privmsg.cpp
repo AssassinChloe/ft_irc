@@ -9,17 +9,22 @@ void    Command::Privmsg()
 {
     // int index = server->getChannelIndex(parameters[0]);
     // mettre ca dans une voucle pour chaque user du channel, le prefix et tout doit 
+int i = 0;
+int nb_param = parameters.size();
 
-    if (parameters[0][0] == '#')
+for (i=0; i<nb_param; i++)
+{
+
+    if (parameters[i][0] == '#' || parameters[i][0] == '&' || parameters[i][0] == '+' || parameters[i][0] ==  '!')
     {
-        std::cout << "parameter0: " << parameters[0] << std::endl;
-        std::cout << "parameter1: " << parameters[1] << std::endl;
-        std::cout << "parameters.size: " << parameters.size() << std::endl;
+        // std::cout << "parameter0: " << parameters[0] << std::endl;
+        // std::cout << "parameter1: " << parameters[1] << std::endl;
+        // std::cout << "parameters.size: " << parameters.size() << std::endl;
 
         std::string message = this->client->getPrefixe() + "PRIVMSG " +  parameters[0] + " :" + this->getArgLine() + " \r\n";
         std::cout << message << std::endl;
 
-        int index = server->getChannelIndex(parameters[0]);
+        int index = server->getChannelIndex(parameters[i]);
         std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
         for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
         {
@@ -30,6 +35,20 @@ void    Command::Privmsg()
                 }
                 // send_message((*it).second, message);
         }
+    }
+    else
+    {
+        for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
+        {
+            if ((*it).second.getNickname() == this->parameters[i])
+            {
+                int id = (it)->second.getFd();
+                std::string message = this->client->getPrefixe() + "PRIVMSG " + parameters[i] + " :" + this->getArgLine() + " \r\n";
+                send(id, message.c_str(), message.size(), 0);
+                std::cout <<"message individuel : " << message << std::endl;
+            }
+        }
+    }
 
 
         // send_message(*this->client, message);
@@ -47,7 +66,8 @@ void    Command::Privmsg()
         // std::cout << message << std::endl;
         // send_message(*this->client, message);
         
-    }
+    
+}
 }
 
 
