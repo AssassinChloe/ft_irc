@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:18 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/23 15:31:37 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:26:57 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,14 @@ void Command::nick()
     
     if (this->parameters.size() == 0 || this->parameters[0].size() > 9)
     {
-        send(this->client->getFd(), ERR_ERRONEUSNICKNAME(this->parameters[0]).c_str(), ERR_ERRONEUSNICKNAME(this->parameters[0]).size(), 0);
+        send_message(*this->client, ERR_ERRONEUSNICKNAME(this->parameters[0]));
         return ;
     } 
     for (unsigned int i = 0; i < this->parameters[0].size(); i++)
     {
 	    if ((position = charset.find(this->parameters[0][i])) == std::string::npos)
         {
-            send(this->client->getFd(), ERR_ERRONEUSNICKNAME(this->parameters[0]).c_str(), ERR_ERRONEUSNICKNAME(this->parameters[0]).size(), 0);
+            send_message(*this->client, ERR_ERRONEUSNICKNAME(this->parameters[0]));
             return ;
         }
             
@@ -85,20 +85,20 @@ void Command::nick()
     {
         if ((*it).second.getNickname() == this->parameters[0])
         {
-          send(this->client->getFd(), ERR_NICKNAMEINUSE(this->parameters[0]).c_str(), ERR_NICKNAMEINUSE(this->parameters[0]).size(), 0);
+          send_message(*this->client, ERR_NICKNAMEINUSE(this->parameters[0]));
           return ;
         } 
     }
     rep = this->client->getPrefixe() + "NICK " + this->parameters[0] + "\r\n";
     this->client->setNickname(this->parameters[0]);
-    send(this->client->getFd(), rep.c_str(), rep.size(), 0);
+    send_message(*this->client, rep);
 }
 
 void Command::user()
 {
     if (this->client->getStatus() != "default")
     {
-        send(this->client->getFd(), ERR_ALREADYREGISTRED(this->client->getPrefixe(), check_params(this->client->getNickname())).c_str(), ERR_ALREADYREGISTRED(this->client->getPrefixe(), check_params(this->client->getNickname())).size(), 0);
+        send_message(*this->client, ERR_ALREADYREGISTRED(this->client->getPrefixe(), check_params(this->client->getNickname())));
         return ;
     }
     this->client->setUsername(this->parameters[0]);
@@ -111,6 +111,6 @@ void Command::pass()
         if (this->parameters[0] == this->server->getPass())
             this->client->setCheckPass(true);
         else
-            send(this->client->getFd(), ERR_PASSWDMISMATCH(this->client->getPrefixe(), check_params(this->client->getNickname())).c_str(), ERR_PASSWDMISMATCH(this->client->getPrefixe(), check_params(this->client->getNickname())).size(), 0);
+            send_message(*this->client, ERR_PASSWDMISMATCH(this->client->getPrefixe(), check_params(this->client->getNickname())));
     }
 }

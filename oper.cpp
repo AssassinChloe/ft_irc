@@ -6,7 +6,7 @@ void Command::oper()
     if (this->parameters.size() < 2)
     {
         message = "OPER :Not enough parameters\r\n";
-        send(this->client->getFd(), message.c_str(), message.size(), 0);
+        send_message(*this->client, message);
         return ;
     }
     if (this->parameters[0] == OPER_NAME)
@@ -15,19 +15,19 @@ void Command::oper()
         if (this->parameters[1] != OPER_PASS)
         {
             message = ERR_PASSWDMISMATCH(this->client->getPrefixe(), this->client->getNickname());
-            send(this->client->getFd(), message.c_str(), message.size(), 0);
+            send_message(*this->client, message);
             return ;  
         }
         else if (this->client->getHostname() != "localhost")
         {
             message = ERR_NOOPERHOST(this->client->getPrefixe(), this->client->getNickname());
-            send(this->client->getFd(), message.c_str(), message.size(), 0);
+            send_message(*this->client, message);
             return ;
         }
         else
         {
             message = RPL_YOUREOPER(this->client->getPrefixe(), this->client->getNickname());
-            send(this->client->getFd(), message.c_str(), message.size(), 0);
+            send_message(*this->client, message);
             //send mode message as well
             return ;
         }

@@ -107,7 +107,7 @@ void Command::Join()
             if (this->client != (*it).second)
                 {
                     int id = (*it).second->getFd();
-                    send(id, message.c_str(), message.size(), 0);
+                    send(id, message.c_str(), message.size(), MSG_NOSIGNAL);
                 }
                 // send_message((*it).second, message);
         }

@@ -7,7 +7,7 @@ void Command::part()
     std::string message = this->client->getPrefixe() + "PART :" + parameters[0] + " " + this->getArgLine() + "\r\n";
     for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
     {
-        send((*it).second->getFd(), message.c_str(), message.size(), 0);
+        send_message(*(*it).second, message);
     }
     this->server->getChannel(index).removeClient(*this->client);
     if (this->server->getChannel(index).getNbClients() == 0)

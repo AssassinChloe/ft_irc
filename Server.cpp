@@ -108,10 +108,14 @@ int Server::reception_concatenation(int i, std::string *buffer)
 
 void Server::deleteClient(int i)
 {
-    std::cout << "pollserver: socket " << _poll_fd[i].fd << " hung up" << std::endl;
-    Command command_line(this->getClient(_poll_fd[i].fd), this, "JOIN 0");
-    command_line.execCommand();
+    std::cout << "pollserver: socket n°" << i << " : " << _poll_fd[i].fd << " hung up" << std::endl;
+    if (this->getClient(_poll_fd[i].fd).getChanList().size() > 0)
+    {
+        Command command_line(this->getClient(_poll_fd[i].fd), this, "JOIN 0");
+        command_line.execCommand();
+    }
     close(_poll_fd[i].fd);
+    if (_clients.size() > 0)
     _clients.erase(_poll_fd[i].fd);
     for (std::vector<struct pollfd>::iterator it = this->_poll_fd.begin(); it != this->_poll_fd.end(); it++)
     {
@@ -271,4 +275,9 @@ int Server::getChannelIndex(std::string chanName)
 std::string Server::getChannelName(int index)
 {
     return (_channels[index].getCName());
+}
+
+std::vector<struct pollfd> Server::getPollFdList()
+{
+    return (this->_poll_fd);
 }

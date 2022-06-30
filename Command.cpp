@@ -102,6 +102,7 @@ void Command::execCommand()
 			break;
 		case QUIT:
 			std::cout << "case quit" << std::endl;
+			this->quit(); 
 			break;
 		case CAP: // pas a gerer 
 			std::cout << "case cap" << std::endl;
@@ -146,5 +147,5 @@ void Command::execCommand()
 
 void	send_message(Client &cl, std::string message)
 {
-	send(cl.getFd(), message.c_str(), message.size(), 0);
+	send(cl.getFd(), message.c_str(), message.size(), MSG_NOSIGNAL);
 }
