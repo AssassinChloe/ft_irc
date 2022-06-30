@@ -91,7 +91,7 @@ void Channel::addClient(Client &client) {
 	// 	std::cout << "max number of clients on " << name << " channel reached" << std::endl;
 }
 void Channel::removeClient(Client &client) 
-{ 
+{
 	clients.erase(clients.find(client.getFd()));
 	// rajouter un check pour voir s'il n'y a plus de client -> effcaer le channel ?
 }
@@ -130,6 +130,11 @@ void Channel::setClientMode(Client &client, std::string mode) { client_mode[clie
 std::string Channel::getClientMode(Client &client) { return client_mode[client.getFd()]; }
 
 std::map<int, Client*> Channel::getClientMap() { return clients;}
+
+int Channel::getChannelSize()
+{
+	return (this->clients.size());
+}
 
 // void Channel::setKey(std::string key) { this->key = key; }
 // std::string Channel::getKey() { return key; }

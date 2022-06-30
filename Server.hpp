@@ -39,9 +39,9 @@ class Server
         std::string getCreation() const;
         // int getNbChannel(); // voir si on veut un nb max de channels
         void addChannel(std::string chanName);
+        void delChannel(std::string chanName);
         Channel &getChannel(int i);
         Channel &getChannel(std::string chanName);
-        int getChannelSize();
         std::string getChannelName(int index);
         int getChannelIndex(std::string chanName);
 };

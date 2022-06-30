@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/21 16:56:32 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/30 14:05:56 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Client
         bool            pass_checked;
         time_t          last_ping;
         struct pollfd   fd;
+        std::map<std::string, std::string> channel_list;
 
         Client();
         void write(std::string message);
@@ -51,9 +52,13 @@ class Client
 		std::string getHostname();
         bool getCheckPass();
         int getFd();
+        std::map<std::string, std::string> getChanList();
 
         // void Client::sendTo(Client &toClient, std::string message);
         std::string getPrefixe();
+
+        void addChannel(std::string name, std::string mode);
+        void delChannel(std::string name);
 };
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/27 14:48:32 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/06/30 14:11:28 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,29 @@ std::string Client::getPrefixe()
     std::string ret = ":" + check_params(this->nickname) + "!" + check_params(this->username) + "@" + this->hostaddr + " ";
     return (ret);
 }
+std::map<std::string, std::string> Client::getChanList()
+{
+    return (this->channel_list);
+}
+
+void Client::addChannel(std::string name, std::string mode)
+{
+    this->channel_list.insert(std::make_pair(name, mode));
+}
+
+void Client::delChannel(std::string name)
+{
+    std::map<std::string, std::string>::iterator ite = this->channel_list.end();
+    for(std::map<std::string, std::string>::iterator it = this->channel_list.begin(); it != ite; it++)
+    {
+        if ((*it).first == name)
+        {
+            this->channel_list.erase(it);
+            return ;
+        }
+    }
+}
+
+
 //void Client::write(std::string message) { waitingToSend.push_back(message); }
 //void Client::sendTo(Client &toClient, std::string message) { toClient.write(":" + " " + message); }

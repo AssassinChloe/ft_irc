@@ -52,7 +52,13 @@ void Command::Join()
 		
 	if (this->getParameters()[0] == "0")
     {
-        // return leaveAllChannels(command); (cf Part.cpp)
+        std::string chan;
+        for (std::map<std::string, std::string>::iterator it = this->client->getChanList().begin(); it != this->client->getChanList().end(); it++)
+        {
+            chan = "PART " + (*it).first;
+            Command command_line(*this->client, this->server, chan);
+            command_line.execCommand();
+        }
         return;
     }
 		
@@ -105,9 +111,10 @@ void Command::Join()
                 }
                 // send_message((*it).second, message);
         }
-
+        this->client->addChannel(parameters[0], "mode");
     }
-    else{
+    else
+    {
         std::cout << "channel non cree, client non ajoute" << std::endl; // reply 476 ERR_BADCHANMASK
         std::string message = parameters[0] + " :Bad Channel Mask\r\n";
         send_message(*this->client, message);

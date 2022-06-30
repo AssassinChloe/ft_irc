@@ -28,6 +28,7 @@ void Command::oper()
         {
             message = RPL_YOUREOPER(this->client->getPrefixe(), this->client->getNickname());
             send(this->client->getFd(), message.c_str(), message.size(), 0);
+            //send mode message as well
             return ;
         }
     }
