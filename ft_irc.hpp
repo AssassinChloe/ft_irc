@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/23 16:14:36 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/30 12:31:12 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@
 # define VERSION " 0.1 "
 # define USER_MODE "aiwro"
 # define CHAN_MODE "Oovimnptkl"
+
+# define OPER_NAME "Ganesh_Army"
+# define OPER_PASS "securisedpassword"
 
 
 
