@@ -216,14 +216,21 @@ void Server::addChannel(std::string chanName)
     }
 
 // petite verif
-    // int nb = getChannelSize();
+    // int nb = getChannelNb();
     // for (int i=0; i<nb; i++)
     // std::cout << i << " : " <<_channels[i].getCName() << std::endl;
 }
 
 void Server::delChannel(std::string chanName)
 {
-
+    for(std::vector<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+    {
+        if ((*it).getCName() == chanName)
+        {
+            this->_channels.erase(it);
+            return ;
+        }
+    }
 }
 
 
@@ -233,14 +240,14 @@ Channel &Server::getChannel(int i)
 }
 
 
-int Server::getChannelSize()
+int Server::getChannelNb()
 {
     return (_channels.size());
 }
 
 int Server::getChannelIndex(std::string chanName)
 {
-    int nb = getChannelSize();
+    int nb = getChannelNb();
     for (int i = 0; i < nb; i++)
     {
         if (_channels[i].getCName() == chanName)
@@ -251,7 +258,7 @@ int Server::getChannelIndex(std::string chanName)
 
 // Channel &Server::getChannel(std::string chanName)
 // {
-//     int nb = getChannelSize();
+//     int nb = getChannelNb();
 //     for (int i = 0; i < nb; i++)
 //     {
 //         if (_channels[i].getCName() == chanName)

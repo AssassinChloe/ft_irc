@@ -52,7 +52,6 @@ class Channel
 		int getMaxClients();
 		int getNbClients(); 
 		int formatName(std::string name);
-        int getChannelSize();
 
 		void broadcast(Client &client, std::string message);
 

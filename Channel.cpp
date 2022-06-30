@@ -76,9 +76,10 @@ std::string Channel::getCName() { return name; }
 void Channel::setTopic(std::string topic) { this->topic = topic; }
 std::string Channel::getTopic() { return topic; }
 
-int Channel::getNbClients(){
-return this->clients.size();
-};
+int Channel::getNbClients()
+{
+	return this->clients.size();
+}
 
 void Channel::addClient(Client &client) { 
 	// if (this->clients.size() < max_clients)
@@ -131,10 +132,6 @@ std::string Channel::getClientMode(Client &client) { return client_mode[client.g
 
 std::map<int, Client*> Channel::getClientMap() { return clients;}
 
-int Channel::getChannelSize()
-{
-	return (this->clients.size());
-}
 
 // void Channel::setKey(std::string key) { this->key = key; }
 // std::string Channel::getKey() { return key; }

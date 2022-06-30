@@ -10,7 +10,7 @@ void Command::part()
         send((*it).second->getFd(), message.c_str(), message.size(), 0);
     }
     this->server->getChannel(index).removeClient(*this->client);
-    if (this->server->getChannel(index).getChannelSize() == 0)
-        this->server
+    if (this->server->getChannel(index).getNbClients() == 0)
+        this->server->delChannel(parameters[0]);
     this->client->delChannel(parameters[0]);
 }
