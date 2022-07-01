@@ -7,6 +7,9 @@ void    Command::Privmsg()
 int i = 0;
 int nb_param = parameters.size();
 
+if (nb_param == 0) 
+        return;
+
 for (i=0; i<nb_param; i++)
 {
 

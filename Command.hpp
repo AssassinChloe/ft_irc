@@ -14,7 +14,7 @@
 
 // # define ERR_NOSUCHNICK(pseudo) (pseudo + " :No such nick/channel\r\n") //401
 // # define ERR_NOSUCHSERVER(server) (server + " :No such server\r\n") //402
-// # define ERR_NOSUCHCHANNEL(channel) (channel + " :No such channel\r\n") //403
+# define ERR_NOSUCHCHANNEL(channel) (channel + " :No such channel\r\n") //403
 // # define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel\r\n") //404
 // # define ERR_TOOMANYCHANNELS(channel) (channel + " :You have joined too many channels\r\n") //405
 // # define ERR_WASNOSUCHNICK(nickname) (nickname + " :There was no such nickname\r\n") //406
@@ -34,7 +34,7 @@
 # define ERR_NICKNAMEINUSE(nick) (nick + " :Nickname is already in use\r\n")
 
 // # define ERR_USERNOTINCHANNEL(pseudo, channel) (pseudo + " :Is not on channel " + channel + "\r\n")
-// # define ERR_NOTONCHANNEL(channel) (channel + " :You're not on that channel\r\n")
+# define ERR_NOTONCHANNEL(channel) (channel + " :You're not on that channel\r\n")
 // # define ERR_USERONCHANNEL(user, channel) (user + channel + " :User is already on that channel\r\n")
 // # define ERR_NOLOGIN(user) (user + " :User not logged in\r\n")
 // # define ERR_SUMMONDISABLED() (":SUMMON has been disabled\r\n")
@@ -49,16 +49,13 @@
 // # define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)\r\n")
 // # define ERR_UNKNOWNMODE(character) (character + " :is unknown mode char to me\r\n")
 // # define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (+i)\r\n")
-// # define ERR_BANNEDFROMCHAN(channel) (channel + " :Cannot join channel (+b)\r\n")
-// # define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)\r\n")
-// # define ERR_NOPRIVILEGES() (":Permission Denied- You're not an IRC operator\r\n")
-// # define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator\r\n")
+// # define ERR_BANNEDFROMCHAN(channel) // isOnChannel(std::string const &nick);) (channel + " :You're not channel operator\r\n")
 // # define ERR_CANTKILLSERVER() (":You cant kill a server!\r\n")
 # define ERR_NOOPERHOST(prefixe, nick) (prefixe + "491 " + nick + " :No O-lines for your host\r\n")
 // # define ERR_UMODEUNKNOWNFLAG() (":Unknown MODE flag\r\n")
 // # define ERR_USERSDONTMATCH() (":Cannot change mode for other users\r\n")
 // # define ERR_INVALIDCAP(command) (command + " :Invalid CAP command\r\n")
-// # define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
+# define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
 # define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask\r\n") // utilise dans join (mais peut etre commente ici)
 // # define ERR_ALREADYBAN(channel, user) (channel + " " + user + " b :Channel " + channel + " list already contains " + user + "\r\n")
 // # define ERR_SERVERISFULL(serv_name) (serv_name + " Server is full\r\n")
@@ -232,6 +229,7 @@ class Command
 		void oper();
 		void part();
 		void quit();
+		void Topic();
 		// void reply(Client &user, unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
 		// void reply(unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
 };

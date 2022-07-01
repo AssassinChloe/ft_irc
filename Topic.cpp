@@ -1,3 +1,88 @@
+#include "Command.hpp"
+
+void    Command::Topic()
+{
+
+    // int i = 0;
+    int nb_param = parameters.size();
+
+    if (nb_param == 0) 
+    {
+        std::string message = parameters[0] + " :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
+        send_message(*this->client, message);
+        return;
+    }
+    
+    else
+    {
+        // trouver le channel
+        int index = server->getChannelIndex(parameters[0]); // si channel n'existe pas = -1
+        if (index == -1)
+        {
+            std::string message = parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
+            send_message(*this->client, message);
+            return;
+        }
+        if (server->getChannel(index).isOnChannel(this->getClient().getNickname())) //si client sur le channel
+        {
+            // voir si n'a  pas les droits pour changer
+
+            // si a les droit
+            if (nb_param == 1 && argLine == "") //normalement comportement diffreent si existe : ou pas... voir si a preciser
+            {
+                if (server->getChannel(index).getTopic().length() != 0) // topic existe
+                {
+                    std::string message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
+                    std::cout << "message TOPIC :" << message <<std::endl;
+                    send_message(*this->client, message);
+                }
+                else 
+                {
+                    std::string message = parameters[0] + " :No topic is set\r\n";
+                    std::cout << "message NO_TOPIC :" << message <<std::endl;
+                    send_message(*this->client, message);
+                }
+                // define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
+            }
+            if (nb_param == 1 && argLine != "")
+            {
+                server->getChannel(index).setTopic(argLine);
+                // rajouter qui et quand set topic;
+                
+                std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+                for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                {
+                    // if (this->client != (*it).second) // condition a mettre si on ne veut pas envoyer a celui qui a change le topic
+                    // {
+                        std::string message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
+                        int id = (*it).second->getFd();
+                        send(id, message.c_str(), message.size(), 0);
+                    // }
+                }
+            }
+                // send_message((*it).second, message);
+        }
+
+
+        else // client pas sur le channel
+        {
+            std::string message = parameters[0] + " :You're not on that channel\r\n"; // # define ERR_NOTONCHANNEL(channel)
+            send_message(*this->client, message);
+        }
+        // verifier que le client est dessus
+        // 
+        // si oui, 
+        //      si nb_param = 1 : envoyer (RPL Topic + RPL_TOPICWHOTIME) ou rpl notopic
+        //      si nb_param = 2 : 
+        //          si client n'a pa les droits pour changer ERR_CHANOPRIVSNEEDED (482)
+        //          si pas de soucis, changement du topic + envoi commande TOPIC a tout le channel
+
+        // si non ERR_NOTONCHANNEL (442)
+    }
+    
+}
+
+
 // Command: TOPIC
 //   Parameters: <channel> [<topic>]
 
@@ -41,3 +126,7 @@
 
 // # define RPL_NOTOPIC(channel) (channel + " :No topic is set\r\n") // 331 
 // # define RPL_TOPIC(channel, subject) (channel + " :" + subject + "\r\n") // 332 
+
+// RPL_TOPICWHOTIME (333)
+//   "<client> <channel> <nick> <setat>"
+// Sent to a client to let them know who set the topic (<nick>) and when they set it (<setat> is a unix timestamp). Sent after RPL_TOPIC (332).

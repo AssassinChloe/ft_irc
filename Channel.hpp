@@ -10,13 +10,15 @@ class Server;
 class Channel
 {
 	private:
-		std::string name;
-		std::string topic;
+		std::string				name;
+		std::string 			topic;
 		std::map<int, Client *> clients;
-		std::string mode;
+		std::string 			mode;
 		std::map<int, std::string> client_mode; // voir si pas plutot client, std::string
 		// std::string key;
-		unsigned int max_clients;
+		unsigned int 			max_clients;
+		class Client 			*topicSetter;
+		time_t          		lastTopicSet;
 
 
 	public:
@@ -52,8 +54,12 @@ class Channel
 		int getMaxClients();
 		int getNbClients(); 
 		int formatName(std::string name);
+		Client 	*getTopicSetter();
+		void 	setTopicSetter(Client &client);
+		time_t  getLastTopicSet();
+		void    setLastTopicSet();
 
-		void broadcast(Client &client, std::string message);
+		void broadcast(Client &client, std::string message); // utile ou non ?
 
 };
 #endif

@@ -117,6 +117,7 @@ void Command::execCommand()
 			break;
 		case TOPIC:
 			std::cout << "case topic" << std::endl;
+			Command::Topic();
 			break;
 		case LIST:
 			std::cout << "case list" << std::endl;
