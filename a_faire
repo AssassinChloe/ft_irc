@@ -1,0 +1,54 @@
+general
+- nettoyer nos fichiers des fonctions inutiles et affichages divers
+- interception signaux (sigpipe ?)
+- verifier, fonction par fonction, les ERR et RPL a envoyer
+- verifier leaks dans cas particuliers
+- securiser les envois de messages pour etre sur d’avoir transmis le bon nb de bytes
+- tests divers :
+    - envoi de texte > taille du buffer (concaténation du buffer…)
+    - envoi d’une ligne sans commande hors channel
+    - channels avec meme nom sauf majuscule minuscule ?
+    - 2 clients avec meme username, nickname different
+    - 2 clients avec meme username et nickname
+    - test ajout plus de cliens que de places dans pollfd
+    - test avec nc
+    - derouler la fiche de correction
+
+
+join
+- enregistrer le mode du client sur le channel
+- faire cas join 0
+
+topic
+- ajouter probleme des autorisations en fonction du mode
+- voir si conservation des TOPICWHOTIME, ne semble pas reconnu par hexchat
+
+pingpong
+- lancer des ping de temps en temps pour avoir reponse client ?
+
+list
+- tout a faire ?
+
+kick
+- tout a faire ?
+
+channel
+- nb max de client sur channel ?
+- nb max de channel qu'un client peut rejoindre ?
+- key sur channel ?
+- joindre plusieurs channels a la fois ?
+
+mode
+- integrer le changement de mode du user
+- inetgrer les differents messages erreur
+
+commande invite ?
+
+part
+- voir cas d'erreur (channel non existant, pas sur channel ?)
+
+privmsg
+- verifier et intergrer les cas d'erreur
+
+who
+- rajouter user mode ?

@@ -2,8 +2,7 @@
 
 void    Command::Privmsg()
 {
-    // int index = server->getChannelIndex(parameters[0]);
-    // mettre ca dans une voucle pour chaque user du channel, le prefix et tout doit 
+    
 int i = 0;
 int nb_param = parameters.size();
 
