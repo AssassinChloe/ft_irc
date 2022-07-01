@@ -55,7 +55,7 @@ class Channel
 		int getNbClients(); 
 		int formatName(std::string name);
 		Client 	*getTopicSetter();
-		void 	setTopicSetter(Client &client);
+		void 	setTopicSetter(Client *client);
 		time_t  getLastTopicSet();
 		void    setLastTopicSet();
 

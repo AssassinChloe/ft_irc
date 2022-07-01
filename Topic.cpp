@@ -1,4 +1,6 @@
 #include "Command.hpp"
+#include <string>
+#include <sstream>
 
 void    Command::Topic()
 {
@@ -47,8 +49,20 @@ void    Command::Topic()
             if (nb_param == 1 && argLine != "")
             {
                 server->getChannel(index).setTopic(argLine);
-                // rajouter qui et quand set topic;
-                
+                server->getChannel(index).setTopicSetter(this->client);
+                server->getChannel(index).setLastTopicSet();
+                std::cout << "topic set on " << server->getChannel(index).getLastTopicSet() << " by " << server->getChannel(index).getTopicSetter()->getNickname() << std::endl;
+                // voir si ajout de RPL_TOPICWHOTIME (333) --> garbage ???
+                std::stringstream ss;
+                ss << server->getChannel(index).getLastTopicSet();
+                std::string timestring = ss.str();
+                std::string message = this->client->getPrefixe() +" "+ parameters[0] + " " ;
+                message = message + server->getChannel(index).getTopicSetter()->getNickname() + " " ;
+                message = message + timestring +  "\r\n";
+                // message = message + server->getChannel(index).getLastTopicSet() +  "\r\n";
+                std::cout << "message TOPICWHOTIME :" << message <<std::endl;
+                send_message(*this->client, message);
+
                 std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
                 for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
                 {
@@ -60,9 +74,7 @@ void    Command::Topic()
                     // }
                 }
             }
-                // send_message((*it).second, message);
         }
-
 
         else // client pas sur le channel
         {

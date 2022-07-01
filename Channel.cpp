@@ -132,6 +132,11 @@ std::string Channel::getClientMode(Client &client) { return client_mode[client.g
 
 std::map<int, Client*> Channel::getClientMap() { return clients;}
 
+Client 	*Channel::getTopicSetter() {return this->topicSetter;}
+void 	Channel::setTopicSetter(Client *client) {this->topicSetter = client;}
+time_t  Channel::getLastTopicSet(){ return this->lastTopicSet;}
+void    Channel::setLastTopicSet(){ this->lastTopicSet = std::time(0);}
+
 
 // void Channel::setKey(std::string key) { this->key = key; }
 // std::string Channel::getKey() { return key; }
