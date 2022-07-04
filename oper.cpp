@@ -27,6 +27,7 @@ void Command::oper()
         else
         {
             message = RPL_YOUREOPER(this->client->getPrefixe(), this->client->getNickname());
+            
             send_message(*this->client, message);
             //send mode message as well
             return ;
