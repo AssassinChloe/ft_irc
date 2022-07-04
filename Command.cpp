@@ -78,32 +78,25 @@ void Command::execCommand()
 	
 	switch (get_cmd_id(cmdType)){
 		case PING: // attendre un pong
-			std::cout << "case ping" << std::endl;
 			Command::Ping();
 			break;
 		case NICK: // changer nickname
 			this->nick();
 			break;
 		case JOIN: // rejoindre un channel
-			// if (this->client.getStatus() == "welcome")
-			{
 			std::cout << "case join" << std::endl;
 			Command::Join();
-			}
 			break;
-		case PART: // sortir d'un channel
-			std::cout << "case part" << std::endl;
+		case PART: 
 			this->part();
 			break;
 		case USER:
 			this->user();
 			break;	
 		case OPER:
-			std::cout << "case oper" << std::endl;
 			this->oper(); 
 			break;
 		case QUIT:
-			std::cout << "case quit" << std::endl;
 			this->quit(); 
 			break;
 		case CAP: // pas a gerer 
@@ -114,21 +107,16 @@ void Command::execCommand()
 			// Command::Pong();
 			break;
 		case MODE:
-			std::cout << "case mode" << std::endl;
 			Command::Mode();
 			break;
 		case TOPIC:
-			std::cout << "case topic" << std::endl;
 			Command::Topic();
 			break;
 		case LIST:
-			std::cout << "case list" << std::endl;
 			break;
 		case KICK:
-			std::cout << "case kick" << std::endl;
 			break;
 		case PRIVMSG:
-			std::cout << "case PRIVMSG" << std::endl;
 			Command::Privmsg();
 			break;
 		case PASS:
@@ -138,11 +126,9 @@ void Command::execCommand()
 			this->welcome();
 			break;
 		case WHO:
-			std::cout << "case who" << std::endl;
 			Command::Who();
 			break;
 		case NOTICE:
-			std::cout << "case who" << std::endl;
 			Command::Notice();
 			break;
 		case 0:

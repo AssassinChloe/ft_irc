@@ -19,6 +19,7 @@ class Channel
 		unsigned int 			max_clients;
 		class Client 			*topicSetter;
 		time_t          		lastTopicSet;
+		// std::vector<Client *>	ChanOp;
 
 
 	public:
@@ -58,6 +59,8 @@ class Channel
 		void 	setTopicSetter(Client *client);
 		time_t  getLastTopicSet();
 		void    setLastTopicSet();
+		// void	addChanOp(Client &client);
+		// std::vector<Client *> 	getChanOp();
 
 };
 #endif

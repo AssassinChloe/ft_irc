@@ -137,6 +137,21 @@ void 	Channel::setTopicSetter(Client *client) {this->topicSetter = client;}
 time_t  Channel::getLastTopicSet(){ return this->lastTopicSet;}
 void    Channel::setLastTopicSet(){ this->lastTopicSet = std::time(0);}
 
+// void	Channel::addChanOp(Client &client) 
+// {
+
+// };
+
+
+// std::vector<Client *> Channel::getChanOp()
+// {
+// 	std::vector<Client *> chanops = std::vector<Client *>();
+
+// 	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+// 		chanops.push_back(it->second);
+// 	return chanops;
+// }
+
 
 // void Channel::setKey(std::string key) { this->key = key; }
 // std::string Channel::getKey() { return key; }
@@ -153,12 +168,6 @@ void    Channel::setLastTopicSet(){ this->lastTopicSet = std::time(0);}
 // 		invited.erase(it);
 // }
 
-// void Channel::broadcast(Client &client, std::string message)
-// {
 
-// //get number of clients du chnnel
-// // boucle for pour chaque client du channel:
-// // 	si le client est different du clientBroadcast (?), alors envoi du message
-// }
 
 

@@ -66,13 +66,13 @@ void Command::Join()
     if (!channelExist(this->server, parameters[0]))
     {
         // std::cout << "channel a creer" << std::endl;
-        server->addChannel(parameters[0]);
+        server->addChannel(parameters[0]); // penser a ajouter le client qui cree dans la liste des operateurs du channel
 
     }
     if (channelExist(this->server, parameters[0]))
     { 
         int index = server->getChannelIndex(parameters[0]);
-        server->getChannel(index).addClient(this->getClient());
+        server->getChannel(index).addClient(this->getClient()); // voir le ;ode par defaut
 
         // message JOIN
         std::string message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
@@ -80,27 +80,19 @@ void Command::Join()
         
         // message topic
         message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
-        // std::cout << "message TOPIC :" << message <<std::endl;
         send_message(*this->client, message);
 
         // message users connectes
         message = this->client->getPrefixe() + "353 " + this->client->getUsername() + " = " + parameters[0] + " :@";
         std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
         for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
-        {
-            // std::cout << "----plop----" << (*it).second->getUsername() << std::endl;
             message = message + (*it).second->getNickname() + " ";
-        }
-            // message = message + this->client->getNickname(); // en attendant d'arriver a faire la liste par une boucle !!!!
         message = message + "\r\n";
-        // std::cout << "----plop----" << message << std::endl;
         send_message(*this->client, message);
-        
 
         // message end of list user
         message = this->client->getPrefixe() + "366 " + this->client->getUsername() + " " + parameters[0] + " :End of NAMES list\r\n"; // #366 RPL_ENDOFNAMES
         send_message(*this->client, message);
-        // :vmercier!vmercier@localhost 366 vmercier #test :End of /NAMES list
 
         message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
         for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
@@ -110,11 +102,10 @@ void Command::Join()
                     int id = (*it).second->getFd();
                     send(id, message.c_str(), message.size(), MSG_NOSIGNAL);
                 }
-                // send_message((*it).second, message);
         }
         this->client->addChannel(parameters[0], "");
     }
-    else
+    else // correspond a erreur car impossibe de creer le channel
     {
         std::cout << "channel non cree, client non ajoute" << std::endl; // reply 476 ERR_BADCHANMASK
         std::string message = parameters[0] + " :Bad Channel Mask\r\n";

@@ -50,9 +50,24 @@ void    Command::Mode()
             send_message(*this->client, message);
             return;
         }
-        else
+        else // attention a modifier (cas prevu avec juste un argument pour utilisateur, mais peut avoir plusieurs ?)
         {
+            int find = 0;
+            for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
+            {
+                if ((*it).second.getNickname() == this->parameters[0])
+                {
+                    // chaner le mode du user
 
+                    find = 1;
+                }
+            }
+            if (find == 0)
+            {
+                std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + parameters[0] + " :No such nick/channel\r\n";
+                send_message(*this->client, message);
+                //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
+            }
         }
     }
 }
@@ -61,6 +76,26 @@ void    Command::Mode()
 //403 std::string ERR_NOSUCHCHANNEL(std::string channel) { return channel + " :No such channel"; }
 //401 std::string ERR_NOSUCHNICK(std::string nickname) { return nickname + " :No such nick/channel"; }
 //501 std::string ERR_UMODEUNKNOWNFLAG() { return ":Unknown MODE flag"; }
+
+// Command Examples:
+
+//   MODE dan +i                     ; Setting the "invisible" user mode on dan.
+
+//   MODE #foobar +mb *@127.0.0.1    ; Setting the "moderated" channel mode and
+//                                   adding the "*@127.0.0.1" mask to the ban
+//                                   list of the #foobar channel.
+
+// Message Examples:
+
+//   :dan!~h@localhost MODE #foobar -bl+i *@192.168.0.1
+//                                   ; dan unbanned the "*@192.168.0.1" mask,
+//                                   removed the client limit from, and set the
+//                                   #foobar channel to invite-only.
+
+//   :irc.example.com MODE #foobar +o bunny
+//                                   ; The irc.example.com server gave channel
+//                                   operator privileges to bunny on #foobar.
+
 
 
 

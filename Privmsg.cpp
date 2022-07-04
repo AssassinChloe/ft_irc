@@ -7,7 +7,20 @@ int i = 0;
 int nb_param = parameters.size();
 
 if (nb_param == 0) 
-        return;
+{
+    // :lilin!liliu@localhost 411 lilin :No recipient given ()
+    std::string message = this->client->getPrefixe() + " 411 " + this->client->getNickname() + parameters[i] + " :No recipient given ()\r\n";
+    send_message(*this->client, message);
+    return;
+}
+
+if (this->getArgLine().length() == 0)    
+{
+    // :lilin!liliu@localhost 412 lilin :No text to send
+    std::string message = this->client->getPrefixe() + " 412 " + this->client->getNickname() + parameters[i] + " :No text to send\r\n";
+    send_message(*this->client, message);
+    return;
+}   
 
 for (i=0; i<nb_param; i++)
 {
@@ -23,26 +36,29 @@ for (i=0; i<nb_param; i++)
 
         if (index == -1) // = channel non trouve
         {
-            std::string message = this->client->getPrefixe() + " " + parameters[i] + " :No such nick/channel\r\n";
+            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + parameters[i] + " :No such nick/channel\r\n";
             send_message(*this->client, message);
             //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
         } 
         else
         {
-
-            // rajouter condition sur les drots ( a ajouter aussi a notice)
-
-            std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-            for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+            int condition = 1;
+            // rajouter condition sur les droits ( a ajouter aussi a notice)
+            if (condition)
             {
-                if (this->client != (*it).second)
-                    {
-                        int id = (*it).second->getFd();
-                        send(id, message.c_str(), message.size(), 0);
-                    }
+                std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+                for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                {
+                    if (this->client != (*it).second)
+                        {
+                            int id = (*it).second->getFd();
+                            send(id, message.c_str(), message.size(), 0);
+                        }
+                }
             }
+            
 
-            // else si pas de droits
+            else// else si pas de droits
             {
                 std::string message = this->client->getPrefixe() + " " + parameters[i] + " :Cannot send to channel\r\n";
                 send_message(*this->client, message);
@@ -66,7 +82,7 @@ for (i=0; i<nb_param; i++)
         }
         if (find == 0)
         {
-            std::string message = this->client->getPrefixe() + " " + parameters[i] + " :No such nick/channel\r\n";
+            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + parameters[i] + " :No such nick/channel\r\n";
             send_message(*this->client, message);
             //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
         }

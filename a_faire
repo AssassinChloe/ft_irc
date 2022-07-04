@@ -21,6 +21,7 @@ join
 topic
 - ajouter probleme des autorisations en fonction du mode
 - voir si conservation des TOPICWHOTIME, ne semble pas reconnu par hexchat
+- The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today.
 
 pingpong
 - lancer des ping de temps en temps pour avoir reponse client ?
@@ -29,7 +30,7 @@ list
 - tout a faire ?
 
 kick
-- tout a faire ?
+- a faire (oper)
 
 channel
 - nb max de client sur channel ?
@@ -42,6 +43,8 @@ mode
 - inetgrer les differents messages erreur
 
 commande invite ?
+- a faire notamment pour oper
+- changement a prevoir pour channel
 
 part
 - voir cas d'erreur (channel non existant, pas sur channel ?)
@@ -53,7 +56,8 @@ who
 - rajouter user mode ?
 
 notice
-- a faire pour correction
+- ajouter condition de droit
+
 user (dans nick.cpp)
 - rajouter USERLEN et le fait de tronquer si trop long : The value MUST be specified and MUST be a positive integer.
 - ajout retour needmoreparams 461
@@ -61,5 +65,13 @@ user (dans nick.cpp)
 pong 
 - Servers MUST send a <server> parameter, and clients SHOULD ignore it. It exists for historical reasons, and indicates the name of the server sending the PONG.
 
-topic 
--The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today.
+quit
+- ajout RPL
+
+commades a gere pour oper :
+
+    KICK: Eject a client from the channel
+    MODE: Change the channel’s modes
+    INVITE: Invite a client to an invite-only channel (mode +i)
+    TOPIC: Change the channel topic in a mode +t channel
+
