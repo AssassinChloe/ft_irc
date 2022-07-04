@@ -18,6 +18,7 @@
 #define PART 16
 #define WELCOME 17
 #define WHO 18
+#define NOTICE 19
 
 Command::Command(Client &client, Server *ganesh, std::string line)
 	: client(&client), server(ganesh), query(line)
@@ -67,6 +68,7 @@ int	get_cmd_id(const std::string s)
 	else if (s == "PART")		return PART;
 	else if (s == "WELCOME")    return WELCOME;
 	else if (s == "WHO")   		return WHO;
+	else if (s == "NOTICE")   	return NOTICE;
 	return 0;
 }
 
@@ -138,6 +140,10 @@ void Command::execCommand()
 		case WHO:
 			std::cout << "case who" << std::endl;
 			Command::Who();
+			break;
+		case NOTICE:
+			std::cout << "case who" << std::endl;
+			Command::Notice();
 			break;
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;

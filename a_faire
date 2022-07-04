@@ -1,6 +1,6 @@
 general
 - nettoyer nos fichiers des fonctions inutiles et affichages divers
-- interception signaux (sigpipe ?)
+- interception signaux (sigpipe ?) /
 - verifier, fonction par fonction, les ERR et RPL a envoyer
 - verifier leaks dans cas particuliers
 - securiser les envois de messages pour etre sur d’avoir transmis le bon nb de bytes
@@ -52,3 +52,6 @@ privmsg
 
 who
 - rajouter user mode ?
+
+notice
+- a faire pour correction

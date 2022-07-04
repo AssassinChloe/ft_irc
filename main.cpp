@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/21 17:04:07 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/04 10:23:15 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void sighandler(int sig)
     if (sig == SIGINT)
         g_stop = 1; 
     if (sig == SIGPIPE)
-        g_stop = 2;
+        std::cout << "signal SIGPIPE intercepte" << std::endl;
+        // g_stop = 2;
 }
 
 int main(int argc, char **argv)
@@ -31,7 +32,7 @@ int main(int argc, char **argv)
 	}
 	g_stop = 0;
 	signal(SIGINT, sighandler);
-    signal(SIGPIPE, sighandler); // attention pour l'instant je ne sais pas du tout ce qu'il faut faire en cas de SIGPIPE
+    signal(SIGPIPE, sighandler); 
     Server server(argv[1], argv[2]);
 	if (server.init() < 0)
 		return (1);

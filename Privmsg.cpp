@@ -20,19 +20,39 @@ for (i=0; i<nb_param; i++)
         std::cout << message << std::endl;
 
         int index = server->getChannelIndex(parameters[i]);
-        std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-        for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+
+        if (index == -1) // = channel non trouve
         {
-            if (this->client != (*it).second)
-                {
-                    int id = (*it).second->getFd();
-                    send(id, message.c_str(), message.size(), 0);
-                }
-                // send_message((*it).second, message);
+            std::string message = this->client->getPrefixe() + " " + parameters[i] + " :No such nick/channel\r\n";
+            send_message(*this->client, message);
+            //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
+        } 
+        else
+        {
+
+            // rajouter condition sur les drots ( a ajouter aussi a notice)
+
+            std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+            for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+            {
+                if (this->client != (*it).second)
+                    {
+                        int id = (*it).second->getFd();
+                        send(id, message.c_str(), message.size(), 0);
+                    }
+            }
+
+            // else si pas de droits
+            {
+                std::string message = this->client->getPrefixe() + " " + parameters[i] + " :Cannot send to channel\r\n";
+                send_message(*this->client, message);
+                // ERR_CANNOTSENDTOCHAN (404) "<client> <channel> :Cannot send to channel"
+            }
         }
     }
     else
     {
+        int find = 0;
         for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
         {
             if ((*it).second.getNickname() == this->parameters[i])
@@ -40,8 +60,15 @@ for (i=0; i<nb_param; i++)
                 int id = (it)->second.getFd();
                 std::string message = this->client->getPrefixe() + "PRIVMSG " + parameters[i] + " :" + this->getArgLine() + " \r\n";
                 send(id, message.c_str(), message.size(), 0);
+                find = 1;
                 std::cout <<"message individuel : " << message << std::endl;
             }
+        }
+        if (find == 0)
+        {
+            std::string message = this->client->getPrefixe() + " " + parameters[i] + " :No such nick/channel\r\n";
+            send_message(*this->client, message);
+            //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
         }
     }     
 }
@@ -90,3 +117,14 @@ for (i=0; i<nb_param; i++)
 //     ERR_NOTOPLEVEL (413)
 //     ERR_WILDTOPLEVEL (414)
 //     RPL_AWAY (301)
+
+
+// ERR_CANNOTSENDTOCHAN (404)
+
+//   "<client> <channel> :Cannot send to channel"
+
+// Indicates that the PRIVMSG / NOTICE could not be delivered to <channel>. The text used in the last param of 
+// this message may vary.
+
+// This is generally sent in response to channel modes, such as a channel being moderated and the client not having 
+// permission to speak on the channel, or not being joined to a channel with the no external messages mode set.

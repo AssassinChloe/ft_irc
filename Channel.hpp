@@ -22,7 +22,7 @@ class Channel
 
 
 	public:
-		Channel (std::string name); //(Server *server, std::string name);
+		Channel (std::string name); 
 		~Channel();
 		Channel(const Channel &src);
 		Channel &operator=(Channel const &rhs);
@@ -58,8 +58,6 @@ class Channel
 		void 	setTopicSetter(Client *client);
 		time_t  getLastTopicSet();
 		void    setLastTopicSet();
-
-		void broadcast(Client &client, std::string message); // utile ou non ?
 
 };
 #endif
