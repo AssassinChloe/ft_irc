@@ -33,6 +33,5 @@ void Command::oper()
             command_line.execCommand();
             return ;
         }
-    }
-        
+    }    
 }

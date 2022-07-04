@@ -42,10 +42,11 @@ void    Command::Mode()
 {
     if (this->parameters.size() == 1) // a modifier pour user mode ou channel mode
     {
-        if (this->server->getChannelIndex(this->parameters[0]) > 0)
+        int index = this->server->getChannelIndex(this->parameters[0]);
+        if ( index >= 0)
         {
-            std::string message = this->client->getPrefixe() + "324 " +  this->client->getNickname() + " " + parameters[0] + " n \r\n" ;
-            // std::cout << message << std::endl;
+            std::string message = this->client->getPrefixe() + "324 " +  this->client->getNickname() + " " + this->parameters[0] + " " + this->server->getChannel(index).getMode() + " \r\n" ;
+            std::cout << "Message " << message << std::endl;
             send_message(*this->client, message);
             return;
         }
