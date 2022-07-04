@@ -75,3 +75,11 @@ commades a gere pour oper :
     INVITE: Invite a client to an invite-only channel (mode +i)
     TOPIC: Change the channel topic in a mode +t channel
 
+commandes a gerer pour operator server
+
+    KILL message
+    REHASH message
+    RESTART message
+    SQUIT message
+
+

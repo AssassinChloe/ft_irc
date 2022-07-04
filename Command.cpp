@@ -115,6 +115,7 @@ void Command::execCommand()
 		case LIST:
 			break;
 		case KICK:
+			Command::Kick();
 			break;
 		case PRIVMSG:
 			Command::Privmsg();
