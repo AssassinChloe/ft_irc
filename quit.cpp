@@ -11,7 +11,8 @@ void Command::quit()
     close(this->client->getFd());
     if (this->server->getClientList().size() > 0)
         this->server->getClientList().erase(this->client->getFd());
-    for (std::vector<struct pollfd>::iterator it = this->server->getPollFdList().begin(); it != this->server->getPollFdList().end(); it++)
+    std::vector<struct pollfd> tmp = this->server->getPollFdList();
+    for (std::vector<struct pollfd>::iterator it = tmp.begin(); it != tmp.end(); it++)
     {
         if ((*it).fd == this->client->getFd())
         {

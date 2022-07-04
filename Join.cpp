@@ -53,7 +53,8 @@ void Command::Join()
 	if (this->getParameters()[0] == "0")
     {
         std::string chan;
-        for (std::map<std::string, std::string>::iterator it = this->client->getChanList().begin(); it != this->client->getChanList().end(); it++)
+        std::map<std::string, std::string> tmp = this->client->getChanList();
+        for (std::map<std::string, std::string>::iterator it = tmp.begin(); it != tmp.end(); it++)
         {
             chan = "PART " + (*it).first;
             Command command_line(*this->client, this->server, chan);
