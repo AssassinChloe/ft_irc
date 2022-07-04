@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:18 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/30 16:26:57 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/04 11:27:03 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,26 +61,34 @@
          - Sent by the server to a user upon connection to indicate
            the restricted nature of the connection (user mode "+r").
         */
-void Command::nick()
+
+int Command::isvalidname()
 {
     std::string charset(NICKNAME_VALID_CHAR);
-    std::string rep;
     size_t position;
     
     if (this->parameters.size() == 0 || this->parameters[0].size() > 9)
     {
         send_message(*this->client, ERR_ERRONEUSNICKNAME(this->parameters[0]));
-        return ;
+        return (-1);
     } 
     for (unsigned int i = 0; i < this->parameters[0].size(); i++)
     {
 	    if ((position = charset.find(this->parameters[0][i])) == std::string::npos)
         {
             send_message(*this->client, ERR_ERRONEUSNICKNAME(this->parameters[0]));
-            return ;
+            return (-1);
         }
             
     }
+    return (0);
+}
+void Command::nick()
+{
+    std::string rep;
+
+    if (isvalidname() < 0)
+        return ;
     for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it != this->server->getClientList().end(); it++)
     {
         if ((*it).second.getNickname() == this->parameters[0])
@@ -96,6 +104,8 @@ void Command::nick()
 
 void Command::user()
 {
+    // if (isvalidname() < 0)
+    //     return ;
     if (this->client->getStatus() != "default")
     {
         send_message(*this->client, ERR_ALREADYREGISTRED(this->client->getPrefixe(), check_params(this->client->getNickname())));

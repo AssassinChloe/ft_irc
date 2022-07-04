@@ -27,10 +27,11 @@ void Command::oper()
         else
         {
             message = RPL_YOUREOPER(this->client->getPrefixe(), this->client->getNickname());
+            this->client->setStatus("operator");
             send_message(*this->client, message);
-            //send mode message as well
+            Command command_line(*this->client, this->server, "MODE +o");
+            command_line.execCommand();
             return ;
         }
-    }
-        
+    }    
 }

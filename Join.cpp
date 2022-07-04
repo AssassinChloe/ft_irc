@@ -112,7 +112,7 @@ void Command::Join()
                 }
                 // send_message((*it).second, message);
         }
-        this->client->addChannel(parameters[0], "mode");
+        this->client->addChannel(parameters[0], "");
     }
     else
     {

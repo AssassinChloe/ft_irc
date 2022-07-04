@@ -14,7 +14,6 @@ general
     - test avec nc
     - derouler la fiche de correction
 
-
 join
 - enregistrer le mode du client sur le channel
 - faire cas join 0
@@ -55,3 +54,12 @@ who
 
 notice
 - a faire pour correction
+user (dans nick.cpp)
+- rajouter USERLEN et le fait de tronquer si trop long : The value MUST be specified and MUST be a positive integer.
+- ajout retour needmoreparams 461
+
+pong 
+- Servers MUST send a <server> parameter, and clients SHOULD ignore it. It exists for historical reasons, and indicates the name of the server sending the PONG.
+
+topic 
+-The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today.
