@@ -43,6 +43,9 @@ class Channel
 
 		void setMode(std::string);
 		std::string getMode();
+		void addMode(char mode);
+		void delMode(char mode);
+
 
 		void setClientMode(Client &client, std::string mode);
 		std::string getClientMode(Client &client);

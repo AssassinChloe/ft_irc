@@ -127,6 +127,25 @@ bool Channel::isOnChannel(std::string const &nick)
 void Channel::setMode(std::string mode) { this->mode = mode; }
 std::string Channel::getMode() { return mode; }
 
+void Channel::addMode(char mode)
+{
+	if (searchIfMode(mode, this->mode) == 1)
+		return ;
+	this->mode += mode;
+}
+void Channel::delMode(char mode)
+{
+	std::string newmode;
+	if (searchIfMode(mode, this->mode) == 0)
+		return ;
+	for(size_t i = 0; i < this->mode.size(); i++)
+	{
+		if (this->mode[i] != mode)
+			newmode += this->mode[i];
+	}
+	this->setMode(newmode);
+}
+
 void Channel::setClientMode(Client &client, std::string mode) { client_mode[client.getFd()] = mode; }
 std::string Channel::getClientMode(Client &client) { return client_mode[client.getFd()]; }
 

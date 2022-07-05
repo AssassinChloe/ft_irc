@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/30 16:51:17 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/05 10:14:37 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ void Client::delChannel(std::string name)
             return ;
         }
     }
+}
+
+std::string Client::getChanMode(std::string name)
+{
+    return ((*this->channel_list.find(name)).second);
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/30 12:31:12 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/05 11:50:42 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,10 @@
 # define HOST "localhost"
 # define SERVER_NAME " Ganesh's Daugthers"
 # define VERSION " 0.1 "
-# define USER_MODE "aiwro"
-# define CHAN_MODE "Oovimnptkl"
+
+# define USER_MODE "o"
+# define CHAN_USER_MODE "Oo"
+# define CHAN_MODE "nit"
 
 # define OPER_NAME "Ganesh_Army"
 # define OPER_PASS "securisedpassword"
@@ -59,4 +61,8 @@ extern int g_stop;
 
 std::vector<std::string> ftsplit(std::string str, std::string delimiter);
 std::string check_params(std::string param);
+int check_if_channel(std::string name);
+int searchIfMode(std::string tofind, std::string target);
+int searchIfMode(char tofind, std::string target);
+            
 #endif
