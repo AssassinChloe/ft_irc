@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/05 10:14:37 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/05 13:58:47 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,28 @@ void Client::delChannel(std::string name)
 std::string Client::getChanMode(std::string name)
 {
     return ((*this->channel_list.find(name)).second);
+}
+
+
+void Client::setMode(std::string chan, std::string mode) { this->channel_list[chan] = mode; }
+
+void Client::addMode(std::string chan, char mode)
+{
+	if (searchIfMode(mode, this->channel_list[chan]) == 1)
+		return ;
+	this->channel_list[chan] += mode;
+}
+void Client::delMode(std::string chan, char mode)
+{
+	std::string newmode;
+	if (searchIfMode(mode, this->channel_list[chan]) == 0)
+		return ;
+	for(size_t i = 0; i < this->channel_list[chan].size(); i++)
+	{
+		if (this->channel_list[chan][i] != mode)
+			newmode += this->channel_list[chan][i];
+	}
+	this->setMode(chan, newmode);
 }
 
 

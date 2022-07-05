@@ -83,4 +83,10 @@ commandes a gerer pour operator server
     RESTART message
     SQUIT message
 
-
+AUTHENTICATE
+Command: AUTHENTICATE
+The AUTHENTICATE command is used for SASL authentication between a server and a client. 
+The client must support and successfully negotiate the "sasl" client capability (as listed below in the SASL specifications) before using this command.
+The AUTHENTICATE message may be sent from the server to the client.
+For the exact semantics of the AUTHENTICATE command and negotiating support for the "sasl" 
+client capability, please see the IRCv3.1 and IRCv3.2 SASL Authentication specifications.

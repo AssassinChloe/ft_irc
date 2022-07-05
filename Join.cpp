@@ -86,7 +86,12 @@ void Command::Join()
         message = this->client->getPrefixe() + "353 " + this->client->getUsername() + " = " + parameters[0] + " :@";
         std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
         for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
-            message = message + (*it).second->getNickname() + " ";
+        {
+            if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(parameters[0])))
+                message = message + "@" + (*it).second->getNickname() + " ";
+            else
+                message = message + (*it).second->getNickname() + " ";
+        }
         message = message + "\r\n";
         send_message(*this->client, message);
 

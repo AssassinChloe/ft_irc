@@ -161,6 +161,18 @@ Client & Server::getClient(int fd)
     return((*(this->_clients.find(fd))).second);
 }
 
+Client & Server::getClient(std::string nickname)
+{
+    std::map<int, Client>::iterator it;
+    for (it = this->_clients.begin(); it != this->_clients.end(); it++)
+    {
+        if ((*it).second.getNickname() == nickname)
+            break;
+    }
+    return ((*it).second);
+}
+
+
 std::map<int, Client> & Server::getClientList()
 {
     return (this->_clients);
