@@ -20,6 +20,7 @@
 #define WHO 18
 #define NOTICE 19
 
+
 Command::Command(Client &client, Server *ganesh, std::string line)
 	: client(&client), server(ganesh), query(line)
 {
@@ -113,6 +114,7 @@ void Command::execCommand()
 			Command::Topic();
 			break;
 		case LIST:
+			Command::List();
 			break;
 		case KICK:
 			Command::Kick();
@@ -131,7 +133,7 @@ void Command::execCommand()
 			break;
 		case NOTICE:
 			Command::Notice();
-			break;
+			break;	
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;
 	}
@@ -142,4 +144,5 @@ void Command::execCommand()
 void	send_message(Client &cl, std::string message)
 {
 	send(cl.getFd(), message.c_str(), message.size(), MSG_NOSIGNAL);
+	std::cout << "message envoye a " << cl.getNickname() << ": " << message << std::endl; 
 }

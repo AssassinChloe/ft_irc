@@ -1,6 +1,6 @@
 general
 - nettoyer nos fichiers des fonctions inutiles et affichages divers
-- interception signaux (sigpipe ?) /
+- interception signaux (sigpipe ?) //OK
 - verifier, fonction par fonction, les ERR et RPL a envoyer
 - verifier leaks dans cas particuliers
 - securiser les envois de messages pour etre sur d’avoir transmis le bon nb de bytes
@@ -16,18 +16,18 @@ general
 
 join
 - enregistrer le mode du client sur le channel
-- faire cas join 0
+- faire cas join 0 //OK
 
 topic
 - ajouter probleme des autorisations en fonction du mode
-- voir si conservation des TOPICWHOTIME, ne semble pas reconnu par hexchat
+- voir si conservation des TOPICWHOTIME, ne semble pas reconnu par hexchat // OK (changement du message -> reconnu)
 - The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today.
 
 pingpong
 - lancer des ping de temps en temps pour avoir reponse client ?
 
 list
-- tout a faire ?
+- command list geee uniquement pour appel simple (/LIST sans parametre)
 
 kick
 - a faire (oper)

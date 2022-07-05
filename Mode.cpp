@@ -46,7 +46,7 @@ void    Command::Mode()
         if ( index >= 0)
         {
             std::string message = this->client->getPrefixe() + "324 " +  this->client->getNickname() + " " + this->parameters[0] + " " + this->server->getChannel(index).getMode() + " \r\n" ;
-            std::cout << "Message " << message << std::endl;
+            // std::cout << "Message " << message << std::endl;
             send_message(*this->client, message);
             return;
         }

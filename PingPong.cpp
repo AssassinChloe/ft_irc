@@ -3,8 +3,11 @@
 void Command::Ping()
 {
 	if (this->getParameters().size() == 0)
-		std::cout << "bientot une reply 409" << std::endl;
-		// return command->reply(409);
+	{
+		std::string message = this->getClient().getPrefixe() + " :No origin specified\r\n";
+		send_message(*this->client, message);
+		return;
+	}
 	int fd_client = this->getClient().getFd();
 	std::string buffer;
 	buffer = (this->getClient().getPrefixe() + "PONG :" + this->getParameters()[0] + "\r\n");
@@ -17,7 +20,16 @@ void Command::Ping()
 void Command::Pong()
 {
 	if (this->getParameters().size() == 0)
-	std::cout << "bientot une reply 409" << std::endl;
-		// return command->reply(409);
+	{
+		std::string message = this->getClient().getPrefixe() + " :No origin specified\r\n";
+		send_message(*this->client, message);
+		return;
+	}
 	this->getClient().setLastPing(std::time(0));
 }
+
+
+// ERR_NOORIGIN (409)
+//   "<client> :No origin specified"
+// Indicates a PING or PONG message missing the originator parameter which is required by old IRC servers. 
+// Nowadays, this may be used by some servers when the PING <token> is empty.

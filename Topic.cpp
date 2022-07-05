@@ -35,18 +35,18 @@ void    Command::Topic()
                 if (server->getChannel(index).getTopic().length() != 0) // topic existe
                 {
                     std::string message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
-                    std::cout << "message TOPIC :" << message <<std::endl;
+                    // std::cout << "message TOPIC :" << message <<std::endl;
                     send_message(*this->client, message);
                 }
                 else 
                 {
                     std::string message = parameters[0] + " :No topic is set\r\n";
-                    std::cout << "message NO_TOPIC :" << message <<std::endl;
+                    // std::cout << "message NO_TOPIC :" << message <<std::endl;
                     send_message(*this->client, message);
                 }
                 // define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
             }
-            if (nb_param == 1 && argLine != "")
+            if (nb_param == 1 && argLine.length() != 0)
             {
                 server->getChannel(index).setTopic(argLine);
                 server->getChannel(index).setTopicSetter(this->client);
@@ -56,19 +56,20 @@ void    Command::Topic()
                 std::stringstream ss;
                 ss << server->getChannel(index).getLastTopicSet();
                 std::string timestring = ss.str();
-                std::string message = this->client->getPrefixe() +" "+ parameters[0] + " " ;
+                std::string message = this->client->getPrefixe() +" 333 "+ parameters[0] + " " ;
                 message = message + server->getChannel(index).getTopicSetter()->getNickname() + " " ;
                 message = message + timestring +  "\r\n";
                 // message = message + server->getChannel(index).getLastTopicSet() +  "\r\n";
-                std::cout << "message TOPICWHOTIME :" << message <<std::endl;
-                send_message(*this->client, message);
+                // std::cout << "message TOPICWHOTIME :" << message <<std::endl;
+                send_message(*this->client, message); // message 
 
                 std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
                 for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
                 {
                     // if (this->client != (*it).second) // condition a mettre si on ne veut pas envoyer a celui qui a change le topic
                     // {
-                        std::string message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
+                        std::string message = this->client->getPrefixe() +" TOPIC "+parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
+                        // :lilin!liliu@localhost TOPIC #test :i love rockn roll
                         int id = (*it).second->getFd();
                         send(id, message.c_str(), message.size(), 0);
                     // }
@@ -78,7 +79,8 @@ void    Command::Topic()
 
         else // client pas sur le channel
         {
-            std::string message = parameters[0] + " :You're not on that channel\r\n"; // # define ERR_NOTONCHANNEL(channel)
+            std::string message = this->client->getPrefixe() +" 442 "+ this->client->getNickname() + " " + parameters[0] + " :You're not on that channel\r\n"; // # define ERR_NOTONCHANNEL(channel) (442)
+            // :lilin!liliu@localhost 442 lilin #test :You're not on that channel
             send_message(*this->client, message);
         }
         // verifier que le client est dessus

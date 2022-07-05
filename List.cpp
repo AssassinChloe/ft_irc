@@ -38,3 +38,44 @@
 
 //   LIST T<60                       ; Command to list all channels with
 //                                   a topic changed within the last 60 minutes
+
+#include "Command.hpp"
+#include <iostream>
+#include <string>
+#include <sstream>
+
+void    Command::List()
+{
+    if (parameters.size() == 0)
+    {
+        int nbChan = server->getChannelNb();
+        for (int i=0; i < nbChan; i++)
+        {
+            std::stringstream sstream;
+            sstream << server->getChannel(i).getNbClients();
+            std::string message = (this->client->getPrefixe()) + " 322 " + (this->client->getNickname()) + " " + server->getChannel(i).getCName();
+            message = message + " " + sstream.str() + " :" + server->getChannel(i).getTopic() + "\r\n";
+            send_message(*this->client, message);
+        }
+        std::string message2 = (this->client->getPrefixe()) + " 323 " + (this->client->getNickname()) + " :End of /LIST\r\n";
+        send_message(*this->client, message2);
+    }
+
+    // autres possiblites non gerees
+
+}
+
+// RPL_LISTSTART (321)
+//   "<client> Channel :Users  Name"
+// Sent as a reply to the LIST command, this numeric marks the start of a channel list. As noted in the command description, 
+// this numeric MAY be skipped by the server so clients MUST NOT depend on receiving it.
+
+// RPL_LIST (322)
+//   "<client> <channel> <client count> :<topic>"
+// Sent as a reply to the LIST command, this numeric sends information about a channel to the client. <channel> is the 
+// name of the channel. <client count> is an integer indicating how many clients are joined to that channel. <topic> is the 
+// channel’s topic (as set by the TOPIC command).
+
+// RPL_LISTEND (323)
+//   "<client> :End of /LIST"
+// Sent as a reply to the LIST command, this numeric indicates the end of a LIST response.

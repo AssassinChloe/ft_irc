@@ -107,10 +107,9 @@ void Command::Join()
     }
     else // correspond a erreur car impossibe de creer le channel
     {
-        std::cout << "channel non cree, client non ajoute" << std::endl; // reply 476 ERR_BADCHANMASK
-        std::string message = parameters[0] + " :Bad Channel Mask\r\n";
+        std::cout << "channel non cree, client non ajoute" << std::endl;
+        std::string message = parameters[0] + " :Bad Channel Mask\r\n";  // reply 476 ERR_BADCHANMASK
         send_message(*this->client, message);
-        // std::string ERR_BADCHANMASK(std::string channel) { return channel + " :Bad Channel Mask"; }
     }
     
 }
