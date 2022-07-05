@@ -90,23 +90,28 @@ void    Command::Kick()
         for (int i = 1; i <= nbKicked; i++)
         {
             int find = 0;
-            if (parameters[0] == "0ganesh")
+            // if (parameters[0] == "0ganesh")
+            // {
+            //     //if (trouver le client dans la liste)
+            //     std::cout << " virer " << kickedClients[i] << " du serveur" << std::endl; 
+            //     find = 1;
+            //     // a faire, fonction quit(nickname) ?
+            // }
+            //boucle pour trouver le client dans le channel
+            std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+            for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
             {
-                //if (trouver le client dans la liste)
-                std::cout << " virer " << kickedClients[i] << " du serveur" << std::endl; 
-                find = 1;
-                // a faire, fonction quit(nickname) ?
-            }
-            else
-            {
-                //if (trouver le client dans le channel)
-                std::cout << " virer " << kickedClients[i] << " du channel" << std::endl; 
-                //server->getChannel(index).removeClient(kickedclients[i]);
-                std::string message =  this->client->getPrefixe() + " KICK " + parameters[0] + " " + kickedClients[i] + "\r\n";
-                //:WiZ!jto@tolsun.oulu.fi KICK #Finnish John
-                // voir a qui envoyer le message 
-                // voir si on ajoute " :" + argLine à la fin du message
-                find = 1;
+                if (it->second->getNickname() == kickedClients[i])
+                {
+                    std::string message = this->client->getPrefixe() + " KICK " + parameters[0] + " " + kickedClients[i] + " ";
+                    if (argLine.length() != 0)
+                        message = message + ":" + argLine;
+                    message = message + "\r\n";
+                    server->getChannel(index).broadcast(message);
+                    server->getChannel(index).removeClient(kickedClients[i]);
+    
+                    find = 1;
+                }
             }
             if (find == 0)
             {

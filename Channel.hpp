@@ -62,6 +62,8 @@ class Channel
 		void 	setTopicSetter(Client *client);
 		time_t  getLastTopicSet();
 		void    setLastTopicSet();
+
+		void	broadcast(std::string message);
 		// void	addChanOp(Client &client);
 		// std::vector<Client *> 	getChanOp();
 

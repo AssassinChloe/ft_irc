@@ -25,7 +25,9 @@ void    Command::Kill()
         }
         else
         {
-
+            // si on trouve pas l'utlisateur
+            // err no such nick
+            // sinon
         }
     }
 }

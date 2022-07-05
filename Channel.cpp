@@ -156,6 +156,12 @@ void 	Channel::setTopicSetter(Client *client) {this->topicSetter = client;}
 time_t  Channel::getLastTopicSet(){ return this->lastTopicSet;}
 void    Channel::setLastTopicSet(){ this->lastTopicSet = std::time(0);}
 
+void	Channel::broadcast(std::string message)
+{
+	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+		send_message(*(*it).second, message);
+}
+
 // void	Channel::addChanOp(Client &client) 
 // {
 

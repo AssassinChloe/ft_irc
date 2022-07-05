@@ -60,7 +60,7 @@ void Command::changeChannelMode(std::string modifier, int index)
         {
             if (modifier[i] == 'o' && sign > 0)
             {
-                if (this->)
+                // if (this->)
                 //ici on donne les droits operateur a this->parameters[2] (check nb param, validite du nickmname)
                 std::cout << "qqun devient operateur" << std::endl;
             }

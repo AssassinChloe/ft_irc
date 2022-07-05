@@ -3,7 +3,7 @@ general
 - interception signaux (sigpipe ?) //OK
 - verifier, fonction par fonction, les ERR et RPL a envoyer
 - verifier leaks dans cas particuliers
-- securiser les envois de messages pour etre sur d’avoir transmis le bon nb de bytes
+- securiser les envois de messages pour etre sur d'avoir transmis le bon nb de bytes
 - tests divers :
     - envoi de texte > taille du buffer (concaténation du buffer…)
     - envoi d’une ligne sans commande hors channel
@@ -80,7 +80,7 @@ commandes a gerer pour operator server
 
     KILL message
     REHASH message
-    RESTART message
-    SQUIT message
+    RESTART message // optionnel car considere comme a risque
+    SQUIT message // neconcerne que le network
 
 
