@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/05 10:13:06 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/05 14:43:47 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,10 @@ class Client
         std::string getChanMode(std::string name);
         void addChannel(std::string name, std::string mode);
         void delChannel(std::string name);
+        
+        void setMode(std::string chan, std::string mode);
+        void addMode(std::string chan, char mode);
+		void delMode(std::string chan, char mode);
 };
 
 #endif

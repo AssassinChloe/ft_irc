@@ -60,9 +60,11 @@ void Command::changeChannelMode(std::string modifier, int index)
         {
             if (modifier[i] == 'o' && sign > 0)
             {
-                // if (this->)
-                //ici on donne les droits operateur a this->parameters[2] (check nb param, validite du nickmname)
-                std::cout << "qqun devient operateur" << std::endl;
+                if (this->parameters.size() >= 3 && this->server->getChannel(index).isOnChannel(this->parameters[2]) == true)
+                {
+                    this->server->getClient(this->parameters[2]).addMode(this->parameters[0], modifier[i]);
+                    names(index);
+                }
             }
         }
         else
@@ -92,7 +94,7 @@ void    Command::Mode()
             send_message(*this->client, message);
             return;
         }
-        if (searchIfMode("oO", this->client->getChanMode(this->parameters[0])) == 0)
+        if (searchIfMode(CHAN_USER_MODE, this->client->getChanMode(this->parameters[0])) == 0)
         {
             message = ERR_CHANOPRIVSNEEDED(this->client->getPrefixe(), this->client->getNickname(), this->parameters[0]);
             send_message(*this->client, message);

@@ -34,6 +34,7 @@ class Server
         void dispatch(Client &client, std::string buff);
 
         Client &getClient(int fd);
+        Client &getClient(std::string name);
         std::map<int, Client> &getClientList();
         std::string getPass() const;
         std::string getCreation() const;
