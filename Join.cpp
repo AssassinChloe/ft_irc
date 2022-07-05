@@ -103,7 +103,11 @@ void Command::Join()
                     send(id, message.c_str(), message.size(), MSG_NOSIGNAL);
                 }
         }
-        this->client->addChannel(parameters[0], "");
+        if (this->server->getChannel(index).getClients().size() == 1)
+            this->client->addChannel(parameters[0], "O");
+        else
+            this->client->addChannel(parameters[0], "");
+
     }
     else // correspond a erreur car impossibe de creer le channel
     {

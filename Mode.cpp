@@ -19,11 +19,11 @@
 
 // Channel mode
 
-// If <target> is a channel that does not exist on the network, the ERR_NOSUCHCHANNEL (403) numeric is returned.
+// If <target> is a channel that does not exist on the network, the ERR_NOSUCHCHANNEL (403) numeric is returned.            OK
 
 // If <modestring> is not given, the RPL_CHANNELMODEIS (324) numeric is returned. Servers MAY choose to hide 
 // sensitive information such as channel keys when sending the current modes. Servers MAY also return the 
-// RPL_CREATIONTIME (329) numeric following RPL_CHANNELMODEIS.
+// RPL_CREATIONTIME (329) numeric following RPL_CHANNELMODEIS.                                                              OK
 
 // If <modestring> is given, the user sending the command MUST have appropriate channel privileges on the target 
 // channel to change the modes given. If a user does not have appropriate privileges to change modes on 
@@ -38,36 +38,90 @@
 
 #include "Command.hpp"
 
+void Command::changeChannelMode(std::string modifier, int index)
+{
+    int sign = 1;
+    std::string message;
+
+    for (size_t i = 0; i < modifier.size(); i++)
+    {
+        if (modifier[i] == '+')
+            sign = 1;
+        else if (modifier[i] == '-')
+            sign = -1;
+        else if (searchIfMode(modifier[i], CHAN_MODE) == 1)
+        {
+            if (sign > 0)
+                this->server->getChannel(index).addMode(modifier[i]);
+            else
+                this->server->getChannel(index).delMode(modifier[i]);          
+        }
+        else if (searchIfMode(modifier[i], CHAN_USER_MODE) == 1)
+        {
+            if (modifier[i] == 'o' && sign > 0)
+            {
+                if (this->)
+                //ici on donne les droits operateur a this->parameters[2] (check nb param, validite du nickmname)
+                std::cout << "qqun devient operateur" << std::endl;
+            }
+        }
+        else
+        {
+            message = ERR_UNKNOWNMODE(this->client->getPrefixe(), this->client->getNickname(), modifier[i]);
+            send_message(*this->client, message);
+        }
+    }
+}
+
 void    Command::Mode()
 {
-    if (this->parameters.size() == 1) // a modifier pour user mode ou channel mode
+    std::string message;
+
+    if (check_if_channel(this->parameters[0]) == 1) //channel mode  N I et T / O o
     {
         int index = this->server->getChannelIndex(this->parameters[0]);
-        if ( index >= 0)
+        if (index < 0)
         {
-            std::string message = this->client->getPrefixe() + "324 " +  this->client->getNickname() + " " + this->parameters[0] + " " + this->server->getChannel(index).getMode() + " \r\n" ;
-            // std::cout << "Message " << message << std::endl;
+            message = ERR_NOSUCHCHANNEL(this->client->getPrefixe(), this->client->getNickname(), this->parameters[0]);
+            send_message(*this->client, message);
+            return ;
+        }
+        if (this->parameters.size() == 1)
+        {
+            message = RPL_CHANNELMODEIS(this->client->getPrefixe(), this->client->getNickname(), this->parameters[0], this->server->getChannel(index).getMode(), ""); //dernier argument je sais pas ce qu'on doit/peut y mettre
             send_message(*this->client, message);
             return;
         }
-        else // attention a modifier (cas prevu avec juste un argument pour utilisateur, mais peut avoir plusieurs ?)
+        if (searchIfMode("oO", this->client->getChanMode(this->parameters[0])) == 0)
         {
-            int find = 0;
-            for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
+            message = ERR_CHANOPRIVSNEEDED(this->client->getPrefixe(), this->client->getNickname(), this->parameters[0]);
+            send_message(*this->client, message);
+            return;
+        }
+        changeChannelMode(this->parameters[1], index);
+        for(int i = 0; i < this->server->getChannel(index).getNbClients(); i++)
+        {
+            Client tmp = *(this->server->getChannel(index).getClients()[i]);
+            message = RPL_CHANNELMODEIS(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0], this->server->getChannel(index).getMode(), ""); //dernier argument je sais pas ce qu'on doit/peut y mettre
+            send_message(tmp, message);
+        }
+    }
+    else //user mode o
+    {
+        int find = 0;
+        for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
+        {
+            if ((*it).second.getNickname() == this->parameters[0])
             {
-                if ((*it).second.getNickname() == this->parameters[0])
-                {
-                    // chaner le mode du user
-
-                    find = 1;
-                }
+                // chaner le mode du user
+                find = 1;
             }
-            if (find == 0)
-            {
-                std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + parameters[0] + " :No such nick/channel\r\n";
-                send_message(*this->client, message);
-                //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
-            }
+        }
+        if (find == 0)
+        {
+            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + parameters[0] + " :No such nick/channel\r\n";
+            send_message(*this->client, message);
+            //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
         }
     }
 }

@@ -47,3 +47,31 @@ std::string check_params(std::string param)
 		return (param);
 	return("default");
 }
+
+int check_if_channel(std::string name)
+{
+	size_t position;
+	std::string charset = CHANNEL_VALID_CHAR;
+	if ((position = charset.find(name[0])) == std::string::npos)
+		return (0);
+	return (1);
+}
+
+int searchIfMode(std::string tofind, std::string target)
+{
+    size_t position;
+    for (size_t i = 0; i != tofind.size(); i++)
+    {
+        if ((position = target.find(tofind[i])) != std::string::npos)
+            return (1);
+    }
+    return (0);
+}
+
+int searchIfMode(char tofind, std::string target)
+{
+    size_t position;
+    if ((position = target.find(tofind)) != std::string::npos)
+            return (1);
+    return (0);
+}
