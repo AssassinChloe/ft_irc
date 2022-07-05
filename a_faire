@@ -53,7 +53,8 @@ privmsg
 - verifier et intergrer les cas d'erreur
 
 who
-- rajouter user mode ?
+- rajouter user mode 
+- changer la lettre H en fonction du mode + @ si operator
 
 notice
 - ajouter condition de droit

@@ -36,4 +36,9 @@ void    Command::Who()
 }
 
 // rajouter  user mode !!!
+
+// < WHO #test
+// 4 > :lilin!liliu@localhost 352 lilin #test liliu localhost  lilin H :0 realname
+// 4 > :lilin!liliu@localhost 352 lilin #test lalau localhost  lalan H :0 realname
+// 4 > :lilin!liliu@localhost 352 lilin #test admin localhost  admin H@ :0 realname
     

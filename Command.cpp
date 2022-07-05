@@ -21,6 +21,7 @@
 #define NOTICE 19
 
 
+
 Command::Command(Client &client, Server *ganesh, std::string line)
 	: client(&client), server(ganesh), query(line)
 {
@@ -70,6 +71,7 @@ int	get_cmd_id(const std::string s)
 	else if (s == "WELCOME")    return WELCOME;
 	else if (s == "WHO")   		return WHO;
 	else if (s == "NOTICE")   	return NOTICE;
+	else if (s == "KILL")   	return KILL;
 	return 0;
 }
 
@@ -134,6 +136,9 @@ void Command::execCommand()
 		case NOTICE:
 			Command::Notice();
 			break;	
+		case KILL:
+			Command::Kill();
+			break;
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;
 	}
