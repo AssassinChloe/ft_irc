@@ -226,6 +226,7 @@ class Command
 		void user();
 		void pass();
 		void Join();
+			void names(int index);
 		void welcome();
 		void Mode();
 			void changeChannelMode(std::string modifier, int index);

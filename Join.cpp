@@ -73,31 +73,23 @@ void Command::Join()
     { 
         int index = server->getChannelIndex(parameters[0]);
         server->getChannel(index).addClient(this->getClient()); // voir le ;ode par defaut
+        std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
 
         // message JOIN
         std::string message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
         send_message(*this->client, message);
-        
+        if (this->server->getChannel(index).getClients().size() == 1)
+            this->client->addChannel(parameters[0], "O");
+        else
+            this->client->addChannel(parameters[0], "");
         // message topic
         message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
         send_message(*this->client, message);
 
         // message users connectes
-        message = this->client->getPrefixe() + "353 " + this->client->getUsername() + " = " + parameters[0] + " :@";
-        std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-        for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
-        {
-            if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(parameters[0])))
-                message = message + "@" + (*it).second->getNickname() + " ";
-            else
-                message = message + (*it).second->getNickname() + " ";
-        }
-        message = message + "\r\n";
-        send_message(*this->client, message);
-
+        names(index);
         // message end of list user
-        message = this->client->getPrefixe() + "366 " + this->client->getUsername() + " " + parameters[0] + " :End of NAMES list\r\n"; // #366 RPL_ENDOFNAMES
-        send_message(*this->client, message);
+        
 
         message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
         for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)

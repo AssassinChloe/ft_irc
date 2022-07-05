@@ -63,6 +63,7 @@ void Command::changeChannelMode(std::string modifier, int index)
                 if (this->parameters.size() >= 3 && this->server->getChannel(index).isOnChannel(this->parameters[2]) == true)
                 {
                     this->server->getClient(this->parameters[2]).addMode(this->parameters[0], modifier[i]);
+                    names(index);
                 }
             }
         }
