@@ -38,13 +38,15 @@
 
 #include "Command.hpp"
 
-void Command::changeChannelMode(std::string modifier, int index)
+int Command::changeChannelMode(std::string modifier, int index)
 {
     int sign = 1;
     std::string message;
+    int ret = 0;
 
     for (size_t i = 0; i < modifier.size(); i++)
     {
+        
         if (modifier[i] == '+')
             sign = 1;
         else if (modifier[i] == '-')
@@ -58,12 +60,33 @@ void Command::changeChannelMode(std::string modifier, int index)
         }
         else if (searchIfMode(modifier[i], CHAN_USER_MODE) == 1)
         {
-            if (modifier[i] == 'o' && sign > 0)
+            if (modifier[i] == 'o' && this->parameters.size() >= 3)
             {
-                if (this->parameters.size() >= 3 && this->server->getChannel(index).isOnChannel(this->parameters[2]) == true)
+                if (this->server->getChannel(index).isOnChannel(this->parameters[2]) == true)
                 {
-                    this->server->getClient(this->parameters[2]).addMode(this->parameters[0], modifier[i]);
+                    if (sign > 0)
+                    {
+                        this->server->getClient(this->parameters[2]).addMode(this->parameters[0], modifier[i]);
+                        ret = 1;
+                    }
+                    else if (sign < 0 && this->client->getNickname() == this->parameters[2])
+                    {
+                        this->client->delMode(this->parameters[0], modifier[i]);
+                        ret = 1;
+                    }
+                    else
+                    {
+                        message = ERR_USERSDONTMATCH(this->client->getPrefixe(), this->client->getNickname());
+                        send_message(*this->client, message);
+                        return (ret);
+                    }
                 }
+            }
+            else
+            {
+                message = ERR_NEEDMOREPARAMS(this->client->getPrefixe(), this->client->getNickname(), "MODE");
+                send_message(*this->client, message);
+                return (ret);
             }
         }
         else
@@ -72,6 +95,8 @@ void Command::changeChannelMode(std::string modifier, int index)
             send_message(*this->client, message);
         }
     }
+    return (ret);
+
 }
 
 void    Command::Mode()
@@ -104,17 +129,22 @@ void    Command::Mode()
             send_message(*this->client, message);
             return;
         }
-        changeChannelMode(this->parameters[1], index);
+        if (changeChannelMode(this->parameters[1], index) == 1)
+        {
+            //trouver comment dire au nouvel operator channel qu'il est now operator channel afin que le client mette a jour sa liste de names
+        }
         for(int i = 0; i < this->server->getChannel(index).getNbClients(); i++)
         {
             Client tmp = *(this->server->getChannel(index).getClients()[i]);
             message = RPL_CHANNELMODEIS(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0], this->server->getChannel(index).getMode(), ""); //dernier argument je sais pas ce qu'on doit/peut y mettre
             send_message(tmp, message);
+            //pertinence de l'envoyer a chaque fois? faire un check before/after de si y a vraiment un changement au niveau des modes du channel pour eviter le spam inutile
         }
     }
     else //user mode O
     {
         int find = 0;
+        int sign = 1;
         for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
         {
             if ((*it).second.getNickname() == this->parameters[0])
@@ -126,22 +156,31 @@ void    Command::Mode()
                     send_message(*this->client, message);
                     return ;
                 }
-                // for (size_t i = 0; i < parameters[1].size(); i++)
-                // {
-                //     if (parameters[1][i] == 'O')
-                //     {
-
-                //     }
-                //     else
-                //     {
-                //         message = ERR_UNKNOWNMODE(this->client->getPrefixe(), this->client->getNickname(), parameters[1][i]);
-                //         send_message(*this->client, message);
-                //     }
-                // }
+                for (size_t i = 0; i < parameters[1].size(); i++)
+                {
+                    if (parameters[1][i] == '+')
+                        sign = 1;
+                    else if (parameters[1][i] == '-')
+                        sign = -1;
+                    else if (parameters[1][i] == 'o')
+                    {
+                        if (sign < 0)
+                        {
+                            this->client->setStatus("welcome"); // a voir si on cree une variable mode en plus de status ou quoi
+                            message = RPL_UMODEIS(this->client->getPrefixe(), this->client->getNickname(), this->client->getStatus());
+                            send_message(*this->client, message);
+                            return;
+                        } 
+                    }
+                    else
+                    {
+                        message = ERR_UNKNOWNMODE(this->client->getPrefixe(), this->client->getNickname(), parameters[1][i]);
+                        send_message(*this->client, message);
+                    }
+                }
                 // 
-                message = ERR_UMODEUNKNOWNFLAG(this->client->getPrefixe(), this->client->getNickname());
-                send_message(*this->client, message);
-                return ;
+                // message = ERR_UMODEUNKNOWNFLAG(this->client->getPrefixe(), this->client->getNickname());
+                // send_message(*this->client, message);
             }
         }
         if (find == 0)

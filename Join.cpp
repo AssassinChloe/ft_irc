@@ -109,8 +109,8 @@ void Command::Join()
         else
             this->client->addChannel(parameters[0], "");
         // message topic
-        // message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
-        // send_message(*this->client, message);
+        message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
+        send_message(*this->client, message);
 
         // message users connectes
         names(index);

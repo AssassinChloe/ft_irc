@@ -40,7 +40,7 @@
 // # define ERR_SUMMONDISABLED() (":SUMMON has been disabled\r\n")
 // # define ERR_USERSDISABLED() (":USERS has been disabled\r\n")
 // # define ERR_NOTREGISTERED() (":You have not registered\r\n")
-# define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters\r\n") // utilise dans join (mais peut etre commente ici)
+# define ERR_NEEDMOREPARAMS(prefixe, nick, command) (prefixe + "461 " + nick + " " + command + " :Not enough parameters\r\n")
 # define ERR_ALREADYREGISTRED(prefixe, nick) (prefixe + "462 " + nick + " :You may not reregister\r\n")
 // # define ERR_NOPERMFORHOST() (":Your host isn't among the privileged\r\n")
 # define ERR_PASSWDMISMATCH(prefixe, nick) (prefixe + "464 " + nick + " :Password incorrect\r\n")
@@ -91,6 +91,7 @@
 // # define RPL_LIST(channel, topic) (channel + " :" + topic + "\r\n")
 // # define RPL_LISTEND() (":End of LIST\r\n")
 # define RPL_CHANNELMODEIS(prefixe, nick, channel, mode, params) (prefixe + "324 " + nick + " " + channel + " " + mode + " " + params + "\r\n")
+# define RPL_UNIQOPIS(prefixe, nick, channel) (prefixe + "325 " + nick + " " + channel + " " + nick + "\r\n")
 # define RPL_NOTOPIC(channel) (channel + " :No topic is set\r\n") // 331 utilise dans topic (mais peut etre commente ici)
 # define RPL_TOPIC(channel, subject) (channel + " :" + subject + "\r\n") // 332 utilise dans join et topic (mais peut etre commente ici)
 // # define RPL_INVITING(channel, pseudo) (channel + " " + pseudo + "\r\n")
@@ -230,7 +231,7 @@ class Command
 			void names(int index);
 		void welcome();
 		void Mode();
-			void changeChannelMode(std::string modifier, int index);
+			int changeChannelMode(std::string modifier, int index);
 
 		void Who();
 		void Privmsg();
