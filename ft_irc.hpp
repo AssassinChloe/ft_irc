@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/05 11:50:42 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/06 12:45:16 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@
 # define SERVER_NAME " Ganesh's Daugthers"
 # define VERSION " 0.1 "
 
-# define USER_MODE "o"
+# define USER_MODE "O"
 # define CHAN_USER_MODE "Oo"
 # define CHAN_MODE "nit"
 

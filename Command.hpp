@@ -12,7 +12,7 @@
 **  error for command file
 */
 
-// # define ERR_NOSUCHNICK(pseudo) (pseudo + " :No such nick/channel\r\n") //401
+# define ERR_NOSUCHNICK(prefixe, nick, arg) (prefixe + "401 " + nick + " " + arg + " :No such nick\r\n") //401
 // # define ERR_NOSUCHSERVER(server) (server + " :No such server\r\n") //402
 # define ERR_NOSUCHCHANNEL(prefixe, nick, channel) (prefixe + "403 " + nick + " " + channel + " :No such channel\r\n")
 // # define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel\r\n") //404
@@ -137,7 +137,7 @@
 // # define RPL_STATSUPTIME(arg) (":Server Up " + arg + "\r\n")
 // # define RPL_STATSOLINE(host_mask, name) ("O " + host_mask + " * " + name + "\r\n")
 // # define RPL_STATSHLINE(host_mask, server_name) ("H " + host_mask + " * " + server_name + "\r\n")
-// # define RPL_UMODEIS(user_mode) (user_mode + "\r\n")
+# define RPL_UMODEIS(prefixe, nick, user_mode) (prefixe + "221 " + nick + " " + user_mode + "\r\n")
 // # define RPL_LUSERCLIENT(int1, int2, int3) (":There are " + int1 + " users and " + int2 + " invisible on " + int3 + " servers\r\n")
 // # define RPL_LUSEROP(int1) (int1 + " :operator(s) online\r\n")
 // # define RPL_LUSERUNKNOWN(int1) (int1 + " :unknown connection(s)\r\n")
