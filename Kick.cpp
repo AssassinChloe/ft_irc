@@ -59,12 +59,6 @@ void    Command::Kick()
     
     else
     {
-    //     pour test du parsing commande :
-    //     for (int i = 0; i < (nb_param); i++)
-    //         std::cout << "parameters[" << i << "]: " << parameters[i] << std::endl;
-    //     if (argLine.length() != 0)
-    //         std::cout << "argline: " << this->getArgLine() << std::endl;
-    // }
 
         int index = server->getChannelIndex(parameters[0]); // si channel n'existe pas = -1
         if (index == -1)
@@ -77,27 +71,18 @@ void    Command::Kick()
         bool power = 1; //v faire une fonction hasPower dans channel power = server->getChannel(index).asPower(this->getClient().getNickname()))
         if (!power) // client n'a pas les droits sur le channel
         {
-            std::string message = this->client->getPrefixe() + " " + parameters[0] + " :You're not channel operator\r\n";
-            send_message(*this->client, message);
+            std::string message = parameters[0] + " :You're not channel operator\r\n";
+            send_message(*this->client, message); //ERR_CHANOPRIVSNEEDED (482)
             return;
-            //ERR_CHANOPRIVSNEEDED (482)
-            //  "<client> <channel> :You're not channel operator"
 
         }
 
         std::vector<std::string> kickedClients = ftsplit(parameters[1], ",");
         int nbKicked = kickedClients.size();
-        for (int i = 1; i <= nbKicked; i++)
+        for (int i = 0; i < nbKicked; i++)
         {
             int find = 0;
-            // if (parameters[0] == "0ganesh")
-            // {
-            //     //if (trouver le client dans la liste)
-            //     std::cout << " virer " << kickedClients[i] << " du serveur" << std::endl; 
-            //     find = 1;
-            //     // a faire, fonction quit(nickname) ?
-            // }
-            //boucle pour trouver le client dans le channel
+
             std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
             for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
             {
@@ -109,21 +94,14 @@ void    Command::Kick()
                     message = message + "\r\n";
                     server->getChannel(index).broadcast(message);
                     server->getChannel(index).removeClient(kickedClients[i]);
-    
                     find = 1;
                 }
             }
             if (find == 0)
             {
-                std::string message = this->client->getPrefixe() + " " + kickedClients[i] + " " + parameters[0] + " :They aren't on that channel\r\n";
-                send_message(*this->client, message);
+                std::string message = kickedClients[i] + " " + parameters[0] + " :They aren't on that channel\r\n";
+                send_message(*this->client, message); // ERR_USERNOTINCHANNEL (441)
             }
-
-
-        // ERR_USERNOTINCHANNEL (441)
-        //"<client> <nick> <channel> :They aren't on that channel"
-        // Returned when a client tries to perform a channel+nick affecting command, when the nick isn’t joined to the channel (for example, MODE #channel +o nick).
-
 
         }
 
