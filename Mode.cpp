@@ -120,25 +120,34 @@ void    Command::Mode()
             if ((*it).second.getNickname() == this->parameters[0])
             {
                 find = 1;
-                for (size_t i = 0; i < parameters[1].size(); i++)
+                if(this->client->getNickname() != this->parameters[0])
                 {
-                    if (parameters[1][i] == "O")
-                    {
-                        
-                    }
-                    else
-                    {
-                        message = ERR_UNKNOWNMODE(this->client->getPrefixe(), this->client->getNickname(), parameters[1][i]);
-                        send_message(*this->client, message);
-                    }
+                    message = ERR_USERSDONTMATCH(this->client->getPrefixe(), this->client->getNickname());
+                    send_message(*this->client, message);
+                    return ;
                 }
+                // for (size_t i = 0; i < parameters[1].size(); i++)
+                // {
+                //     if (parameters[1][i] == 'O')
+                //     {
+
+                //     }
+                //     else
+                //     {
+                //         message = ERR_UNKNOWNMODE(this->client->getPrefixe(), this->client->getNickname(), parameters[1][i]);
+                //         send_message(*this->client, message);
+                //     }
+                // }
+                // 
+                message = ERR_UMODEUNKNOWNFLAG(this->client->getPrefixe(), this->client->getNickname());
+                send_message(*this->client, message);
+                return ;
             }
         }
         if (find == 0)
         {
             std::string message = ERR_NOSUCHNICK(this->client->getPrefixe(), this->client->getNickname(), parameters[0]);
             send_message(*this->client, message);
-            //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
         }
     }
 }
