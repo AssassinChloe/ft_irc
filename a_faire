@@ -20,7 +20,7 @@ join
 
 topic
 - ajouter probleme des autorisations en fonction du mode
-- voir si conservation des TOPICWHOTIME, probleme de decalage des valeurs -)
+- voir si conservation des TOPICWHOTIME, (probleme de decalage des valeurs -)
 - The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today.
 
 pingpong
@@ -80,7 +80,7 @@ commades a gere pour oper :
 commandes a gerer pour operator server
 
     KILL message
-    REHASH message
+    REHASH message // besoin de faire un fichier de config a relire
     RESTART message // optionnel car considere comme a risque
     SQUIT message // neconcerne que le network
 

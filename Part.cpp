@@ -12,5 +12,6 @@ void Command::part()
     this->server->getChannel(index).removeClient(*this->client);
     if (this->server->getChannel(index).getNbClients() == 0)
         this->server->delChannel(parameters[0]);
+    this->server->getChannel(index).delInvited(this->client->getNickname()); // suppression de la list des invites, a voir si on conserve
     this->client->delChannel(parameters[0]);
 }
