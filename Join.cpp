@@ -11,6 +11,11 @@
 // - si parameters[0] == 0 (part all)
 // - broadcast de l'info aux autres du channel
 
+// ERR_INVITEONLYCHAN (473)
+//   "<client> <channel> :Cannot join channel (+i)"
+// Returned to indicate that a JOIN command failed because the channel is set to [invite-only] mode 
+// and the client has not been invited to the channel or had an invite exception set for them. The text 
+// used in the last param of this message may vary.
 
 bool channelExist(Server *server, std::string chanName)
 {
@@ -72,6 +77,27 @@ void Command::Join()
     if (channelExist(this->server, parameters[0]))
     { 
         int index = server->getChannelIndex(parameters[0]);
+
+        std::string modeChan = server->getChannel(index).getMode();
+        std::cout << "mode Chan = " << modeChan << std::endl;
+        // SI channel en mode i : verification de presence sur liste d'invites
+        if (searchIfMode('i', modeChan) == 1)
+        {
+            int nb = server->getChannel(index).getInvitedNb();
+            int isInvited = 0;
+            for (int i=0; i<nb; i++)
+            {
+                if (this->client->getNickname() == server->getChannel(index).getInvited(i))
+                    isInvited = 1;
+            }
+            if (isInvited == 0 )
+            {
+                std::string message =  parameters[0] + " :Cannot join channel (+i)\r\n";
+                send_message(*this->client, message);
+                return;  // ERR_INVITEONLYCHAN (473)
+            }
+        }
+
         server->getChannel(index).addClient(this->getClient()); // voir le ;ode par defaut
         std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
 

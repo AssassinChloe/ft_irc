@@ -162,37 +162,51 @@ void	Channel::broadcast(std::string message)
 		send_message(*(*it).second, message);
 }
 
-// void	Channel::addChanOp(Client &client) 
-// {
+void Channel::addInvited(std::string nickname)
+{
+	std::cout << "debut du add invited" << std::endl;
+    if (nickname.length() != 0)
+    {
+        if (getInvitedIndex(nickname) == -1)
+		{
+			invited.push_back(nickname);
+       		std::cout << "invite ajoute a la liste" << std::endl;
+		}
+    }
+}
 
-// };
+void Channel::delInvited(std::string nickname)
+{
+	int nb = invited.size();
+	for (int i = 0; i < nb; i++)
+	{
+		if (invited[i] == nickname)
+		{
+			invited.erase(invited.begin() + i);
+			return;
+		}
+	}
+}
 
+std::string Channel::getInvited(int i)
+{
+	return(invited[i]);
+}
 
-// std::vector<Client *> Channel::getChanOp()
-// {
-// 	std::vector<Client *> chanops = std::vector<Client *>();
+int Channel::getInvitedIndex(std::string nickname)
+{
+	int nb = invited.size();
+	for (int i = 0; i < nb; i++)
+    {
+        if (invited[i] == nickname)
+            return (i);
+    }
+    return (-1); 
 
-// 	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
-// 		chanops.push_back(it->second);
-// 	return chanops;
-// }
+}
 
-
-// void Channel::setKey(std::string key) { this->key = key; }
-// std::string Channel::getKey() { return key; }
-
-// void Channel::setMaxClients(int max_users) { this->max_clients = max_clients; }
-// int Channel::getMaxClients() { return max_clients; }
-
-// void Channel::addInvited(Client &user) { invited.push_back(&user); }
-// bool Channel::isInvited(Client &user) { return std::find(invited.begin(), invited.end(), &user) != invited.end(); }
-// void Channel::removeInvited(Client &user)
-// {
-// 	std::vector<Client *>::iterator it = std::find(invited.begin(), invited.end(), &user);
-// 	if (it != invited.end())
-// 		invited.erase(it);
-// }
-
-
-
+int Channel::getInvitedNb()
+{
+	return (invited.size());
+}
 

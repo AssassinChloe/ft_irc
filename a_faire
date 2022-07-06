@@ -20,7 +20,7 @@ join
 
 topic
 - ajouter probleme des autorisations en fonction du mode
-- voir si conservation des TOPICWHOTIME, ne semble pas reconnu par hexchat // OK (changement du message -> reconnu)
+- voir si conservation des TOPICWHOTIME, probleme de decalage des valeurs -)
 - The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today.
 
 pingpong
@@ -30,19 +30,20 @@ list
 - command list geee uniquement pour appel simple (/LIST sans parametre)
 
 kick
-- a faire (oper)
+- rajouter les droits (pour l'instant booleen fixe)
 
 channel
 - nb max de client sur channel ?
 - nb max de channel qu'un client peut rejoindre ?
 - key sur channel ?
 - joindre plusieurs channels a la fois ?
+- faire la suppression du channel quand il n'y a plus de user (ou controle des 2 elements quand invite)
 
 mode
 - integrer le changement de mode du user
 - inetgrer les differents messages erreur
 
-commande invite ?
+Invite
 - a faire notamment pour oper
 - changement a prevoir pour channel
 

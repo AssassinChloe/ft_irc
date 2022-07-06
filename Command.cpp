@@ -19,6 +19,7 @@
 #define WELCOME 17
 #define WHO 18
 #define NOTICE 19
+#define INVITE 20
 
 
 
@@ -72,6 +73,7 @@ int	get_cmd_id(const std::string s)
 	else if (s == "WHO")   		return WHO;
 	else if (s == "NOTICE")   	return NOTICE;
 	else if (s == "KILL")   	return KILL;
+	else if (s == "INVITE")   	return INVITE;
 	return 0;
 }
 
@@ -138,6 +140,9 @@ void Command::execCommand()
 			break;	
 		case KILL:
 			Command::Kill();
+			break;
+		case INVITE:
+			Command::Invite();
 			break;
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;

@@ -241,6 +241,7 @@ class Command
 		void Kick();
 		void List();
 		void Kill();
+		void Invite();
 
 
 		

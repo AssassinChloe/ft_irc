@@ -19,6 +19,7 @@ class Channel
 		unsigned int 			max_clients;
 		class Client 			*topicSetter;
 		time_t          		lastTopicSet;
+		std::vector<std::string> invited; // tous les nicknames des invites
 		// std::vector<Client *>	ChanOp;
 
 
@@ -64,6 +65,12 @@ class Channel
 		void    setLastTopicSet();
 
 		void	broadcast(std::string message);
+
+		void addInvited(std::string nickname);
+        void delInvited(std::string nickname);
+        std::string getInvited(int i);
+        int getInvitedIndex(std::string nickname);
+        int getInvitedNb();
 		// void	addChanOp(Client &client);
 		// std::vector<Client *> 	getChanOp();
 
