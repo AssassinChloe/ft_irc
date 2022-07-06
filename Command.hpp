@@ -12,7 +12,7 @@
 **  error for command file
 */
 
-// # define ERR_NOSUCHNICK(pseudo) (pseudo + " :No such nick/channel\r\n") //401
+# define ERR_NOSUCHNICK(prefixe, nick, arg) (prefixe + "401 " + nick + " " + arg + " :No such nick\r\n") //401
 // # define ERR_NOSUCHSERVER(server) (server + " :No such server\r\n") //402
 # define ERR_NOSUCHCHANNEL(prefixe, nick, channel) (prefixe + "403 " + nick + " " + channel + " :No such channel\r\n")
 // # define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel\r\n") //404
@@ -47,6 +47,7 @@
 // # define ERR_YOUREBANNEDCREEP() (":You are banned from this server\r\n")
 // # define ERR_KEYSET(channel) (channel + " :Channel key already set\r\n")
 // # define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)\r\n")
+# define ERR_UMODEUNKNOWNFLAG(prefixe, nick) (prefixe + "501 " + nick + " :Unknown MODE flag\r\n")
 # define ERR_UNKNOWNMODE(prefixe, nick, character) (prefixe + "472 " + nick + " " + character + " :is unknown mode char to me\r\n")
 // # define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (+i)\r\n")
 // # define ERR_BANNEDFROMCHAN(channel) // isOnChannel(std::string const &nick);) (channel + " :You're not channel operator\r\n")
@@ -54,7 +55,7 @@
 // # define ERR_CANTKILLSERVER() (":You cant kill a server!\r\n")
 # define ERR_NOOPERHOST(prefixe, nick) (prefixe + "491 " + nick + " :No O-lines for your host\r\n")
 // # define ERR_UMODEUNKNOWNFLAG() (":Unknown MODE flag\r\n")
-// # define ERR_USERSDONTMATCH() (":Cannot change mode for other users\r\n")
+# define ERR_USERSDONTMATCH(prefixe, nick) (prefixe + "502 " + nick + " :Cannot change mode for other users\r\n")
 // # define ERR_INVALIDCAP(command) (command + " :Invalid CAP command\r\n")
 # define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
 # define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask\r\n") // utilise dans join (mais peut etre commente ici)
@@ -97,8 +98,8 @@
 // # define RPL_VERSION(version, debuglevel, server, comment) (version + "." + debuglevel + " " + server + " :" + comment + "\r\n")
 // //# define RPL_WHOREPLY(channel, user, host, server, pseudo) (channel + " " + user + " " + host + " " + server + " " + pseudo + " <H|G>[*][@|+] :<compteur de distance> <vrai nom>\r\n")
 // # define RPL_ENDOFWHO(name) (name + " :End of WHO list\r\n")
-# define RPL_NAMREPLY(channel, nick_list) (channel + " :" + nick_list + "\r\n") //modif_ici // utilise dans join (mais peut etre commente ici)
-# define RPL_ENDOFNAMES(channel) (channel + " :End of NAMES list\r\n") // utilise dans join (mais peut etre commente ici)
+# define RPL_NAMREPLY(prefixe, nick, channel, nick_list) (prefixe + "353 " + nick + " = " + channel + " :" + nick_list + "\r\n") 
+# define RPL_ENDOFNAMES(prefixe, nick, channel) (prefixe + "366 " + nick + " " + channel + " :End of /NAMES list\r\n")
 // # define RPL_LINKS(mask, server_name, hopcount, info) (mask + " " + server_name + " " + hopcount + " " + info + "\r\n")
 // # define RPL_ENDOFLINKS(mask) (mask + " :End of LINKS list\r\n")
 // # define RPL_BANLIST(mssg) (mssg + "\r\n")
@@ -137,7 +138,7 @@
 // # define RPL_STATSUPTIME(arg) (":Server Up " + arg + "\r\n")
 // # define RPL_STATSOLINE(host_mask, name) ("O " + host_mask + " * " + name + "\r\n")
 // # define RPL_STATSHLINE(host_mask, server_name) ("H " + host_mask + " * " + server_name + "\r\n")
-// # define RPL_UMODEIS(user_mode) (user_mode + "\r\n")
+# define RPL_UMODEIS(prefixe, nick, user_mode) (prefixe + "221 " + nick + " " + user_mode + "\r\n")
 // # define RPL_LUSERCLIENT(int1, int2, int3) (":There are " + int1 + " users and " + int2 + " invisible on " + int3 + " servers\r\n")
 // # define RPL_LUSEROP(int1) (int1 + " :operator(s) online\r\n")
 // # define RPL_LUSERUNKNOWN(int1) (int1 + " :unknown connection(s)\r\n")

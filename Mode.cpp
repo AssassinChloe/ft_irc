@@ -63,7 +63,6 @@ void Command::changeChannelMode(std::string modifier, int index)
                 if (this->parameters.size() >= 3 && this->server->getChannel(index).isOnChannel(this->parameters[2]) == true)
                 {
                     this->server->getClient(this->parameters[2]).addMode(this->parameters[0], modifier[i]);
-                    names(index);
                 }
             }
         }
@@ -78,7 +77,12 @@ void Command::changeChannelMode(std::string modifier, int index)
 void    Command::Mode()
 {
     std::string message;
-
+    if (this->parameters.size() == 0)
+    {
+            message = RPL_UMODEIS(this->client->getPrefixe(), this->client->getNickname(), this->client->getStatus());
+            send_message(*this->client, message);
+            return;
+    }
     if (check_if_channel(this->parameters[0]) == 1) //channel mode  N I et T / O o
     {
         int index = this->server->getChannelIndex(this->parameters[0]);
@@ -108,22 +112,42 @@ void    Command::Mode()
             send_message(tmp, message);
         }
     }
-    else //user mode o
+    else //user mode O
     {
         int find = 0;
         for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
         {
             if ((*it).second.getNickname() == this->parameters[0])
             {
-                // chaner le mode du user
                 find = 1;
+                if(this->client->getNickname() != this->parameters[0])
+                {
+                    message = ERR_USERSDONTMATCH(this->client->getPrefixe(), this->client->getNickname());
+                    send_message(*this->client, message);
+                    return ;
+                }
+                // for (size_t i = 0; i < parameters[1].size(); i++)
+                // {
+                //     if (parameters[1][i] == 'O')
+                //     {
+
+                //     }
+                //     else
+                //     {
+                //         message = ERR_UNKNOWNMODE(this->client->getPrefixe(), this->client->getNickname(), parameters[1][i]);
+                //         send_message(*this->client, message);
+                //     }
+                // }
+                // 
+                message = ERR_UMODEUNKNOWNFLAG(this->client->getPrefixe(), this->client->getNickname());
+                send_message(*this->client, message);
+                return ;
             }
         }
         if (find == 0)
         {
-            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + parameters[0] + " :No such nick/channel\r\n";
+            std::string message = ERR_NOSUCHNICK(this->client->getPrefixe(), this->client->getNickname(), parameters[0]);
             send_message(*this->client, message);
-            //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
         }
     }
 }

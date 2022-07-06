@@ -272,16 +272,16 @@ int Server::getChannelIndex(std::string chanName)
     return (-1); // 
 }
 
-// Channel &Server::getChannel(std::string chanName)
-// {
-//     int nb = getChannelNb();
-//     for (int i = 0; i < nb; i++)
-//     {
-//         if (_channels[i].getCName() == chanName)
-//             return (_channels[i]);
-//     }
-//     return (_channels[0]); // attention a modifier !!!
-// }
+Channel &Server::getChannel(std::string chanName)
+{
+    int nb = getChannelNb();
+    for (int i = 0; i < nb; i++)
+    {
+        if (_channels[i].getCName() == chanName)
+            return (_channels[i]);
+    }
+    return (_channels[0]); // attention a modifier !!!
+}
 
 
 std::string Server::getChannelName(int index)

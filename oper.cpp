@@ -9,16 +9,19 @@ void Command::oper()
         send_message(*this->client, message);
         return ;
     }
+
     if (this->parameters[0] == OPER_NAME)
     {
         std::cout << this->client->getHostaddr() << std::endl;
+        std::cout << this->client->getHostname() << std::endl;
+
         if (this->parameters[1] != OPER_PASS)
         {
             message = ERR_PASSWDMISMATCH(this->client->getPrefixe(), this->client->getNickname());
             send_message(*this->client, message);
             return ;  
         }
-        else if (this->client->getHostname() != "localhost")
+        else if (this->client->getHostaddr() != "localhost")
         {
             message = ERR_NOOPERHOST(this->client->getPrefixe(), this->client->getNickname());
             send_message(*this->client, message);
@@ -27,10 +30,10 @@ void Command::oper()
         else
         {
             message = RPL_YOUREOPER(this->client->getPrefixe(), this->client->getNickname());
-            this->client->setStatus("operator");
+            this->client->setStatus("O");
             send_message(*this->client, message);
-            Command command_line(*this->client, this->server, "MODE +o");
-            command_line.execCommand();
+            // Command command_line(*this->client, this->server, "MODE +o");
+            // command_line.execCommand();
             return ;
         }
     }    

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:18 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/04 11:27:03 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/06 15:03:24 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,16 @@ void Command::nick()
     }
     rep = this->client->getPrefixe() + "NICK " + this->parameters[0] + "\r\n";
     this->client->setNickname(this->parameters[0]);
-    send_message(*this->client, rep);
+    if (this->client->getChanList().size() > 0)
+    {
+        std::map<std::string, std::string> tmp = this->client->getChanList();
+        for (std::map<std::string, std::string>::iterator it = tmp.begin(); it != tmp.end(); it++)
+        {
+            this->server->getChannel((*it).first).broadcast(rep);
+        }
+    }
+    else
+        send_message(*this->client, rep);
 }
 
 void Command::user()

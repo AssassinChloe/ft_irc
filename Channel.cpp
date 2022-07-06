@@ -158,8 +158,10 @@ void    Channel::setLastTopicSet(){ this->lastTopicSet = std::time(0);}
 
 void	Channel::broadcast(std::string message)
 {
-	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
+    for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+	{	
 		send_message(*(*it).second, message);
+	}
 }
 
 void Channel::addInvited(std::string nickname)
