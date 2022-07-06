@@ -28,6 +28,20 @@ void    Command::Topic()
         if (server->getChannel(index).isOnChannel(this->getClient().getNickname())) //si client sur le channel
         {
             // voir si n'a  pas les droits pour changer
+            std::string modeChan = server->getChannel(index).getMode();
+            std::cout << "mode Chan = " << modeChan << std::endl;
+            // SI channel en mode t : verification de has power = (client est operator channel)
+            if (searchIfMode('t', modeChan) == 1)
+            {
+                std::string modeClient = server->getChannel(index).getClientMode(this->getClient());
+                std::cout << "mode Client = " << modeClient << std::endl;
+                if (!(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
+                {
+                    std::string message =  parameters[0] + " :You're not channel operator\r\n";
+                    send_message(*this->client, message);
+                    return;  // ERR_CHANOPRIVSNEEDED 482
+                }
+            }
 
             // si a les droit
             if (nb_param == 1 && argLine == "") //normalement comportement diffreent si existe : ou pas... voir si a preciser
@@ -56,7 +70,7 @@ void    Command::Topic()
                 std::stringstream ss;
                 ss << server->getChannel(index).getLastTopicSet();
                 std::string timestring = ss.str();
-                std::string message = this->client->getPrefixe() +" 333 "+ parameters[0] + " " ;
+                std::string message = this->client->getPrefixe() +" 333 "+ " server " + parameters[0] + " " ;
                 message = message + server->getChannel(index).getTopicSetter()->getNickname() + " " ;
                 message = message + timestring +  "\r\n";
                 // message = message + server->getChannel(index).getLastTopicSet() +  "\r\n";
