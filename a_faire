@@ -48,16 +48,16 @@ mode
 //part
 //- voir cas d'erreur (channel non existant, pas sur channel ?)
 
-privmsg
-- verifier et intergrer les cas d'erreur
+//privmsg
+//- verifier et intergrer les cas d'erreur (cas d plusieurs fois le meme target pas utilise)
 
 who
 - rajouter user mode 
 - changer la lettre H en fonction du mode + @ si operator
 - pourquoi maintenant le client nous envoie des who toutes les 30 secondes?
 
-notice
-- ajouter condition de droit
+//notice
+//- ajouter condition de droit
 
 user (dans nick.cpp)
 - rajouter USERLEN et le fait de tronquer si trop long : The value MUST be specified and MUST be a positive integer.
@@ -70,10 +70,10 @@ pong
 //- ajout RPL
 
 commades a gere pour oper :
-    KICK: Eject a client from the channel
- //   MODE: Change the channel’s modes
- //   INVITE: Invite a client to an invite-only channel (mode +i)
-    TOPIC: Change the channel topic in a mode +t channel
+//   KICK: Eject a client from the channel
+//   MODE: Change the channel’s modes
+//   INVITE: Invite a client to an invite-only channel (mode +i)
+//    TOPIC: Change the channel topic in a mode +t channel
 
 commandes a gerer pour operator server
  //   KILL message (qui doit recevoir le message a part le killed ? pas sure)

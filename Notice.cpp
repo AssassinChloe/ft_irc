@@ -30,31 +30,41 @@ void    Command::Notice()
     if (nb_param == 0) 
             return;
 
-    for (i=0; i<nb_param; i++)
+    std::vector<std::string> target = ftsplit(parameters[0], ",");
+    int nbtarget = target.size();
+    for (i=0; i<nbtarget; i++)
     {
 
-        if (parameters[i][0] == '#' || parameters[i][0] == '&' || parameters[i][0] == '+' || parameters[i][0] ==  '!')
+        if (target[i][0] == '#' || target[i][0] == '&' || target[i][0] == '+' || target[i][0] ==  '!')
         {
 
 
-            std::string message = this->client->getPrefixe() + "PRIVMSG " +  parameters[i] + " :" + this->getArgLine() + " \r\n";
+            std::string message = this->client->getPrefixe() + "PRIVMSG " +  target[i] + " :" + this->getArgLine() + " \r\n";
             std::cout << message << std::endl;
 
-            int index = server->getChannelIndex(parameters[i]);
+            int index = server->getChannelIndex(target[i]);
 
             if (index != -1) // = si le channel a ete trouve
             {
 
-                // rajouter condition sur les droits
+                //condition sur les droits
+                int condition = 1;
+                int index = server->getChannelIndex(target[i]);
+                std::string modeChan = server->getChannel(index).getMode();
+                if (searchIfMode('n', modeChan) == 1 && (server->getChannel(index).isOnChannel(client->getNickname()) == 0))
+                    condition = 0;
 
-                std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-                for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                if (condition)
                 {
-                    if (this->client != (*it).second)
-                        {
-                            int id = (*it).second->getFd();
-                            send(id, message.c_str(), message.size(), 0);
-                        }
+                    std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+                    for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                    {
+                        if (this->client != (*it).second)
+                            {
+                                int id = (*it).second->getFd();
+                                send(id, message.c_str(), message.size(), 0);
+                            }
+                    }
                 }
             }
         }
@@ -62,10 +72,10 @@ void    Command::Notice()
         {
             for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
             {
-                if ((*it).second.getNickname() == this->parameters[i])
+                if ((*it).second.getNickname() == target[i])
                 {
                     int id = (it)->second.getFd();
-                    std::string message = this->client->getPrefixe() + "PRIVMSG " + parameters[i] + " :" + this->getArgLine() + " \r\n";
+                    std::string message = this->client->getPrefixe() + "PRIVMSG " + target[i] + " :" + this->getArgLine() + " \r\n";
                     send(id, message.c_str(), message.size(), 0);
                     std::cout <<"message individuel : " << message << std::endl;
                 }
