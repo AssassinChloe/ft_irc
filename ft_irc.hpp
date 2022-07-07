@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/06 16:49:38 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/07 13:27:15 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,14 @@
 # include "Command.hpp"
 
 # define HOST "localhost"
-# define SERVER_NAME " Ganesh's Daugthers"
+# define SERVER_NAME "Ganesh's Daugthers"
 # define VERSION " 0.1 "
 
 # define USER_MODE "o"
 # define CHAN_USER_MODE "Oo"
 # define CHAN_MODE "nit"
+# define UNREGISTERED "U"
+# define GANESH_FRIEND "g"
 
 # define OPER_NAME "Ganesh_Army"
 # define OPER_PASS "securisedpassword"

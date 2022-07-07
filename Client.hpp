@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/05 14:43:47 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/07 13:24:30 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class Client
         
         std::string     username;
         std::string     nickname;
-        std::string     status; // normal ou operator par exemple
+        std::string     status; 
         std::string     hostaddr;
 		std::string     hostname;
         bool            pass_checked;

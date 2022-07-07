@@ -94,7 +94,7 @@ int Server::reception_concatenation(int i, std::string *buffer)
     std::cout << "---BUFFER----" << buff << std::endl;
     *buffer = static_cast<std::string>(buff);
     if (nbytes <= 0)
-        return (this->retRecv(i, nbytes));
+        return (this->retRecv(_poll_fd[i].fd, nbytes));
     else
     {
         while ((position = buffer->find("\n")) == std::string::npos)
@@ -106,20 +106,20 @@ int Server::reception_concatenation(int i, std::string *buffer)
     return (0);
 }
 
-void Server::deleteClient(int i)
+void Server::deleteClient(int fd)
 {
-    std::cout << "pollserver: socket n°" << i << " : " << _poll_fd[i].fd << " hung up" << std::endl;
-    if (this->getClient(_poll_fd[i].fd).getChanList().size() > 0)
+    std::cout << "pollserver: socket : " << fd << " hung up" << std::endl;
+    if (this->getClient(fd).getChanList().size() > 0)
     {
-        Command command_line(this->getClient(_poll_fd[i].fd), this, "JOIN 0");
+        Command command_line(this->getClient(fd), this, "JOIN 0");
         command_line.execCommand();
     }
-    close(_poll_fd[i].fd);
+    close(fd);
     if (_clients.size() > 0)
-    _clients.erase(_poll_fd[i].fd);
+    _clients.erase(fd);
     for (std::vector<struct pollfd>::iterator it = this->_poll_fd.begin(); it != this->_poll_fd.end(); it++)
     {
-        if ((*it).fd == _poll_fd[i].fd)
+        if ((*it).fd == fd)
         {
             _poll_fd.erase(it);
             return ;
@@ -194,22 +194,22 @@ void Server::dispatch(Client &client, std::string buff)
         command_line.execCommand();
     }
     lines.clear();
-    if (client.getStatus() == "default" && client.getCheckPass() == true
+    if (client.getStatus() == UNREGISTERED && client.getCheckPass() == true
         && client.getNickname().size() > 0 && client.getUsername().size() > 0)
     {
         Command command_line(client, this, "WELCOME");
         command_line.execCommand();
-        client.setStatus("welcome");
+        client.setStatus(GANESH_FRIEND);
     } 
 }
 
-int Server::retRecv(int i, int nbytes)
+int Server::retRecv(int fd, int nbytes)
 {
     if (nbytes == 0)
-        this->deleteClient(i);
+        this->deleteClient(fd);
     else
     {
-        this->deleteClient(i);
+        this->deleteClient(fd);
         perror("recv");
     }
     return (-1);

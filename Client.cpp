@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/05 13:58:47 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/07 13:25:56 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Client::Client() {}
 Client::Client(struct pollfd newfd)
-: username(""), nickname(""), status("default"), hostaddr(HOST), hostname(SERVER_NAME), pass_checked(false), fd(newfd)
+: username(""), nickname(""), status(UNREGISTERED), hostaddr(HOST), hostname(SERVER_NAME), pass_checked(false), fd(newfd)
 {}
 
 Client::~Client() { }

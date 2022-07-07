@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:18 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/06 15:03:24 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/07 13:25:27 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void Command::user()
 {
     // if (isvalidname() < 0)
     //     return ;
-    if (this->client->getStatus() != "default")
+    if (this->client->getStatus() != UNREGISTERED)
     {
         send_message(*this->client, ERR_ALREADYREGISTRED(this->client->getPrefixe(), check_params(this->client->getNickname())));
         return ;
@@ -125,7 +125,7 @@ void Command::user()
 
 void Command::pass()
 {
-    if (this->client->getStatus() == "default")
+    if (this->client->getStatus() == UNREGISTERED)
     {
         if (this->parameters[0] == this->server->getPass())
             this->client->setCheckPass(true);
