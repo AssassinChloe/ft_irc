@@ -1,6 +1,6 @@
 general
 - nettoyer nos fichiers des fonctions inutiles et affichages divers
-- interception signaux (sigpipe ?) //OK
+//- interception signaux (sigpipe ?) //OK
 - verifier, fonction par fonction, les ERR et RPL a envoyer
 - verifier leaks dans cas particuliers
 - securiser les envois de messages pour etre sur d'avoir transmis le bon nb de bytes
@@ -14,39 +14,39 @@ general
     - test avec nc
     - derouler la fiche de correction
 
-join
-- enregistrer le mode du client sur le channel
-- faire cas join 0 //OK
+//join
+//- enregistrer le mode du client sur le channel
+//- faire cas join 0 //OK
 
 topic
-- ajouter probleme des autorisations en fonction du mode //OK
-- voir si conservation des TOPICWHOTIME //OK
+//- ajouter probleme des autorisations en fonction du mode //OK
+//- voir si conservation des TOPICWHOTIME //OK
 - The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today. (topic len a metre dans fichier config)
 
 
-list
-- command list geee uniquement pour appel simple (/LIST sans parametre)
+//list
+//- command list geee uniquement pour appel simple (/LIST sans parametre)
 
 kick
 - rajouter les droits (pour l'instant booleen fixe)
 
-channel
-- nb max de client sur channel ?
-- nb max de channel qu'un client peut rejoindre ?
-- key sur channel ?
-- joindre plusieurs channels a la fois ?
-- faire la suppression du channel quand il n'y a plus de user (ou controle des 2 elements quand invite)
+//channel
+//- nb max de client sur channel ? // pas a gerer
+//- nb max de channel qu'un client peut rejoindre ? // pas a gerer
+//- key sur channel ? // pas a gerer
+//- joindre plusieurs channels a la fois ? //OK
+//- faire la suppression du channel quand il n'y a plus de user (ou controle des 2 elements quand invite) //OK
 
 mode
 -comment on dit au client que qqun est devenu channel operator?
 -limiter la rpl_modeis a si il y a effectivement eu un changement sur les modes?
 
-Invite
-- a faire notamment pour oper
-- changement a prevoir pour channel
+//Invite
+//- a faire notamment pour oper
+//- changement a prevoir pour channel
 
-part
-- voir cas d'erreur (channel non existant, pas sur channel ?)
+//part
+//- voir cas d'erreur (channel non existant, pas sur channel ?)
 
 privmsg
 - verifier et intergrer les cas d'erreur
@@ -66,19 +66,17 @@ user (dans nick.cpp)
 pong 
 - Servers MUST send a <server> parameter, and clients SHOULD ignore it. It exists for historical reasons, and indicates the name of the server sending the PONG.
 
-quit
-- ajout RPL
+//quit
+//- ajout RPL
 
 commades a gere pour oper :
-
     KICK: Eject a client from the channel
-    MODE: Change the channel’s modes
-    INVITE: Invite a client to an invite-only channel (mode +i)
+ //   MODE: Change the channel’s modes
+ //   INVITE: Invite a client to an invite-only channel (mode +i)
     TOPIC: Change the channel topic in a mode +t channel
 
 commandes a gerer pour operator server
-
-    KILL message
+ //   KILL message (qui doit recevoir le message a part le killed ? pas sure)
     REHASH message // besoin de faire un fichier de config a relire
     RESTART message // optionnel car considere comme a risque
-    SQUIT message // neconcerne que le network
+ //   SQUIT message // neconcerne que le network

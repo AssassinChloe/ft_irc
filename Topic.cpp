@@ -29,12 +29,9 @@ void    Command::Topic()
         {
             // voir si n'a  pas les droits pour changer
             std::string modeChan = server->getChannel(index).getMode();
-            // std::cout << "mode Chan = " << modeChan << std::endl;
-            // SI channel en mode t : verification de has power = (client est operator channel)
             if (searchIfMode('t', modeChan) == 1)
             {
                 std::string modeClient = server->getChannel(index).getClientMode(this->getClient());
-                // std::cout << "mode Client = " << modeClient << std::endl;
                 if (!(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
                 {
                     std::string message =  parameters[0] + " :You're not channel operator\r\n";
@@ -55,13 +52,14 @@ void    Command::Topic()
                 else 
                 {
                     std::string message = parameters[0] + " :No topic is set\r\n";
-                    // std::cout << "message NO_TOPIC :" << message <<std::endl;
                     send_message(*this->client, message);
                 }
                 // define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
             }
             if (nb_param == 1 && argLine.length() != 0)
             {
+                if (argLine.size() >= TOPIC_MAX_LEN)
+                    argLine.resize(TOPIC_MAX_LEN);
                 server->getChannel(index).setTopic(argLine);
                 server->getChannel(index).setTopicSetter(this->client);
                 server->getChannel(index).setLastTopicSet();

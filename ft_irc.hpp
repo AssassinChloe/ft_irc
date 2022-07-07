@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/07 13:27:15 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/07 16:11:41 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # define BUFFER_SIZE 1024
 # define MAXCHANNEL 10
 # define DEBUG 1
+# define TOPIC_MAX_LEN 307
 
 # include <stdlib.h>
 # include <unistd.h>
