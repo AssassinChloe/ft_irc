@@ -200,9 +200,7 @@ void    Command::Mode()
                         send_message(*this->client, message);
                     }
                 }
-                // 
-                // message = ERR_UMODEUNKNOWNFLAG(this->client->getPrefixe(), this->client->getNickname());
-                // send_message(*this->client, message);
+                return ;
             }
         }
         if (find == 0)
