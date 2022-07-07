@@ -20,16 +20,12 @@
 bool channelExist(Server *server, std::string chanName)
 {
     int nb = server->getChannelNb();
-    std::cout << "chan name a rechercher : " << chanName << ", taille _channels: " << nb << std::endl; // juste pour pas unused value
 
     for (int i = 0; i < nb; i++)
     {
-        std::cout << "i=" << i << ", chaname = " << server->getChannelName(i) << std::endl;
-        std::cout << "blob" << server->getChannelName(0)<< std::endl;
         if (server->getChannelName(i) == chanName)
             return (true);
     }
-    //     std::cout << server->
     return (false);
 }
 
@@ -67,78 +63,82 @@ void Command::Join()
         }
         return;
     }
+
+    std::vector<std::string> joinChan = ftsplit(parameters[0], ",");
+    int nbChan = joinChan.size();
+    for (int i = 0; i < nbChan; i++)
+    {
 		
-    if (!channelExist(this->server, parameters[0]))
-    {
-        // std::cout << "channel a creer" << std::endl;
-        server->addChannel(parameters[0]); // penser a ajouter le client qui cree dans la liste des operateurs du channel
-
-    }
-    if (channelExist(this->server, parameters[0]))
-    { 
-        int index = server->getChannelIndex(parameters[0]);
-
-        std::string modeChan = server->getChannel(index).getMode();
-        std::cout << "mode Chan = " << modeChan << std::endl;
-        // SI channel en mode i : verification de presence sur liste d'invites
-        if (searchIfMode('i', modeChan) == 1)
+        if (!channelExist(this->server, joinChan[i]))
         {
-            int nb = server->getChannel(index).getInvitedNb();
-            int isInvited = 0;
-            for (int i=0; i<nb; i++)
-            {
-                if (this->client->getNickname() == server->getChannel(index).getInvited(i))
-                    isInvited = 1;
-            }
-            if (isInvited == 0 )
-            {
-                std::string message =  parameters[0] + " :Cannot join channel (+i)\r\n";
-                send_message(*this->client, message);
-                return;  // ERR_INVITEONLYCHAN (473)
-            }
+            server->addChannel(joinChan[i]); // penser a ajouter le client qui cree dans la liste des operateurs du channel
+
         }
+        if (channelExist(this->server, joinChan[i]))
+        { 
+            int index = server->getChannelIndex(joinChan[i]);
 
-        server->getChannel(index).addClient(this->getClient()); // voir le ;ode par defaut
-        std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-
-        // message JOIN
-        std::string message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
-        send_message(*this->client, message);
-        if (this->server->getChannel(index).getClients().size() == 1)
-            this->client->addChannel(parameters[0], "O");
-        else
-            this->client->addChannel(parameters[0], "");
-        // message topic
-        message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
-        send_message(*this->client, message);
-
-        // message users connectes
-        names(index);
-        // message end of list user
-        
-
-        message = this->client->getPrefixe() + "JOIN :" + parameters[0] + "\r\n" ;
-        for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
-        {
-            if (this->client != (*it).second)
+            std::string modeChan = server->getChannel(index).getMode();
+            // SI channel en mode i : verification de presence sur liste d'invites
+            int isInvited = 1;
+            if (searchIfMode('i', modeChan) == 1)
+            {
+                int nb = server->getChannel(index).getInvitedNb();
+                isInvited = 0;
+                for (int i=0; i<nb; i++)
                 {
-                    int id = (*it).second->getFd();
-                    send(id, message.c_str(), message.size(), MSG_NOSIGNAL);
+                    if (this->client->getNickname() == server->getChannel(index).getInvited(i))
+                        isInvited = 1;
                 }
-        }
-        if (this->server->getChannel(index).getClients().size() == 1)
-            this->client->addChannel(parameters[0], "O");
-        else
-            this->client->addChannel(parameters[0], "");
+                if (isInvited == 0 )
+                {
+                    std::string message =  joinChan[i] + " :Cannot join channel (+i)\r\n";
+                    send_message(*this->client, message); // ERR_INVITEONLYCHAN (473)
+                }
+            }
+            if (isInvited== 1)
+            {
+                server->getChannel(index).addClient(this->getClient()); // voir le ;ode par defaut
+                std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
 
+                // message JOIN
+                std::string message = this->client->getPrefixe() + "JOIN :" + joinChan[i] + "\r\n" ;
+                send_message(*this->client, message);
+                if (this->server->getChannel(index).getClients().size() == 1)
+                    this->client->addChannel(joinChan[i], "O");
+                else
+                    this->client->addChannel(joinChan[i], "");
+                // message topic
+                message = joinChan[i] + " :" + server->getChannel(index).getTopic() + "\r\n";
+                send_message(*this->client, message);
+
+                // message users connectes
+                names(index, joinChan[i]);
+                // message end of list user
+                
+
+                message = this->client->getPrefixe() + "JOIN :" + joinChan[i] + "\r\n" ;
+                for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                {
+                    if (this->client != (*it).second)
+                        {
+                            int id = (*it).second->getFd();
+                            send(id, message.c_str(), message.size(), MSG_NOSIGNAL);
+                        }
+                }
+                if (this->server->getChannel(index).getClients().size() == 1)
+                    this->client->addChannel(joinChan[i], "O");
+                else
+                    this->client->addChannel(joinChan[i], "");
+            }
+
+        }
+        else // correspond a erreur car impossibe de creer le channel
+        {
+            std::string message = joinChan[i] + " :Bad Channel Mask\r\n";  // reply 476 ERR_BADCHANMASK
+            send_message(*this->client, message);
+        }
     }
-    else // correspond a erreur car impossibe de creer le channel
-    {
-        std::cout << "channel non cree, client non ajoute" << std::endl;
-        std::string message = parameters[0] + " :Bad Channel Mask\r\n";  // reply 476 ERR_BADCHANMASK
-        send_message(*this->client, message);
-    }
-    
 }
 
 
@@ -146,3 +146,4 @@ void Command::Join()
 // which requests that the sending client leave all channels they are currently connected to. 
 // The server will process this command as though the client had sent a PART command for each channel they are a member of.
 
+// /join #test1,#test2,#test3,test,#test4

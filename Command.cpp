@@ -89,7 +89,7 @@ void Command::execCommand()
 			this->nick();
 			break;
 		case JOIN: // rejoindre un channel
-			std::cout << "case join" << std::endl;
+
 			Command::Join();
 			break;
 		case PART: 
@@ -105,10 +105,8 @@ void Command::execCommand()
 			this->quit(); 
 			break;
 		case CAP: // pas a gerer 
-			std::cout << "case cap" << std::endl;
 			break;
 		case PONG:
-			std::cout << "case pong" << std::endl;
 			// Command::Pong();
 			break;
 		case MODE:
@@ -147,7 +145,6 @@ void Command::execCommand()
 		case 0:
 			std::cout << "commande non reconnue" << std::endl;
 	}
-	std::cout << "." << std::endl;
 
 }
 

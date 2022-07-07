@@ -29,12 +29,12 @@ void    Command::Topic()
         {
             // voir si n'a  pas les droits pour changer
             std::string modeChan = server->getChannel(index).getMode();
-            std::cout << "mode Chan = " << modeChan << std::endl;
+            // std::cout << "mode Chan = " << modeChan << std::endl;
             // SI channel en mode t : verification de has power = (client est operator channel)
             if (searchIfMode('t', modeChan) == 1)
             {
                 std::string modeClient = server->getChannel(index).getClientMode(this->getClient());
-                std::cout << "mode Client = " << modeClient << std::endl;
+                // std::cout << "mode Client = " << modeClient << std::endl;
                 if (!(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
                 {
                     std::string message =  parameters[0] + " :You're not channel operator\r\n";
@@ -65,8 +65,7 @@ void    Command::Topic()
                 server->getChannel(index).setTopic(argLine);
                 server->getChannel(index).setTopicSetter(this->client);
                 server->getChannel(index).setLastTopicSet();
-                std::cout << "topic set on " << server->getChannel(index).getLastTopicSet() << " by " << server->getChannel(index).getTopicSetter()->getNickname() << std::endl;
-                // voir si ajout de RPL_TOPICWHOTIME (333) --> garbage ???
+                // std::cout << "topic set on " << server->getChannel(index).getLastTopicSet() << " by " << server->getChannel(index).getTopicSetter()->getNickname() << std::endl;
                 std::stringstream ss;
                 ss << server->getChannel(index).getLastTopicSet();
                 std::string timestring = ss.str();
