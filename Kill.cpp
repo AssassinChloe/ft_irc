@@ -6,7 +6,7 @@ void    Command::Kill()
         
     int nb_param = parameters.size();
 
-    if (nb_param <= 1) 
+    if (nb_param <= 0) 
     {
         std::string message = parameters[0] + " :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
         send_message(*this->client, message);
@@ -15,9 +15,9 @@ void    Command::Kill()
     
     else
     {
-        // check if client is operator
-        bool hasPower = 1;
-        if (!hasPower)
+        std::string clientStat = this->client->getStatus();
+        std::cout << "client status : " << clientStat << std::endl;
+        if (searchIfMode('o', clientStat) != 1) // si client n'est pas operateur
         {
             std::string message = this->client->getPrefixe() + " 481 " + this->client->getNickname() + " :Permission Denied- You're not an IRC operator\r\n";
             send_message(*this->client, message);
@@ -25,9 +25,38 @@ void    Command::Kill()
         }
         else
         {
-            // si on trouve pas l'utlisateur
-            // err no such nick
-            // sinon
+            // verifier si le nickname en question est sur le server
+            int NickOnServer = 0;
+            for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it != this->server->getClientList().end(); it++)
+            {
+                if ((*it).second.getNickname() == this->parameters[0])
+                {
+                NickOnServer = 1;
+                } 
+            }
+
+            if (NickOnServer == 0) // pas trouve de message approprie dans la doc, mis le 401 est pas mal
+            {
+                std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + parameters[0] + " :No such nick/channel\r\n";
+                send_message(*this->client, message); //ERR_NOSUCHNICK (401)
+                return;
+            }
+
+            int id = server->getClient(parameters[0]).getFd();
+            // std::string message3 = this->client->getPrefixe()  + " KILL " + parameters[0] + " :"+ argLine + "\r\n";
+            std::string message = server->getClient(id).getPrefixe()  + " QUIT " + parameters[0] + " :"+ argLine + "\r\n";
+            send_message(*this->client, message);
+            // send_message(*this->client, message3);
+
+            std::string message2 = this->client->getPrefixe() + " KILL " + parameters[0] + " :" + argLine + "\r\n";
+            send_message(server->getClient(parameters[0]), message2);
+            
+            server->deleteClient(id);
+
+            
+
+            // emnover messge de quit a tous les autres connectes ? // 4 > :lilin!liliu@localhost QUIT :il ne me plait pas
+
         }
     }
 }
