@@ -3,18 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/07 15:04:00 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:49:42 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
+
+
 Client::Client() {}
 Client::Client(struct pollfd newfd)
-: username(""), nickname(""), status(UNREGISTERED), hostaddr(HOST), hostname(SERVER_NAME), pass_checked(false), fd(newfd)
+: username(""), nickname(""), status(UNREGISTERED), hostaddr(HOST), hostname(SERVER_NAME), pass_checked(false), realname("realname"), fd(newfd)
 {}
 
 Client::~Client() { }
@@ -22,6 +24,7 @@ Client::~Client() { }
 void Client::setStatus(std::string status) { this->status = status; }
 void Client::setNickname(std::string nickname) { this->nickname = nickname; }
 void Client::setUsername(std::string username) { this->username = username; }
+void Client::setRealname(std::string realname) {this->realname = realname; }
 void Client::setCheckPass(bool checked) {this->pass_checked = checked; }
 void Client::setLastPing(time_t lastping) { this->last_ping = lastping; }
 
@@ -31,6 +34,8 @@ std::string Client::getHostname() { return hostname; }
 std::string Client::getHostaddr() { return hostaddr; }
 std::string Client::getNickname() { return nickname; }
 std::string Client::getUsername() { return username; }
+std::string Client::getRealname() { return realname; }
+
 
 bool Client::getCheckPass() {return pass_checked; }
 std::string Client::getPrefixe()
@@ -69,25 +74,24 @@ std::string Client::getChanMode(std::string name)
 
 void Client::setMode(std::string chan, std::string mode) { this->channel_list[chan] = mode; }
 
-void Client::addMode(std::string chan, char mode)
+int Client::addMode(std::string chan, char mode)
 {
 	if (searchIfMode(mode, this->channel_list[chan]) == 1)
-		return ;
+		return (0);
 	this->channel_list[chan] += mode;
+    return (1);
 }
-void Client::delMode(std::string chan, char mode)
+
+int Client::delMode(std::string chan, char mode)
 {
 	std::string newmode;
 	if (searchIfMode(mode, this->channel_list[chan]) == 0)
-		return ;
+		return (0);
 	for(size_t i = 0; i < this->channel_list[chan].size(); i++)
 	{
 		if (this->channel_list[chan][i] != mode)
 			newmode += this->channel_list[chan][i];
 	}
 	this->setMode(chan, newmode);
+    return (1);
 }
-
-
-//void Client::write(std::string message) { waitingToSend.push_back(message); }
-//void Client::sendTo(Client &toClient, std::string message) { toClient.write(":" + " " + message); }

@@ -37,48 +37,23 @@ channel
 - joindre plusieurs channels a la fois ?
 - faire la suppression du channel quand il n'y a plus de user (ou controle des 2 elements quand invite)
 
-mode
--comment on dit au client que qqun est devenu channel operator?
--limiter la rpl_modeis a si il y a effectivement eu un changement sur les modes?
-
 Invite
 - a faire notamment pour oper
 - changement a prevoir pour channel
 
-part
-- voir cas d'erreur (channel non existant, pas sur channel ?)
-
 privmsg
 - verifier et intergrer les cas d'erreur
-
-who
-- rajouter user mode 
-- changer la lettre H en fonction du mode + @ si operator
-- pourquoi maintenant le client nous envoie des who toutes les 30 secondes?
 
 notice
 - ajouter condition de droit
 
 user (dans nick.cpp)
-- rajouter USERLEN et le fait de tronquer si trop long : The value MUST be specified and MUST be a positive integer.
 - ajout retour needmoreparams 461
-
-pong 
-- Servers MUST send a <server> parameter, and clients SHOULD ignore it. It exists for historical reasons, and indicates the name of the server sending the PONG.
-
-quit
-- ajout RPL
-
-commades a gere pour oper :
-
-    KICK: Eject a client from the channel
-    MODE: Change the channel’s modes
-    INVITE: Invite a client to an invite-only channel (mode +i)
-    TOPIC: Change the channel topic in a mode +t channel
 
 commandes a gerer pour operator server
 
-    KILL message
     REHASH message // besoin de faire un fichier de config a relire
-    RESTART message // optionnel car considere comme a risque
-    SQUIT message // neconcerne que le network
+
+client :
+-dans la construction de l'objet client, mise en dure du host et server name via #define du ft_irc.hpp, a voir si y a moyen de
+recuperer les info via une fonction getaddrinfo ou truc dans le genre.

@@ -89,7 +89,6 @@ void Command::execCommand()
 			this->nick();
 			break;
 		case JOIN: // rejoindre un channel
-
 			Command::Join();
 			break;
 		case PART: 
@@ -143,7 +142,7 @@ void Command::execCommand()
 			Command::Invite();
 			break;
 		case 0:
-			std::cout << "commande non reconnue" << std::endl;
+			send_message(*this->client, ERR_UNKNOWNCOMMAND(cmdType));
 	}
 
 }

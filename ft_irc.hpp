@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/07 13:27:15 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/07 17:55:17 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # define BUFFER_SIZE 1024
 # define MAXCHANNEL 10
 # define DEBUG 1
+# define USERLEN 18
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -45,7 +46,7 @@
 # include "Command.hpp"
 
 # define HOST "localhost"
-# define SERVER_NAME "Ganesh's Daugthers"
+# define SERVER_NAME "Ganesh's_Daugthers"
 # define VERSION " 0.1 "
 
 # define USER_MODE "o"
@@ -55,8 +56,7 @@
 # define GANESH_FRIEND "g"
 
 # define OPER_NAME "Ganesh_Army"
-# define OPER_PASS "securisedpassword"
-
+# define OPER_PASS "securisedpassword" 
 
 
 extern int g_stop;
