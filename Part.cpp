@@ -4,7 +4,7 @@ void Command::part()
 {
     if (parameters.size() ==0)
     {
-        std::string message = "PART :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
+        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "PART :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
         send_message(*this->client, message);
         return;
     }
@@ -17,7 +17,7 @@ void Command::part()
         int index = server->getChannelIndex(partChan[i]);
         if (index == -1)
         {
-            std::string message = partChan[i] + " :No such channel\r\n"; 
+            std::string message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + partChan[i] + " :No such channel\r\n"; 
             send_message(*this->client, message); // ERR_NOSUCHCHANNEL (403)
         }
         else

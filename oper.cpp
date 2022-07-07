@@ -5,7 +5,7 @@ void Command::oper()
     std::string message;
     if (this->parameters.size() < 2)
     {
-        message = "OPER :Not enough parameters\r\n";
+        message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "OPER :Not enough parameters\r\n";
         send_message(*this->client, message);
         return ;
     }

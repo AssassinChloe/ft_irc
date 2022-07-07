@@ -4,7 +4,7 @@ void    Command::Invite()
 {
     if (this->getParameters().size() == 0)
     {
-        std::string message = "INVITE :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
+        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "INVITE :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
         send_message(*this->client, message);
         return;
     }
@@ -12,7 +12,7 @@ void    Command::Invite()
     int index = this->server->getChannelIndex(parameters[1]);
     if (index == -1 || server->getChannel(index).getNbClients() == 0)
     {
-        std::string message = parameters[1] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
+        std::string message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[1] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
         send_message(*this->client, message);
         return;
     }
@@ -35,7 +35,7 @@ void    Command::Invite()
             std::string modeClient = client->getChanMode(parameters[1]);
             if (modeClient.size() == 0 || !(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
             {
-                std::string message =  parameters[1] + " :You're not channel operator\r\n";
+                std::string message =  this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[1] + " :You're not channel operator\r\n";
                 send_message(*this->client, message);
                 return;  // ERR_CHANOPRIVSNEEDED 482
             }

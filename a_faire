@@ -18,10 +18,10 @@ general
 //- enregistrer le mode du client sur le channel
 //- faire cas join 0 //OK
 
-topic
+//topic
 //- ajouter probleme des autorisations en fonction du mode //OK
 //- voir si conservation des TOPICWHOTIME //OK
-- The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today. (topic len a metre dans fichier config)
+//- The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers ///today. (topic len a metre dans fichier config)
 
 
 //list

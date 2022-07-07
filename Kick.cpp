@@ -1,3 +1,74 @@
+
+
+#include "Command.hpp"
+
+// ligne d'argument : parameters[0] = server OU #... (a ne pas mettre par l'utilisateur, fait par client si hexchat)
+//                    parameters[1] : user OU user1,user2 -> a split en cas de virgule voir ftsplit
+//                    argLine = tous les mots qui apparaissent apres les users (le client met les :avant)
+
+void    Command::Kick()
+{
+        
+    int nb_param = parameters.size();
+
+    if (nb_param <= 1) 
+    {
+        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " "  + "KICK :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
+        send_message(*this->client, message);
+        return;
+    }
+    
+    else
+    {
+
+        int index = server->getChannelIndex(parameters[0]); // si channel n'existe pas = -1
+        if (index == -1)
+        {
+            std::string message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
+            send_message(*this->client, message);
+            return;
+        }
+
+        std::string modeClient = client->getChanMode(parameters[0]);
+        if (modeClient.size() == 0 || !(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 )) // client n'a pas les droits sur le channel
+        {
+            std::string message = this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[0] + " :You're not channel operator\r\n";
+            send_message(*this->client, message); //ERR_CHANOPRIVSNEEDED (482)
+            return;
+
+        }
+
+        std::vector<std::string> kickedClients = ftsplit(parameters[1], ",");
+        int nbKicked = kickedClients.size();
+        for (int i = 0; i < nbKicked; i++)
+        {
+            int find = 0;
+
+            std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+            for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+            {
+                if (it->second->getNickname() == kickedClients[i])
+                {
+                    std::string message = this->client->getPrefixe() + " KICK " + parameters[0] + " " + kickedClients[i] + " ";
+                    if (argLine.length() != 0)
+                        message = message + ":" + argLine;
+                    message = message + "\r\n";
+                    server->getChannel(index).broadcast(message);
+                    server->getChannel(index).removeClient(kickedClients[i]);
+                    find = 1;
+                }
+            }
+            if (find == 0)
+            {
+                std::string message = kickedClients[i] + " " + parameters[0] + " :They aren't on that channel\r\n";
+                send_message(*this->client, message); // ERR_USERNOTINCHANNEL (441)
+            }
+
+        }
+
+    }
+}
+
 // KICK message
 
 //       Command: KICK
@@ -38,72 +109,3 @@
 //    :WiZ!jto@tolsun.oulu.fi KICK #Finnish John
 //                                    ; KICK message on channel #Finnish
 //                                    from WiZ to remove John from channel
-
-#include "Command.hpp"
-
-// ligne d'argument : parameters[0] = 0ganesh OU #... (a ne pas mettre par l'utilisateur, fait par client)
-//                    parameters[1] : user OU user1,user2 -> a split en cas de virgule voir ftsplit
-//                    argLine = tous les mots qui apparaissent apres les users (le client met les :avant)
-
-void    Command::Kick()
-{
-        
-    int nb_param = parameters.size();
-
-    if (nb_param <= 1) 
-    {
-        std::string message = parameters[0] + " :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
-        send_message(*this->client, message);
-        return;
-    }
-    
-    else
-    {
-
-        int index = server->getChannelIndex(parameters[0]); // si channel n'existe pas = -1
-        if (index == -1)
-        {
-            std::string message = parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
-            send_message(*this->client, message);
-            return;
-        }
-
-        bool power = 1; //v faire une fonction hasPower dans channel power = server->getChannel(index).asPower(this->getClient().getNickname()))
-        if (!power) // client n'a pas les droits sur le channel
-        {
-            std::string message = parameters[0] + " :You're not channel operator\r\n";
-            send_message(*this->client, message); //ERR_CHANOPRIVSNEEDED (482)
-            return;
-
-        }
-
-        std::vector<std::string> kickedClients = ftsplit(parameters[1], ",");
-        int nbKicked = kickedClients.size();
-        for (int i = 0; i < nbKicked; i++)
-        {
-            int find = 0;
-
-            std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-            for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
-            {
-                if (it->second->getNickname() == kickedClients[i])
-                {
-                    std::string message = this->client->getPrefixe() + " KICK " + parameters[0] + " " + kickedClients[i] + " ";
-                    if (argLine.length() != 0)
-                        message = message + ":" + argLine;
-                    message = message + "\r\n";
-                    server->getChannel(index).broadcast(message);
-                    server->getChannel(index).removeClient(kickedClients[i]);
-                    find = 1;
-                }
-            }
-            if (find == 0)
-            {
-                std::string message = kickedClients[i] + " " + parameters[0] + " :They aren't on that channel\r\n";
-                send_message(*this->client, message); // ERR_USERNOTINCHANNEL (441)
-            }
-
-        }
-
-    }
-}

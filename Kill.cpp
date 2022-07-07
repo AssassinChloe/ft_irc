@@ -8,7 +8,7 @@ void    Command::Kill()
 
     if (nb_param <= 0) 
     {
-        std::string message = parameters[0] + " :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
+        std::string message =this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "KILL :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
         send_message(*this->client, message);
         return;
     }

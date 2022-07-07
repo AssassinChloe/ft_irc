@@ -5,12 +5,11 @@
 void    Command::Topic()
 {
 
-    // int i = 0;
     int nb_param = parameters.size();
 
     if (nb_param == 0) 
     {
-        std::string message = parameters[0] + " :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
+        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "TOPIC :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
         send_message(*this->client, message);
         return;
     }
@@ -21,7 +20,7 @@ void    Command::Topic()
         int index = server->getChannelIndex(parameters[0]); // si channel n'existe pas = -1
         if (index == -1)
         {
-            std::string message = parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
+            std::string message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
             send_message(*this->client, message);
             return;
         }
@@ -34,7 +33,7 @@ void    Command::Topic()
                 std::string modeClient = server->getChannel(index).getClientMode(this->getClient());
                 if (!(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
                 {
-                    std::string message =  parameters[0] + " :You're not channel operator\r\n";
+                    std::string message =  this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[0] + " :You're not channel operator\r\n";
                     send_message(*this->client, message);
                     return;  // ERR_CHANOPRIVSNEEDED 482
                 }
@@ -58,8 +57,11 @@ void    Command::Topic()
             }
             if (nb_param == 1 && argLine.length() != 0)
             {
-                if (argLine.size() >= TOPIC_MAX_LEN)
-                    argLine.resize(TOPIC_MAX_LEN);
+                if (TOPIC_MAX_LEN > 0)
+                {
+                    if (argLine.size() >= TOPIC_MAX_LEN)
+                        argLine.resize(TOPIC_MAX_LEN);
+                }
                 server->getChannel(index).setTopic(argLine);
                 server->getChannel(index).setTopicSetter(this->client);
                 server->getChannel(index).setLastTopicSet();

@@ -46,7 +46,7 @@ void Command::Join()
 
     if (this->getParameters().size() == 0)
     {
-        std::string message = "JOIN :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
+        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "JOIN :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
         send_message(*this->client, message);
         return;
     }
