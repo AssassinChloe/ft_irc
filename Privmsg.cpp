@@ -21,26 +21,31 @@ if (this->getArgLine().length() == 0)
     send_message(*this->client, message);
     return;
 }   
-
-for (i=0; i<nb_param; i++)
+std::vector<std::string> target = ftsplit(parameters[0], ",");
+int nbtarget = target.size();
+for (i=0; i<nbtarget; i++)
 {
 
-    if (parameters[i][0] == '#' || parameters[i][0] == '&' || parameters[i][0] == '+' || parameters[i][0] ==  '!')
+    if (target[i][0] == '#' || target[i][0] == '&' || target[i][0] == '+' || target[i][0] ==  '!')
     {
 
-        std::string message = this->client->getPrefixe() + "PRIVMSG " +  parameters[i] + " :" + this->getArgLine() + " \r\n";
+        std::string message = this->client->getPrefixe() + "PRIVMSG " +  target[i] + " :" + this->getArgLine() + " \r\n";
         std::cout << message << std::endl;
 
-        int index = server->getChannelIndex(parameters[i]);
+        int index = server->getChannelIndex(target[i]);
 
         if (index == -1) // = channel non trouve
         {
-            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + parameters[i] + " :No such nick/channel\r\n";
-            send_message(*this->client, message); //ERR_CHNICK (401) // "<client> <nickname> :No such nick/channel"
+            std::string message2 = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + target[i] + " :No such nick/channel\r\n";
+            send_message(*this->client, message2); //ERR_CHNICK (401) // "<client> <nickname> :No such nick/channel"
         } 
         else
         {
             int condition = 1;
+            int index = server->getChannelIndex(target[i]);
+            std::string modeChan = server->getChannel(index).getMode();
+            if (searchIfMode('n', modeChan) == 1 && (server->getChannel(index).isOnChannel(client->getNickname()) == 0))
+                condition = 0;
             // rajouter condition sur les droits ( a ajouter aussi a notice)
             if (condition)
             {
@@ -55,11 +60,10 @@ for (i=0; i<nb_param; i++)
                 }
             }
             
-
             else// else si pas de droits
             {
-                std::string message = this->client->getPrefixe() + " " + parameters[i] + " :Cannot send to channel\r\n";
-                send_message(*this->client, message);
+                std::string message3 = this->client->getPrefixe() + " " + target[i] + " :Cannot send to channel\r\n";
+                send_message(*this->client, message3);
                 // ERR_CANNOTSENDTOCHAN (404) "<client> <channel> :Cannot send to channel"
             }
         }
@@ -69,10 +73,10 @@ for (i=0; i<nb_param; i++)
         int find = 0;
         for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
         {
-            if ((*it).second.getNickname() == this->parameters[i])
+            if ((*it).second.getNickname() == target[i])
             {
                 int id = (it)->second.getFd();
-                std::string message = this->client->getPrefixe() + "PRIVMSG " + parameters[i] + " :" + this->getArgLine() + " \r\n";
+                std::string message = this->client->getPrefixe() + "PRIVMSG " + target[i] + " :" + this->getArgLine() + " \r\n";
                 send(id, message.c_str(), message.size(), 0);
                 find = 1;
                 std::cout <<"message individuel : " << message << std::endl;
@@ -80,7 +84,7 @@ for (i=0; i<nb_param; i++)
         }
         if (find == 0)
         {
-            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + parameters[i] + " :No such nick/channel\r\n";
+            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + target[i] + " :No such nick/channel\r\n";
             send_message(*this->client, message); //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
         }
     }     
