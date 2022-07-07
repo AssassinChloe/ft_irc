@@ -107,7 +107,7 @@ void Command::Join()
                 if (this->server->getChannel(index).getClients().size() == 1)
                     this->client->addChannel(joinChan[i], "O");
                 else
-                    this->client->addChannel(joinChan[i], "");
+                    this->client->addChannel(joinChan[i], "+");
                 // message topic
                 message = joinChan[i] + " :" + server->getChannel(index).getTopic() + "\r\n";
                 send_message(*this->client, message);

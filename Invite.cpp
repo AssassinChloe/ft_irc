@@ -32,12 +32,8 @@ void    Command::Invite()
         // SI channel en mode i : verification de has power d'inviter = (client est operator channel)
         if (searchIfMode('i', modeChan) == 1)
         {
-            // std::string modeClient = server->getChannel(index).getClientMode(&(this->client));
-            std::string modeClient = server->getChannel(index).getClientMode(server->getClient(parameters[0]));
-            // std::string Channel::getClientMode(Client &client) { return client_mode[client.getFd()]; }
-            // Client &getClient(std::string name);
-            std::cout << "mode Client = " << modeClient << std::endl;
-            if (!(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
+            std::string modeClient = client->getChanMode(parameters[1]);
+            if (modeClient.size() == 0 || !(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
             {
                 std::string message =  parameters[1] + " :You're not channel operator\r\n";
                 send_message(*this->client, message);
