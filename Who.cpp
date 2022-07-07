@@ -8,30 +8,47 @@
 
 void    Command::Who()
 {
-    if (this->getParameters().size() == 0) 
-        return;
-
-    if (this->getParameters().size() == 1) // a modifier pour user mode ou channel mode
+    std::string message;
+    std::string flag;
+    if (this->parameters.size() > 0) 
     {
-        // a changer si le mode du client du channel peut etre modifie
-        // std::string message = this->client->getPrefixe() + "352 " +  this->client->getNickname() + parameters[0];
-        int index = server->getChannelIndex(parameters[0]);
-        std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-        for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+        if (check_if_channel(this->parameters[0]) == 1)
         {
-            std::string letter = " H ";
-            std::string message = this->client->getPrefixe() + "352 " +  this->client->getNickname() + " " + parameters[0] + " ";
-            message = message + (*it).second->getUsername() + " " +(*it).second->getHostaddr()+ " " + (*it).second->getNickname() + letter + ":0 realname" +" \r\n";
-            // attention a changer avec mode client (H par default, si mode a alors G), + realname ou name server 
-            // std::cout << "----message----" << message << std::endl;
-            send_message(*this->client, message);
+            int index = this->server->getChannelIndex(this->parameters[0]);
+
+            if (index >= 0)
+            {
+                std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+                for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                {
+                    flag = "H";
+                    if (searchIfMode(CHAN_USER_MODE, (*(*it).second->getChanList().find(parameters[0])).second) == 1)
+                        flag += "@";
+                    message = RPL_WHOREPLY(this->client->getPrefixe(), this->client->getNickname(), parameters[0], (*it).second->getUsername(), (*it).second->getHostaddr(), (*it).second->getHostname(), (*it).second->getNickname(), flag);
+                    send_message(*this->client, message);
+                }
+            }   
         }
-           
-        std::string message2 = this->client->getPrefixe() + "315 " +  this->client->getNickname() + " " + /*this->client->getUsername()*/ parameters[0] + " :End of /WHO list \r\n";
-        send_message(*this->client, message2);
-        // std::cout << "----message----" << message2 << std::endl;
-        return;
+        else
+        {
+            flag = "H";
+            for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
+            {
+                if ((*it).second.getNickname() == this->parameters[0])
+                {
+                    if (searchIfMode(USER_MODE, (*it).second.getStatus()) == 1)
+                        flag += "*";
+                    message = RPL_WHOREPLY(this->client->getPrefixe(), this->client->getNickname(), parameters[0], (*it).second.getUsername(), (*it).second.getHostaddr(), (*it).second.getHostname(), (*it).second.getNickname(), flag);
+                    send_message(*this->client, message);
+                    message = RPL_ENDOFWHO(this->client->getPrefixe(), this->client->getNickname(), parameters[0]);
+                    send_message(*this->client, message);
+                    return ;
+                }
+            }
+        }
     }
+    message = RPL_ENDOFWHO(this->client->getPrefixe(), this->client->getNickname(), parameters[0]);
+    send_message(*this->client, message);
     return;
 }
 
