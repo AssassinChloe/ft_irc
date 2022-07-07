@@ -7,7 +7,8 @@ void Command::names(int index, std::string chanName)
 
     for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
     {
-        if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(chanName)) == 1)
+        if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(chanName)) == 1 ||
+        searchIfMode(USER_MODE, (*it).second->getStatus()) == 1)
             list = list + "@" + (*it).second->getNickname() + " ";
         // else if (searchIfMode('O', (*it).second->getChanMode(parameters[0])) == 1)
         //     message = message + "~" + (*it).second->getNickname() + " ";

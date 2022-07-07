@@ -113,13 +113,32 @@ void Command::Join()
                 send_message(*this->client, message);
 
                 // message users connectes
-                names(index, joinChan[i]);
+                // names(index, joinChan[i]);
+                    // names(index, joinChan[i]);
                 // message end of list user
                 
+                std::string list = "";
 
+                for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                {
+                    if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(this->parameters[0])) == 1
+                    || searchIfMode(USER_MODE, (*it).second->getStatus()) == 1)
+                        list = list + "@" + (*it).second->getNickname() + " ";
+                    else
+                        list = list + (*it).second->getNickname() + " ";
+                }
+                for (int i = 0; i < this->server->getChannel(index).getNbClients(); i++)
+                {
+                    Client tmp = *(this->server->getChannel(index).getClients()[i]);
+                    std::string message = RPL_NAMREPLY(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0], list);
+                    send_message(tmp, message);
+                    message = RPL_ENDOFNAMES(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0]);
+                    send_message(tmp, message);
+                }
                 message = this->client->getPrefixe() + "JOIN :" + joinChan[i] + "\r\n" ;
                 for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
                 {
+
                     if (this->client != (*it).second)
                         {
                             int id = (*it).second->getFd();
@@ -128,6 +147,8 @@ void Command::Join()
                 }
                 if (this->server->getChannel(index).getClients().size() == 1)
                     this->client->addChannel(joinChan[i], "O");
+                else if (searchIfMode(USER_MODE, this->client->getStatus()) == 1)
+                    this->client->addChannel(joinChan[i], "o");
                 else
                     this->client->addChannel(joinChan[i], "");
             }

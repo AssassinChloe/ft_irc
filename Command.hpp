@@ -18,16 +18,9 @@
 // # define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel\r\n") //404
 // # define ERR_TOOMANYCHANNELS(channel) (channel + " :You have joined too many channels\r\n") //405
 // # define ERR_WASNOSUCHNICK(nickname) (nickname + " :There was no such nickname\r\n") //406
-// # define ERR_TOOMANYTARGETS(dest) (dest + ":Duplicate recipients. No message delivered\r\n") //407
-// # define ERR_NOORIGIN() (":No origin specified\r\n") //409
-// # define ERR_NORECIPIENT(command) (":No recipient given (" + command + ")\r\n")
-// # define ERR_NOTEXTTOSEND() (":No text to send\r\n")
-// # define ERR_NOTOPLEVEL(mask) (mask + " :No toplevel domain specified\r\n")
 // # define ERR_WILDTOPLEVEL(mask) (mask + " :Wildcard in toplevel domain\r\n")
-// # define ERR_UNKNOWNCOMMAND(command) (command + " :Unknown command\r\n")
+ # define ERR_UNKNOWNCOMMAND(command) (command + " :Unknown command\r\n")
 // # define ERR_NOMOTD() (":MOTD File is missing\r\n")
-// # define ERR_NOADMININFO(server) (server + " :No administrative info available\r\n")
-// # define ERR_FILEERROR(operation, file) (":File error doing " + operation + " on " + file + "\r\n")
 
 # define ERR_NONICKNAMEGIVEN(prefixe) (prefixe + "431 :No nickname given\r\n")
 # define ERR_ERRONEUSNICKNAME(nick) (nick + " :Erroneus nickname\r\n")
@@ -36,30 +29,20 @@
 // # define ERR_USERNOTINCHANNEL(pseudo, channel) (pseudo + " :Is not on channel " + channel + "\r\n")
 # define ERR_NOTONCHANNEL(channel) (channel + " :You're not on that channel\r\n")
 // # define ERR_USERONCHANNEL(user, channel) (user + channel + " :User is already on that channel\r\n")
-// # define ERR_NOLOGIN(user) (user + " :User not logged in\r\n")
-// # define ERR_SUMMONDISABLED() (":SUMMON has been disabled\r\n")
-// # define ERR_USERSDISABLED() (":USERS has been disabled\r\n")
 // # define ERR_NOTREGISTERED() (":You have not registered\r\n")
 # define ERR_NEEDMOREPARAMS(prefixe, nick, command) (prefixe + "461 " + nick + " " + command + " :Not enough parameters\r\n")
 # define ERR_ALREADYREGISTRED(prefixe, nick) (prefixe + "462 " + nick + " :You may not reregister\r\n")
 // # define ERR_NOPERMFORHOST() (":Your host isn't among the privileged\r\n")
 # define ERR_PASSWDMISMATCH(prefixe, nick) (prefixe + "464 " + nick + " :Password incorrect\r\n")
-// # define ERR_YOUREBANNEDCREEP() (":You are banned from this server\r\n")
-// # define ERR_KEYSET(channel) (channel + " :Channel key already set\r\n")
 // # define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)\r\n")
 # define ERR_UMODEUNKNOWNFLAG(prefixe, nick) (prefixe + "501 " + nick + " :Unknown MODE flag\r\n")
 # define ERR_UNKNOWNMODE(prefixe, nick, character) (prefixe + "472 " + nick + " " + character + " :is unknown mode char to me\r\n")
 // # define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (+i)\r\n")
-// # define ERR_BANNEDFROMCHAN(channel) // isOnChannel(std::string const &nick);) (channel + " :You're not channel operator\r\n")
 # define ERR_CHANOPRIVSNEEDED(prefixe, nick, channel) (prefixe + "482 " + nick + " " + channel + " :You're not channel operator\r\n")
-// # define ERR_CANTKILLSERVER() (":You cant kill a server!\r\n")
 # define ERR_NOOPERHOST(prefixe, nick) (prefixe + "491 " + nick + " :No O-lines for your host\r\n")
-// # define ERR_UMODEUNKNOWNFLAG() (":Unknown MODE flag\r\n")
 # define ERR_USERSDONTMATCH(prefixe, nick) (prefixe + "502 " + nick + " :Cannot change mode for other users\r\n")
-// # define ERR_INVALIDCAP(command) (command + " :Invalid CAP command\r\n")
 # define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
 # define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask\r\n") // utilise dans join (mais peut etre commente ici)
-// # define ERR_ALREADYBAN(channel, user) (channel + " " + user + " b :Channel " + channel + " list already contains " + user + "\r\n")
 // # define ERR_SERVERISFULL(serv_name) (serv_name + " Server is full\r\n")
 // # define ERR_KILLDENY(mssg) (":" + mssg + "\r\n")
 
@@ -71,22 +54,7 @@
 # define RPL_MYINFO(prefixe, nickname, servername, version, usr_modes, chann_modes) (prefixe + "003 " + nickname + " :" + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n")
 # define RPL_CREATED(prefixe, nickname, date) (prefixe + "004 " + nickname + " :This server was created " + date + "\r\n")
 
-// # define RPL_BOUNCE(server_name, port) ("Try server " + server_name + ", port " + port + "\r\n")
-// # define RPL_NONE() ("\r\n") //300
-// # define RPL_USERHOST(userhost_list) (userhost_list + "\r\n") //<réponse> ::= <pseudo>['*'] '=' <'+'|'-'><hôte>
-// # define RPL_ISON(user_list) (user_list + "\r\n")
-// # define RPL_AWAY(pseudo, str) (pseudo + " " + str + "\r\n")
-// # define RPL_UNAWAY() (":You are no longer marked as being away\r\n")
-// # define RPL_NOWAWAY() (":You have been marked as being away\r\n")
-// # define RPL_WHOISUSER(nick, user, host, realname) (nick + " " + user + " " + host + " * :" + realname + "\r\n")
-// //# define RPL_WHOISSERVER(pseudo, server) (pseudo + " " + server + " :<info serveur>\r\n")
-// # define RPL_WHOISOPERATOR(pseudo) (pseudo + " :is an IRC operator\r\n")
-// # define RPL_WHOISIDLE(pseudo, idle, signon) (pseudo + " " + idle + " " + signon + " :seconds idle, signon time\r\n")
-// # define RPL_WHOREPLY(arg) (arg + "\r\n")
-// # define RPL_ENDOFWHOIS(pseudo) (pseudo + " :End of /WHOIS list\r\n")
-// # define RPL_WHOISCHANNELS(nick, chann_info) (nick + " :" + chann_info + "\r\n")
-// # define RPL_WHOWASUSER(nick, user, host, realname) (nick + " " + user + " " + host + " * :" + realname + "\r\n")
-// # define RPL_ENDOFWHOWAS(nick) (nick + " :End of WHOWAS\r\n")
+
 // # define RPL_LISTSTART() ("Channel :Users Name\r\n")
 // # define RPL_LIST(channel, topic) (channel + " :" + topic + "\r\n")
 // # define RPL_LISTEND() (":End of LIST\r\n")
@@ -95,56 +63,20 @@
 # define RPL_NOTOPIC(channel) (channel + " :No topic is set\r\n") // 331 utilise dans topic (mais peut etre commente ici)
 # define RPL_TOPIC(channel, subject) (channel + " :" + subject + "\r\n") // 332 utilise dans join et topic (mais peut etre commente ici)
 // # define RPL_INVITING(channel, pseudo) (channel + " " + pseudo + "\r\n")
-// # define RPL_SUMMONING(user) (user + " :Summoning user to IRC\r\n")
 // # define RPL_VERSION(version, debuglevel, server, comment) (version + "." + debuglevel + " " + server + " :" + comment + "\r\n")
-# define RPL_WHOREPLY(prefixe, nick, channel, user, host, server, mask, flag) (prefixe + "352 " + channel + " " + user + " " + host + " " + server + " " + mask + " " + flag + " 0 realname\r\n")
+# define RPL_WHOREPLY(prefixe, nick, channel, user, host, server, mask, flag, realname) (prefixe + "352 " + nick + " " + channel + " :" + user + " " + host + " " + server + " " + mask + " " + flag + " 0 " + realname + "\r\n")
 # define RPL_ENDOFWHO(prefixe, nick, mask) (prefixe + "315 " + nick + " " + mask + " :End of WHO list\r\n")
 # define RPL_NAMREPLY(prefixe, nick, channel, nick_list) (prefixe + "353 " + nick + " = " + channel + " :" + nick_list + "\r\n") 
 # define RPL_ENDOFNAMES(prefixe, nick, channel) (prefixe + "366 " + nick + " " + channel + " :End of /NAMES list\r\n")
-// # define RPL_LINKS(mask, server_name, hopcount, info) (mask + " " + server_name + " " + hopcount + " " + info + "\r\n")
-// # define RPL_ENDOFLINKS(mask) (mask + " :End of LINKS list\r\n")
-// # define RPL_BANLIST(mssg) (mssg + "\r\n")
-// # define RPL_ENDOFBANLIST(channel) (channel + " :End of list\r\n")
-// # define RPL_INFO(info) (":" + info + "\r\n")
-// # define RPL_ENDOFINFO() (":End of INFO list\r\n")
 // # define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n")
 // # define RPL_MOTD(comment) (":- " + comment + "\r\n")
 // # define RPL_ENDOFMOTD() (":End of MOTD command\r\n")
 # define RPL_YOUREOPER(prefixe, nickname) (prefixe + "381 " + nickname + " :You are now an IRC operator\r\n")
-// # define RPL_REHASHING(config_file) (config_file + " :Rehashing\r\n")
-// # define RPL_TIME(server, time_serveur) (server + " :" + time_serveur + "\r\n")
-// # define RPL_USERSSTART() (":UserID Terminal Hôte\r\n")
-// //# define RPL_USERS() (":%-8s %-9s %-8s\r\n")
-// # define RPL_ENDOFUSERS() (":End of users\r\n")
-// # define RPL_NOUSERS() (":Nobody logged in\r\n")
-// # define RPL_TRACELINK(dest, next_serv) ("Link " + std::string(VERSION) + " " + dest + " " + next_serv + "\r\n")
-// # define RPL_TRACECONNECTING(classe, server) ("Try. " + classe + " " + server + "\r\n")
-// # define RPL_TRACEHANDSHAKE(classe, server) ("H.S. " + classe + " " + serveur + "\r\n")
-// # define RPL_TRACEUNKNOWN(pseudo) ("???? 1 " + pseudo + "\r\n")
-// # define RPL_TRACEOPERATOR(pseudo) ("Oper 1 " + pseudo + "\r\n")
-// # define RPL_TRACEUSER(pseudo) ("User 1 " + pseudo + "\r\n")
-// # define RPL_TRACESERVER(server_name) ("Serv 1 0S 0C " + server_name + " *!*@" + server_name + " V" + PROTOCOL_VERSION + "\r\n")
-// # define RPL_TRACENEWTYPE(new_type, name) (new_type + " 0 " + name + "\r\n")
-// # define RPL_TRACELOG(file_log, debug_level) ("File " + file_log + " " + debug_level + "\r\n")
-// # define RPL_TRACEEND(server_name, version_debug) (server_name + " " + version_debug + " :End of TRACE\r\n")
-// # define RPL_STATSLINKINFO(arg) (arg + "\r\n")
-// # define RPL_STATSCOMMANDS(arg) (arg + "\r\n")
-// # define RPL_STATSCLINE(host, name, port, classe) ("C " + host + " * " + name + " " + port + " " + classe + "\r\n")
-// # define RPL_STATSNLINE(host, name, port, classe) ("N " + host + " * " + name + " " + port + " " + classe + "\r\n")
-// # define RPL_STATSILINE(host, port, classe) ("I " + host + " * " + host + " " + port + " " + classe + "\r\n")
-// # define RPL_STATSKLINE(host, user_name, port, classe) ("K " + host + " * " + user_name + " " + port + " " + classe + "\r\n")
-// # define RPL_STATSYLINE(classe, frq_ping, frq_connection, sendq_max) ("Y " + classe + " " + frq_ping + " " + frq_connection + " " + sendq_max + "\r\n")
-// # define RPL_ENDOFSTATS(stat_letter) (stat_letter + " :End of STATS report\r\n")
-// # define RPL_STATSLLINE(host_mask, server_name, max_depth) ("L " + host_mask + " * " + server_name + max_depth "\r\n")
-// # define RPL_STATSUPTIME(arg) (":Server Up " + arg + "\r\n")
-// # define RPL_STATSOLINE(host_mask, name) ("O " + host_mask + " * " + name + "\r\n")
-// # define RPL_STATSHLINE(host_mask, server_name) ("H " + host_mask + " * " + server_name + "\r\n")
 # define RPL_UMODEIS(prefixe, nick, user_mode) (prefixe + "221 " + nick + " " + user_mode + "\r\n")
 // # define RPL_LUSERCLIENT(int1, int2, int3) (":There are " + int1 + " users and " + int2 + " invisible on " + int3 + " servers\r\n")
 // # define RPL_LUSEROP(int1) (int1 + " :operator(s) online\r\n")
 // # define RPL_LUSERUNKNOWN(int1) (int1 + " :unknown connection(s)\r\n")
 // # define RPL_LUSERCHANNELS(int1) (int1 + " :channels formed\r\n")
-// # define RPL_LUSERME(int1, int2) (":I have " + int1 + " clients and " + int2 + " servers\r\n")
 // # define RPL_ADMINME(server) (server + " :Administrative info\r\n")
 // # define RPL_ADMINLOC1(info) (":" + info + "\r\n")
 // # define RPL_ADMINLOC2(info) (":" + info + "\r\n")
@@ -156,38 +88,7 @@
 class Server;
 class Client;
 
-/*
-** commands
-*/
-
-// void	pass_command(const std::string &line, Client &cl, Server &serv);
-// void	ping_command(const std::string &line, Client &cl, Server &serv);
-// void	pong_command(const std::string &line, Client &cl, Server &serv);
-// void	nick_command(const std::string &line, Client &cl, Server &serv);
-// void	user_command(const std::string &line, Client &cl, Server &serv);
-
-// void	join_command(const std::string &line, Client &cl, Server &serv);
-// void	mode_command(const std::string &line, Client &cl, Server &serv);
-// void	cap_command(const std::string &line, Client &cl, Server &serv);
-// void	quit_command(const std::string &line, Client &cl, Server &serv);
-// void	invite_command(const std::string &line, Client &cl, Server &serv);
-
-// void	list_command(const std::string &line, Client &cl, Server &serv);
-// void	part_command(const std::string &line, Client &cl, Server &serv);
-// void	privmsg_command(const std::string &line, Client &cl, Server &serv);
-
-// void	who_command(const std::string &line, Client &cl, Server &serv);
-// void	oper_command(const std::string &line, Client &cl, Server &serv);
-// void	kick_command(const std::string &line, Client &cl, Server &serv);
-// void	topic_command(const std::string &line, Client &cl, Server &serv);
-// void	kill_command(const std::string &line, Client &cl, Server &serv);
-// void	connect_command(const std::string &line, Client &cl, Server &serv);
-// void	rehash_command(const std::string &line, Client &cl, Server &serv);
-// void	admin_command(const std::string &line, Client &cl, Server &serv);
-
-void	reply_code(const std::string &line, Client &cl, Server &serv);
 void	send_message(Client &cl, std::string message);
-
 
 class Command
 {
@@ -245,12 +146,6 @@ class Command
 		void Kill();
 		void Invite();
 
-
-		
-		// void reply(Client &user, unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
-		// void reply(unsigned short code, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "", std::string arg5 = "", std::string arg6 = "", std::string arg7 = "");
 };
-
-// void PING(Command *command)
 
 #endif

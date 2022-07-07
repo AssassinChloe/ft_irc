@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/07 16:11:41 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/07 18:04:55 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define MAXCHANNEL 10
 # define DEBUG 1
 # define TOPIC_MAX_LEN 307
+# define USERLEN 18
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -46,7 +47,7 @@
 # include "Command.hpp"
 
 # define HOST "localhost"
-# define SERVER_NAME "Ganesh's Daugthers"
+# define SERVER_NAME "Ganesh's_Daugthers"
 # define VERSION " 0.1 "
 
 # define USER_MODE "o"
@@ -56,8 +57,7 @@
 # define GANESH_FRIEND "g"
 
 # define OPER_NAME "Ganesh_Army"
-# define OPER_PASS "securisedpassword"
-
+# define OPER_PASS "securisedpassword" 
 
 
 extern int g_stop;
