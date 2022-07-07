@@ -22,8 +22,8 @@ void    Command::Invite()
         // SI client deja sur le channel ERR_USERONCHANNEL
         if (server->getChannel(index).isOnChannel(parameters[0]))
         {
-            std::string message = " a completer";
-            send_message(*this->client, message);
+            std::string message = this->client->getPrefixe() + " 443 " + parameters[0] + " " + parameters[1] +  " :is already on channel\r\n"; //"<client> <nick> <channel> :is already on channel"
+            send_message(*this->client, message); //ERR_USERONCHANNEL (443)
             return;
         }
         
@@ -53,8 +53,11 @@ void    Command::Invite()
                NickOnServer = 1;
             } 
         }
-        if (NickOnServer == 0)
-            return; // voir si besoin message
+        if (NickOnServer == 0) // pas trouve de message approprie
+        {
+            std::cout << "NickName inconnu" << std::endl;
+            return;
+        }
         // ajout du nickname dans la liste des invite
         server->getChannel(index).addInvited(parameters[0]);
         // envoi au demandeur RPL_INVITING numeric
@@ -68,9 +71,8 @@ void    Command::Invite()
     }
     else // client pas sur le channel
     {
-        std::string message = this->client->getPrefixe() +" 442 "+ this->client->getNickname() + " " + parameters[1] + " :You're not on that channel\r\n"; // # define ERR_NOTONCHANNEL(channel) (442)
-        // :lilin!liliu@localhost 442 lilin #test :You're not on that channel
-        send_message(*this->client, message); // ERR_NOTONCHANNEL 
+        std::string message = this->client->getPrefixe() +" 442 "+ this->client->getNickname() + " " + parameters[1] + " :You're not on that channel\r\n";
+        send_message(*this->client, message); // ERR_NOTONCHANNEL (442)
     }
 }
 
@@ -129,3 +131,7 @@ void    Command::Invite()
 //   "<client> <nick> <channel>"
 // Sent as a reply to the INVITE command to indicate that the attempt was successful and the client with the 
 // nickname <nick> has been invited to <channel>.
+
+// ERR_USERONCHANNEL (443)
+//   "<client> <nick> <channel> :is already on channel"
+// Returned when a client tries to invite <nick> to a channel they’re already joined to.
