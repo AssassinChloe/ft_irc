@@ -9,16 +9,16 @@ int nb_param = parameters.size();
 if (nb_param == 0) 
 {
     // :lilin!liliu@localhost 411 lilin :No recipient given ()
-    std::string message = this->client->getPrefixe() + " 411 " + this->client->getNickname() + parameters[i] + " :No recipient given ()\r\n";
-    send_message(*this->client, message);
+    std::string message = this->client->getPrefixe() + " 411 " + this->client->getNickname() + " " + parameters[i] + " :No recipient given (PRIVMSG)\r\n";
+    send_message(*this->client, message); // ERR_NORECIPIENT (411)
     return;
 }
 
 if (this->getArgLine().length() == 0)    
 {
     // :lilin!liliu@localhost 412 lilin :No text to send
-    std::string message = this->client->getPrefixe() + " 412 " + this->client->getNickname() + parameters[i] + " :No text to send\r\n";
-    send_message(*this->client, message);
+    std::string message = this->client->getPrefixe() + " 412 " + this->client->getNickname() + " " + parameters[i] + " :No text to send\r\n";
+    send_message(*this->client, message); // ERR_NOTEXTTOSEND (412)
     return;
 }   
 std::vector<std::string> target = ftsplit(parameters[0], ",");
@@ -37,7 +37,7 @@ for (i=0; i<nbtarget; i++)
         if (index == -1) // = channel non trouve
         {
             std::string message2 = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + target[i] + " :No such nick/channel\r\n";
-            send_message(*this->client, message2); //ERR_CHNICK (401) // "<client> <nickname> :No such nick/channel"
+            send_message(*this->client, message2); //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
         } 
         else
         {
@@ -62,7 +62,7 @@ for (i=0; i<nbtarget; i++)
             
             else// else si pas de droits
             {
-                std::string message3 = this->client->getPrefixe() + " " + target[i] + " :Cannot send to channel\r\n";
+                std::string message3 = this->client->getPrefixe() + " 404 " + this->client->getPrefixe() + " " + target[i] + " :Cannot send to channel\r\n";
                 send_message(*this->client, message3);
                 // ERR_CANNOTSENDTOCHAN (404) "<client> <channel> :Cannot send to channel"
             }
@@ -125,15 +125,15 @@ for (i=0; i<nbtarget; i++)
 
 // Numeric Replies:
 
-//     ERR_NOSUCHNICK (401)
-//     ERR_NOSUCHSERVER (402)
-//     ERR_CANNOTSENDTOCHAN (404)
-//     ERR_TOOMANYTARGETS (407)
-//     ERR_NORECIPIENT (411)
-//     ERR_NOTEXTTOSEND (412)
+//     ERR_NOSUCHNICK (401) -
+//     ERR_NOSUCHSERVER (402) - on ne gere pas multiserver
+//     ERR_CANNOTSENDTOCHAN (404) - 
+//     ERR_TOOMANYTARGETS (407) { Format: "<target> Duplicate recipients. }
+//     ERR_NORECIPIENT (411) -
+//     ERR_NOTEXTTOSEND (412) -
 //     ERR_NOTOPLEVEL (413)
 //     ERR_WILDTOPLEVEL (414)
-//     RPL_AWAY (301)
+//     RPL_AWAY (301) - on ne gere pas les away
 
 
 // ERR_CANNOTSENDTOCHAN (404)
