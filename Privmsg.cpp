@@ -35,8 +35,8 @@ for (i=0; i<nb_param; i++)
 
         if (index == -1) // = channel non trouve
         {
-            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + parameters[i] + " :No such nick/channel\r\n";
-            send_message(*this->client, message); //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
+            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + parameters[i] + " :No such nick/channel\r\n";
+            send_message(*this->client, message); //ERR_CHNICK (401) // "<client> <nickname> :No such nick/channel"
         } 
         else
         {

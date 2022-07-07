@@ -53,9 +53,10 @@ void    Command::Invite()
                NickOnServer = 1;
             } 
         }
-        if (NickOnServer == 0) // pas trouve de message approprie
+        if (NickOnServer == 0) // pas trouve de message approprie dans la doc, mis le 401 est pas mal
         {
-            std::cout << "NickName inconnu" << std::endl;
+            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + parameters[0] + " :No such nick/channel\r\n";
+            send_message(*this->client, message); //ERR_NOSUCHNICK (401)
             return;
         }
         // ajout du nickname dans la liste des invite

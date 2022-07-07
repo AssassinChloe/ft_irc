@@ -19,12 +19,10 @@ join
 - faire cas join 0 //OK
 
 topic
-- ajouter probleme des autorisations en fonction du mode
-- voir si conservation des TOPICWHOTIME, (probleme de decalage des valeurs -)
-- The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today.
+- ajouter probleme des autorisations en fonction du mode //OK
+- voir si conservation des TOPICWHOTIME //OK
+- The value MUST be specified and MUST be a positive integer. 307 is the typical value for this parameter advertised by servers today. (topic len a metre dans fichier config)
 
-pingpong
-- lancer des ping de temps en temps pour avoir reponse client ?
 
 list
 - command list geee uniquement pour appel simple (/LIST sans parametre)
