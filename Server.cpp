@@ -30,6 +30,9 @@ int Server::init()
         this->_socket.fd = socket(tmp->ai_family, tmp->ai_socktype, tmp->ai_protocol);
         if (this->_socket.fd < 0)
             continue;
+        std::cout << "canon " << tmp->ai_canonname << std::endl;
+        std::cout << "data " << tmp->ai_addr->sa_data << std::endl;
+
         setsockopt(this->_socket.fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int));
         if (bind(this->_socket.fd, tmp->ai_addr, tmp->ai_addrlen) < 0) 
         {
@@ -62,6 +65,7 @@ int Server::accept_client(int i)
         }
         else
         {
+            std::cout << "data " << distaddr.sa_data << std::endl;
             struct pollfd tmp;
             tmp.fd = newfd;
             tmp.events = POLLIN;

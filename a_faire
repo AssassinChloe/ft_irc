@@ -37,9 +37,9 @@ kick
 //- joindre plusieurs channels a la fois ? //OK
 //- faire la suppression du channel quand il n'y a plus de user (ou controle des 2 elements quand invite) //OK
 
-mode
--comment on dit au client que qqun est devenu channel operator?
--limiter la rpl_modeis a si il y a effectivement eu un changement sur les modes?
+//mode
+//-comment on dit au client que qqun est devenu channel operator?
+//-limiter la rpl_modeis a si il y a effectivement eu un changement sur les modes?
 
 //Invite
 //- a faire notamment pour oper
@@ -52,9 +52,9 @@ mode
 //- verifier et intergrer les cas d'erreur (cas d plusieurs fois le meme target pas utilise)
 
 who
-- rajouter user mode 
-- changer la lettre H en fonction du mode + @ si operator
-- pourquoi maintenant le client nous envoie des who toutes les 30 secondes?
+//- rajouter user mode 
+//- changer la lettre H en fonction du mode + @ si operator
+//- pourquoi maintenant le client nous envoie des who toutes les 30 secondes?
 
 //notice
 //- ajouter condition de droit
