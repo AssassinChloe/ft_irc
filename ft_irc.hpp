@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/07 18:04:55 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/14 16:00:00 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@
 # include "Client.hpp"
 # include "Channel.hpp"
 # include "Command.hpp"
+
+#include <sys/stat.h>
+#include <stdio.h>
 
 # define HOST "localhost"
 # define SERVER_NAME "Ganesh's_Daugthers"

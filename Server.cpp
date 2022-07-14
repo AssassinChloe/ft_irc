@@ -22,7 +22,7 @@ int Server::init()
           
     if ((ret = getaddrinfo(NULL, this->_port.c_str(), &(this->_info), &res)) != 0)
     {
-        std::cerr << "Error getaddinfo" << std::endl;
+        std::cerr << "Error getaddrinfo" << std::endl;
         return (-1);
     }
     for (tmp = res; tmp != NULL; tmp = tmp->ai_next) 
@@ -30,9 +30,6 @@ int Server::init()
         this->_socket.fd = socket(tmp->ai_family, tmp->ai_socktype, tmp->ai_protocol);
         if (this->_socket.fd < 0)
             continue;
-        std::cout << "canon " << tmp->ai_canonname << std::endl;
-        std::cout << "data " << tmp->ai_addr->sa_data << std::endl;
-
         setsockopt(this->_socket.fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int));
         if (bind(this->_socket.fd, tmp->ai_addr, tmp->ai_addrlen) < 0) 
         {
@@ -53,7 +50,7 @@ int Server::accept_client(int i)
 {
     int newfd;
     struct sockaddr distaddr;
-    socklen_t size = sizeof (distaddr);
+    socklen_t size = sizeof(distaddr);
 
     if (_poll_fd[i].fd == this->_socket.fd) 
     {
@@ -65,7 +62,30 @@ int Server::accept_client(int i)
         }
         else
         {
-            std::cout << "data " << distaddr.sa_data << std::endl;
+
+            //test : on arrive a recuperer l'addresse ip, gethostbyname arrive pas a retrouver qu'il s'agit de
+            //localhost (la ligne est presente dans /etc/hosts et devrait etre accedee) quid de ce que ca renvoit 
+            //depuis un autre utilisateur mais on peut toujour faire un 
+            //if (ip = 127.0.0.1) (ou avoir une liste d'IP "safe")
+            //     host = localhost;
+            //else
+            //      host = autre;
+            // et on donne pas les droit OPER et che pas quoi a autre --> mais need deux ordi pour test ce qu'on a comme info
+            struct sockaddr_in *plop = (struct sockaddr_in *)&distaddr; //changer plop et le cast a l'arrache
+            std::cout << "IP " << inet_ntoa(plop->sin_addr) << std::endl;
+            struct hostent *test = gethostbyname(inet_ntoa(plop->sin_addr));
+
+            std::cout << "name " << test->h_name << std::endl;
+            for (int i = 0; test->h_aliases[i] != NULL; i++)
+            {
+                std::cout << "alias " << i << " " << test->h_aliases[i] << std::endl;
+            }
+            for (int i = 0; test->h_addr_list[i] != NULL; i++)
+            {
+                std::cout << "addr " << i << " " << test->h_addr_list[i] << std::endl;
+            }
+            //end test
+
             struct pollfd tmp;
             tmp.fd = newfd;
             tmp.events = POLLIN;

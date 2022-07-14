@@ -27,8 +27,8 @@ general
 //list
 //- command list geee uniquement pour appel simple (/LIST sans parametre)
 
-kick
-- rajouter les droits (pour l'instant booleen fixe)
+?kick
+?- rajouter les droits (pour l'instant booleen fixe)
 
 //channel
 //- nb max de client sur channel ? // pas a gerer
@@ -59,11 +59,11 @@ who
 //notice
 //- ajouter condition de droit
 
-user (dans nick.cpp)
-- ajout retour needmoreparams 461
+//user (dans nick.cpp)
+//- ajout retour needmoreparams 461
 
-pong 
-- Servers MUST send a <server> parameter, and clients SHOULD ignore it. It exists for historical reasons, and indicates the name of the server sending the PONG.
+//pong PONG supprime de la commande list 
+//- Servers MUST send a <server> parameter, and clients SHOULD ignore it. It exists for historical reasons, and indicates the name of the server sending the PONG.
 
 //quit
 //- ajout RPL
@@ -80,4 +80,4 @@ commandes a gerer pour operator server
     RESTART message // optionnel car considere comme a risque
  //   SQUIT message // neconcerne que le network
 
-client : a la construction recup adresse via getaddrinfo? plutot que HOST en dur
+client : a la construction recup adresse via getaddrinfo? plutot que HOST en dur ==> a peaufiner

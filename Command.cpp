@@ -7,7 +7,6 @@
 #define QUIT 5
 #define CAP 6
 #define PING 7
-#define PONG 8
 #define MODE 9
 #define TOPIC 10
 #define LIST 11
@@ -60,7 +59,6 @@ int	get_cmd_id(const std::string s)
 	else if (s == "QUIT")		return QUIT;
 	else if (s == "CAP")		return CAP;
 	else if (s == "PING")		return PING;
-	else if (s == "PONG")		return PONG;
 	else if (s == "MODE")		return MODE;
 	else if (s == "TOPIC")		return TOPIC;
 	else if (s == "LIST")		return LIST;
@@ -103,10 +101,7 @@ void Command::execCommand()
 		case QUIT:
 			this->quit(); 
 			break;
-		case CAP: // pas a gerer 
-			break;
-		case PONG:
-			// Command::Pong();
+		case CAP:
 			break;
 		case MODE:
 			Command::Mode();

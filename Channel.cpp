@@ -1,9 +1,4 @@
 #include "Channel.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-#include "ft_irc.hpp"
-#include <algorithm>
-
 
 // Channels names are strings (beginning with a '&', '#', '+' or '!'
 //    character) of length up to fifty (50) characters.  Channel names are
@@ -91,11 +86,13 @@ void Channel::addClient(Client &client) {
 	// else
 	// 	std::cout << "max number of clients on " << name << " channel reached" << std::endl;
 }
+
 void Channel::removeClient(Client &client) 
 {
 	clients.erase(clients.find(client.getFd()));
 	// rajouter un check pour voir s'il n'y a plus de client -> effcaer le channel ?
 }
+
 void Channel::removeClient(std::string const &nick) // idem ci dessus
 {
 	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
@@ -116,6 +113,7 @@ std::vector<Client *> Channel::getClients()
 	return clients;
 }
 bool Channel::isClient(Client &client) { return clients.find(client.getFd()) != clients.end(); }
+
 bool Channel::isOnChannel(std::string const &nick)
 {
 	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); ++it)

@@ -51,6 +51,11 @@ void Command::nick()
 
 void Command::user()
 {
+    if (this->parameters.size() < 3)
+    {
+        send_message(*this->client, ERR_NEEDMOREPARAMS(this->client->getPrefixe(), check_params(this->client->getNickname()), "USER "));
+        return ;
+    }
     if (this->client->getStatus() != UNREGISTERED)
     {
         send_message(*this->client, ERR_ALREADYREGISTRED(this->client->getPrefixe(), check_params(this->client->getNickname())));
@@ -58,7 +63,9 @@ void Command::user()
     }
     this->client->setUsername(this->parameters[0].substr(0, USERLEN));
     if (argLine.size() > 0)
+    {
         this->client->setRealname(this->argLine);
+    }
 }
 
 void Command::pass()
