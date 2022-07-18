@@ -30,8 +30,9 @@ int Channel::formatName(std::string name)
 	return (1);
 }
 
+//truc a faire ici? :
 Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
-	: topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
+: topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
 	{
 		if (formatName(namechan))
 		{
@@ -42,7 +43,6 @@ Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
 			std::cout << "bad channel name" << std::endl;
 	}
 
-// void Channel::setName(std::string name) { this->name = name; }
 Channel::~Channel() { }
 
 Channel::Channel(const Channel &src)
@@ -76,21 +76,13 @@ int Channel::getNbClients()
 	return this->clients.size();
 }
 
-void Channel::addClient(Client &client) { 
-	// if (this->clients.size() < max_clients)
-		std::cout << "entree dans add client" << std::endl;
-		clients[client.getFd()] = &client; 
-		int nb = getNbClients();
-		std::cout << "mb cleints dans channel" << nb << std::endl;
-
-	// else
-	// 	std::cout << "max number of clients on " << name << " channel reached" << std::endl;
-}
+void Channel::addClient(Client &client) { clients[client.getFd()] = &client; }
 
 void Channel::removeClient(Client &client) 
 {
 	clients.erase(clients.find(client.getFd()));
-	// rajouter un check pour voir s'il n'y a plus de client -> effcaer le channel ?
+	// rajouter un check pour voir s'il n'y a plus de client -> effacer le channel ?
+	//check fait dans remove client du serveur. a deplacer ici?
 }
 
 void Channel::removeClient(std::string const &nick) // idem ci dessus
@@ -104,14 +96,16 @@ void Channel::removeClient(std::string const &nick) // idem ci dessus
 		}
 	}
 }
+
 std::vector<Client *> Channel::getClients()
 {
-	std::vector<Client *> clients = std::vector<Client *>();
+	std::vector<Client *> clients = std::vector<Client *>(); // ligne pas == a std::vector<Client *> clients; ??
 
 	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 		clients.push_back(it->second);
 	return clients;
 }
+
 bool Channel::isClient(Client &client) { return clients.find(client.getFd()) != clients.end(); }
 
 bool Channel::isOnChannel(std::string const &nick)
@@ -123,6 +117,7 @@ bool Channel::isOnChannel(std::string const &nick)
 }
 
 void Channel::setMode(std::string mode) { this->mode = mode; }
+
 std::string Channel::getMode() { return mode; }
 
 void Channel::addMode(char mode)
@@ -131,6 +126,7 @@ void Channel::addMode(char mode)
 		return ;
 	this->mode += mode;
 }
+
 void Channel::delMode(char mode)
 {
 	std::string newmode;
@@ -145,13 +141,17 @@ void Channel::delMode(char mode)
 }
 
 void Channel::setClientMode(Client &client, std::string mode) { client_mode[client.getFd()] = mode; }
+
 std::string Channel::getClientMode(Client &client) { return client_mode[client.getFd()]; }
 
 std::map<int, Client*> Channel::getClientMap() { return clients;}
 
 Client 	*Channel::getTopicSetter() {return this->topicSetter;}
+
 void 	Channel::setTopicSetter(Client *client) {this->topicSetter = client;}
+
 time_t  Channel::getLastTopicSet(){ return this->lastTopicSet;}
+
 void    Channel::setLastTopicSet(){ this->lastTopicSet = std::time(0);}
 
 void	Channel::broadcast(std::string message)
@@ -164,13 +164,11 @@ void	Channel::broadcast(std::string message)
 
 void Channel::addInvited(std::string nickname)
 {
-	std::cout << "debut du add invited" << std::endl;
     if (nickname.length() != 0)
     {
         if (getInvitedIndex(nickname) == -1)
 		{
 			invited.push_back(nickname);
-       		std::cout << "invite ajoute a la liste" << std::endl;
 		}
     }
 }

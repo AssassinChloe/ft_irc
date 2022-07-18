@@ -2,9 +2,16 @@
 
 void    Command::Invite()
 {
+    std::string message;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     if (this->getParameters().size() == 0)
     {
-        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "INVITE :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
+        message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "INVITE :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
         send_message(*this->client, message);
         return;
     }
@@ -12,7 +19,7 @@ void    Command::Invite()
     int index = this->server->getChannelIndex(parameters[1]);
     if (index == -1 || server->getChannel(index).getNbClients() == 0)
     {
-        std::string message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[1] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
+        message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[1] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
         send_message(*this->client, message);
         return;
     }
@@ -22,20 +29,19 @@ void    Command::Invite()
         // SI client deja sur le channel ERR_USERONCHANNEL
         if (server->getChannel(index).isOnChannel(parameters[0]))
         {
-            std::string message = this->client->getPrefixe() + " 443 " + parameters[0] + " " + parameters[1] +  " :is already on channel\r\n"; //"<client> <nick> <channel> :is already on channel"
+            message = this->client->getPrefixe() + " 443 " + parameters[0] + " " + parameters[1] +  " :is already on channel\r\n"; //"<client> <nick> <channel> :is already on channel"
             send_message(*this->client, message); //ERR_USERONCHANNEL (443)
             return;
         }
         
         std::string modeChan = server->getChannel(index).getMode();
-        std::cout << "mode Chan = " << modeChan << std::endl;
         // SI channel en mode i : verification de has power d'inviter = (client est operator channel)
         if (searchIfMode('i', modeChan) == 1)
         {
             std::string modeClient = client->getChanMode(parameters[1]);
             if (modeClient.size() == 0 || !(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
             {
-                std::string message =  this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[1] + " :You're not channel operator\r\n";
+                message =  this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[1] + " :You're not channel operator\r\n";
                 send_message(*this->client, message);
                 return;  // ERR_CHANOPRIVSNEEDED 482
             }
@@ -51,14 +57,14 @@ void    Command::Invite()
         }
         if (NickOnServer == 0) // pas trouve de message approprie dans la doc, mis le 401 est pas mal
         {
-            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + parameters[0] + " :No such nick/channel\r\n";
+            message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + parameters[0] + " :No such nick/channel\r\n";
             send_message(*this->client, message); //ERR_NOSUCHNICK (401)
             return;
         }
         // ajout du nickname dans la liste des invite
         server->getChannel(index).addInvited(parameters[0]);
         // envoi au demandeur RPL_INVITING numeric
-        std::string message =  parameters[0] + " " + parameters[1] + "\r\n"; 
+        message =  parameters[0] + " " + parameters[1] + "\r\n"; 
         send_message(*this->client, message); //pas considere comme garbage mais selble bien simple
         // envoi de l'invitation a l'invite an INVITE message with the issuer as <source>, to the target user 
         class Client &invited_client = server->getClient(parameters[0]);
@@ -68,7 +74,7 @@ void    Command::Invite()
     }
     else // client pas sur le channel
     {
-        std::string message = this->client->getPrefixe() +" 442 "+ this->client->getNickname() + " " + parameters[1] + " :You're not on that channel\r\n";
+        message = this->client->getPrefixe() + " 442 " + this->client->getNickname() + " " + parameters[1] + " :You're not on that channel\r\n";
         send_message(*this->client, message); // ERR_NOTONCHANNEL (442)
     }
 }

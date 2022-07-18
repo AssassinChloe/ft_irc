@@ -46,14 +46,21 @@
 
 void    Command::List()
 {
+    std::string message;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     if (parameters.size() == 0)
     {
         int nbChan = server->getChannelNb();
-        for (int i=0; i < nbChan; i++)
+        for (int i = 0; i < nbChan; i++)
         {
             std::stringstream sstream;
             sstream << server->getChannel(i).getNbClients();
-            std::string message = (this->client->getPrefixe()) + " 322 " + (this->client->getNickname()) + " " + server->getChannel(i).getCName();
+            message = (this->client->getPrefixe()) + " 322 " + (this->client->getNickname()) + " " + server->getChannel(i).getCName();
             message = message + " " + sstream.str() + " :" + server->getChannel(i).getTopic() + "\r\n";
             send_message(*this->client, message);
         }

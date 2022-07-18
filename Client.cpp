@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/07 17:49:42 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/18 13:11:48 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 Client::Client() {}
 Client::Client(struct pollfd newfd)
-: username(""), nickname(""), status(UNREGISTERED), hostaddr(HOST), hostname(SERVER_NAME), pass_checked(false), realname("realname"), fd(newfd)
+: username(""), nickname(""), status(UNREGISTERED), hostaddr(HOST), hostname(SERVER_NAME), pass_checked(false), realname("norealname"), fd(newfd)
 {}
 
 Client::~Client() { }
@@ -38,6 +38,7 @@ std::string Client::getRealname() { return realname; }
 
 
 bool Client::getCheckPass() {return pass_checked; }
+
 std::string Client::getPrefixe()
 {
     std::string ret = ":" + check_params(this->nickname) + "!" + check_params(this->username) + "@" + this->hostaddr + " ";
@@ -70,7 +71,6 @@ std::string Client::getChanMode(std::string name)
 {
     return ((*this->channel_list.find(name)).second);
 }
-
 
 void Client::setMode(std::string chan, std::string mode) { this->channel_list[chan] = mode; }
 

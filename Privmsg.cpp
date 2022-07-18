@@ -1,94 +1,101 @@
 #include "Command.hpp"
 
+
+// Command: PRIVMSG
+//   Parameters: <target>{,<target>} <text to be sent>
+
 void    Command::Privmsg()
 {
     
-int i = 0;
-int nb_param = parameters.size();
+    int i = 0;
+    int nb_param = this->parameters.size();
+    std::string message;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
+    if (nb_param == 0) 
+    {
+        // :lilin!liliu@localhost 411 lilin :No recipient given ()
+        message = this->client->getPrefixe() + " 411 " + this->client->getNickname() + " " + parameters[i] + " :No recipient given (PRIVMSG)\r\n";
+        send_message(*this->client, message); // ERR_NORECIPIENT (411)
+        return;
+    }
 
-if (nb_param == 0) 
-{
-    // :lilin!liliu@localhost 411 lilin :No recipient given ()
-    std::string message = this->client->getPrefixe() + " 411 " + this->client->getNickname() + " " + parameters[i] + " :No recipient given (PRIVMSG)\r\n";
-    send_message(*this->client, message); // ERR_NORECIPIENT (411)
-    return;
-}
-
-if (this->getArgLine().length() == 0)    
-{
-    // :lilin!liliu@localhost 412 lilin :No text to send
-    std::string message = this->client->getPrefixe() + " 412 " + this->client->getNickname() + " " + parameters[i] + " :No text to send\r\n";
-    send_message(*this->client, message); // ERR_NOTEXTTOSEND (412)
-    return;
-}   
-std::vector<std::string> target = ftsplit(parameters[0], ",");
-int nbtarget = target.size();
-for (i=0; i<nbtarget; i++)
-{
-
-    if (target[i][0] == '#' || target[i][0] == '&' || target[i][0] == '+' || target[i][0] ==  '!')
+    if (this->getArgLine().length() == 0)    
+    {
+        // :lilin!liliu@localhost 412 lilin :No text to send
+        message = this->client->getPrefixe() + " 412 " + this->client->getNickname() + " " + parameters[i] + " :No text to send\r\n";
+        send_message(*this->client, message); // ERR_NOTEXTTOSEND (412)
+        return;
+    }   
+    std::vector<std::string> target = ftsplit(parameters[0], ",");
+    int nbtarget = target.size();
+    for (i = 0; i < nbtarget; i++)
     {
 
-        std::string message = this->client->getPrefixe() + "PRIVMSG " +  target[i] + " :" + this->getArgLine() + " \r\n";
-        std::cout << message << std::endl;
-
-        int index = server->getChannelIndex(target[i]);
-
-        if (index == -1) // = channel non trouve
+        if (target[i][0] == '#' || target[i][0] == '&' || target[i][0] == '+' || target[i][0] ==  '!')
         {
-            std::string message2 = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + target[i] + " :No such nick/channel\r\n";
-            send_message(*this->client, message2); //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
-        } 
-        else
-        {
-            int condition = 1;
+
+            message = this->client->getPrefixe() + "PRIVMSG " +  target[i] + " :" + this->getArgLine() + " \r\n";
             int index = server->getChannelIndex(target[i]);
-            std::string modeChan = server->getChannel(index).getMode();
-            if (searchIfMode('n', modeChan) == 1 && (server->getChannel(index).isOnChannel(client->getNickname()) == 0))
-                condition = 0;
-            // rajouter condition sur les droits ( a ajouter aussi a notice)
-            if (condition)
+            if (index == -1) // = channel non trouve
             {
-                std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-                for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                std::string message2 = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + target[i] + " :No such nick/channel\r\n";
+                send_message(*this->client, message2); //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
+            } 
+            else
+            {
+                int condition = 1;
+                int index = server->getChannelIndex(target[i]);
+                std::string modeChan = server->getChannel(index).getMode();
+                if (searchIfMode('n', modeChan) == 1 && (server->getChannel(index).isOnChannel(client->getNickname()) == 0))
+                    condition = 0;
+                // rajouter condition sur les droits ( a ajouter aussi a notice)
+                if (condition)
                 {
-                    if (this->client != (*it).second)
-                        {
-                            int id = (*it).second->getFd();
-                            send(id, message.c_str(), message.size(), 0);
-                        }
+                    std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
+                    for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
+                    {
+                        if (this->client != (*it).second)
+                            {
+                                int id = (*it).second->getFd();
+                                send(id, message.c_str(), message.size(), 0);
+                            }
+                    }
+                }
+                
+                else// else si pas de droits
+                {
+                    std::string message3 = this->client->getPrefixe() + " 404 " + this->client->getPrefixe() + " " + target[i] + " :Cannot send to channel\r\n";
+                    send_message(*this->client, message3);
+                    // ERR_CANNOTSENDTOCHAN (404) "<client> <channel> :Cannot send to channel"
                 }
             }
-            
-            else// else si pas de droits
-            {
-                std::string message3 = this->client->getPrefixe() + " 404 " + this->client->getPrefixe() + " " + target[i] + " :Cannot send to channel\r\n";
-                send_message(*this->client, message3);
-                // ERR_CANNOTSENDTOCHAN (404) "<client> <channel> :Cannot send to channel"
-            }
         }
+        else
+        {
+            int find = 0;
+            for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
+            {
+                if ((*it).second.getNickname() == target[i])
+                {
+                    int id = (it)->second.getFd();
+                    std::string message = this->client->getPrefixe() + "PRIVMSG " + target[i] + " :" + this->getArgLine() + " \r\n";
+                    send(id, message.c_str(), message.size(), 0);
+                    find = 1;
+                    std::cout <<"message individuel : " << message << std::endl;
+                }
+            }
+            if (find == 0)
+            {
+                std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + target[i] + " :No such nick/channel\r\n";
+                send_message(*this->client, message); //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
+            }
+        }     
     }
-    else
-    {
-        int find = 0;
-        for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
-        {
-            if ((*it).second.getNickname() == target[i])
-            {
-                int id = (it)->second.getFd();
-                std::string message = this->client->getPrefixe() + "PRIVMSG " + target[i] + " :" + this->getArgLine() + " \r\n";
-                send(id, message.c_str(), message.size(), 0);
-                find = 1;
-                std::cout <<"message individuel : " << message << std::endl;
-            }
-        }
-        if (find == 0)
-        {
-            std::string message = this->client->getPrefixe() + " 401 " + this->client->getNickname() + " " + target[i] + " :No such nick/channel\r\n";
-            send_message(*this->client, message); //ERR_NOSUCHNICK (401) // "<client> <nickname> :No such nick/channel"
-        }
-    }     
-}
 }
 
 

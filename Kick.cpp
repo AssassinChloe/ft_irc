@@ -10,10 +10,16 @@ void    Command::Kick()
 {
         
     int nb_param = parameters.size();
-
+    std::string message;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     if (nb_param <= 1) 
     {
-        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " "  + "KICK :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
+        message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " "  + "KICK :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
         send_message(*this->client, message);
         return;
     }
@@ -24,7 +30,7 @@ void    Command::Kick()
         int index = server->getChannelIndex(parameters[0]); // si channel n'existe pas = -1
         if (index == -1)
         {
-            std::string message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
+            message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
             send_message(*this->client, message);
             return;
         }
@@ -32,7 +38,7 @@ void    Command::Kick()
         std::string modeClient = client->getChanMode(parameters[0]);
         if (modeClient.size() == 0 || !(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 )) // client n'a pas les droits sur le channel
         {
-            std::string message = this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[0] + " :You're not channel operator\r\n";
+            message = this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[0] + " :You're not channel operator\r\n";
             send_message(*this->client, message); //ERR_CHANOPRIVSNEEDED (482)
             return;
 
@@ -49,18 +55,20 @@ void    Command::Kick()
             {
                 if (it->second->getNickname() == kickedClients[i])
                 {
-                    std::string message = this->client->getPrefixe() + " KICK " + parameters[0] + " " + kickedClients[i] + " ";
+                    message = this->client->getPrefixe() + " KICK " + parameters[0] + " " + kickedClients[i] + " ";
                     if (argLine.length() != 0)
                         message = message + ":" + argLine;
                     message = message + "\r\n";
                     server->getChannel(index).broadcast(message);
                     server->getChannel(index).removeClient(kickedClients[i]);
+                    // vu que le check de si le channel est vide est fait dans le removeClient() de la class server, il faudrait le faire ici 
+                    //aussi ou alors effectivement le mettre dans la fct removeClient de channel
                     find = 1;
                 }
             }
             if (find == 0)
             {
-                std::string message = kickedClients[i] + " " + parameters[0] + " :They aren't on that channel\r\n";
+                message = kickedClients[i] + " " + parameters[0] + " :They aren't on that channel\r\n";
                 send_message(*this->client, message); // ERR_USERNOTINCHANNEL (441)
             }
 

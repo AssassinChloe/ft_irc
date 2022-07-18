@@ -115,7 +115,6 @@ int Server::reception_concatenation(int i, std::string *buffer)
     size_t position;
 
     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
-    std::cout << "---BUFFER----" << buff << std::endl;
     *buffer = static_cast<std::string>(buff);
     if (nbytes <= 0)
         return (this->retRecv(_poll_fd[i].fd, nbytes));
@@ -132,7 +131,6 @@ int Server::reception_concatenation(int i, std::string *buffer)
 
 void Server::deleteClient(int fd)
 {
-    std::cout << "pollserver: socket : " << fd << " hung up" << std::endl;
     if (this->getClient(fd).getChanList().size() > 0)
     {
         Command command_line(this->getClient(fd), this, "JOIN 0");

@@ -4,29 +4,33 @@
 
 void    Command::Topic()
 {
-
+	std::string message;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     int nb_param = parameters.size();
 
     if (nb_param == 0) 
     {
-        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "TOPIC :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
+        message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "TOPIC :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
         send_message(*this->client, message);
         return;
     }
     
     else
     {
-        // trouver le channel
-        int index = server->getChannelIndex(parameters[0]); // si channel n'existe pas = -1
+        int index = server->getChannelIndex(parameters[0]);
         if (index == -1)
         {
-            std::string message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
+            message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
             send_message(*this->client, message);
             return;
         }
-        if (server->getChannel(index).isOnChannel(this->getClient().getNickname())) //si client sur le channel
+        if (server->getChannel(index).isOnChannel(this->getClient().getNickname()))
         {
-            // voir si n'a  pas les droits pour changer
             std::string modeChan = server->getChannel(index).getMode();
             if (searchIfMode('t', modeChan) == 1)
             {
@@ -35,17 +39,14 @@ void    Command::Topic()
                 {
                     std::string message =  this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[0] + " :You're not channel operator\r\n";
                     send_message(*this->client, message);
-                    return;  // ERR_CHANOPRIVSNEEDED 482
+                    return;
                 }
             }
-
-            // si a les droit
             if (nb_param == 1 && argLine == "") //normalement comportement diffreent si existe : ou pas... voir si a preciser
             {
-                if (server->getChannel(index).getTopic().length() != 0) // topic existe
+                if (server->getChannel(index).getTopic().length() != 0)
                 {
-                    std::string message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
-                    // std::cout << "message TOPIC :" << message <<std::endl;
+                    message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
                     send_message(*this->client, message);
                 }
                 else 

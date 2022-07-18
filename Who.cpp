@@ -4,6 +4,12 @@ void    Command::Who()
 {
     std::string message;
     std::string flag;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     if (this->parameters.size() > 0) 
     {
         if (check_if_channel(this->parameters[0]) == 1)

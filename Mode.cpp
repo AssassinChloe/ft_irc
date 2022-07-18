@@ -57,7 +57,13 @@ int Command::changeChannelMode(std::string modifier, int index)
 
 void    Command::Mode()
 {
-    std::string message;
+	std::string message;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     if (this->parameters.size() == 0)
     {
             message = RPL_UMODEIS(this->client->getPrefixe(), this->client->getNickname(), this->client->getStatus());
@@ -103,7 +109,7 @@ void    Command::Mode()
             for (int i = 0; i < this->server->getChannel(index).getNbClients(); i++)
             {
                 Client tmp = *(this->server->getChannel(index).getClients()[i]);
-                std::string message = RPL_NAMREPLY(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0], list);
+                message = RPL_NAMREPLY(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0], list);
                 send_message(tmp, message);
                 message = RPL_ENDOFNAMES(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0]);
                 send_message(tmp, message);
@@ -119,7 +125,7 @@ void    Command::Mode()
             }
         }
     }
-    else //user mode O
+    else
     {
         int find = 0;
         int sign = 1;

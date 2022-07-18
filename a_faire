@@ -1,9 +1,10 @@
 general
 - nettoyer nos fichiers des fonctions inutiles et affichages divers
 //- interception signaux (sigpipe ?) //OK
+-sigpipe: on laisse le std<<cout??
 - verifier, fonction par fonction, les ERR et RPL a envoyer
 - verifier leaks dans cas particuliers
-- securiser les envois de messages pour etre sur d'avoir transmis le bon nb de bytes
+//- securiser les envois de messages pour etre sur d'avoir transmis le bon nb de bytes
 - tests divers :
     - envoi de texte > taille du buffer (concaténation du buffer…)
     - envoi d’une ligne sans commande hors channel
@@ -27,8 +28,9 @@ general
 //list
 //- command list geee uniquement pour appel simple (/LIST sans parametre)
 
-?kick
-?- rajouter les droits (pour l'instant booleen fixe)
+kick
+- rajouter les droits (pour l'instant booleen fixe)
+-check channel vide ?
 
 //channel
 //- nb max de client sur channel ? // pas a gerer
@@ -36,20 +38,21 @@ general
 //- key sur channel ? // pas a gerer
 //- joindre plusieurs channels a la fois ? //OK
 //- faire la suppression du channel quand il n'y a plus de user (ou controle des 2 elements quand invite) //OK
+-  RPL a envoyer si jamais il s'agit d'un bad channel name? (suppr std::cout et voir si faut gerer un truc ou pas)
 
 //mode
 //-comment on dit au client que qqun est devenu channel operator?
 //-limiter la rpl_modeis a si il y a effectivement eu un changement sur les modes?
 
 //Invite
-//- a faire notamment pour oper
-//- changement a prevoir pour channel
+- un IRC operator ne peut pas join un chan +i, ca parait ballot non?
 
 //part
 //- voir cas d'erreur (channel non existant, pas sur channel ?)
 
-//privmsg
-//- verifier et intergrer les cas d'erreur (cas d plusieurs fois le meme target pas utilise)
+privmsg
+-quand on envoie le 1er message prive le client ne met pas les ":" entre le nom de la personne et le texte == message d'erreur
+au lieu d'envoyer le message alors que rien dans la doc dit de mettre les ":" pour appeler ?privmsg
 
 who
 //- rajouter user mode 

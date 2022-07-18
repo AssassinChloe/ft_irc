@@ -1,29 +1,7 @@
 #include "Command.hpp"
 
-#define NICK 1
-#define JOIN 2
-#define USER 3
-#define OPER 4
-#define QUIT 5
-#define CAP 6
-#define PING 7
-#define MODE 9
-#define TOPIC 10
-#define LIST 11
-#define KICK 12
-#define PRIVMSG 13
-#define KILL 14
-#define PASS 15
-#define PART 16
-#define WELCOME 17
-#define WHO 18
-#define NOTICE 19
-#define INVITE 20
-
-
-
 Command::Command(Client &client, Server *ganesh, std::string line)
-	: client(&client), server(ganesh), query(line)
+	: client(&client), server(ganesh)
 {
 	std::string delimiter(":");
 	size_t position;
@@ -50,6 +28,13 @@ Client &Command::getClient() { return *client; }
 std::vector<std::string> Command::getParameters() { return parameters; }
 std::string Command::getArgLine() { return argLine; }
 
+int Command::checkRegistration()
+{
+	if (this->client->getStatus() != UNREGISTERED)
+		return (0);
+	return (-1);
+
+}
 int	get_cmd_id(const std::string s)
 {
 	if (s == "NICK")			return NICK;
@@ -80,14 +65,14 @@ void Command::execCommand()
 
 	
 	switch (get_cmd_id(cmdType)){
-		case PING: // attendre un pong
-			Command::Ping();
+		case PING:
+			this->Ping();
 			break;
-		case NICK: // changer nickname
+		case NICK:
 			this->nick();
 			break;
-		case JOIN: // rejoindre un channel
-			Command::Join();
+		case JOIN:
+			this->Join();
 			break;
 		case PART: 
 			this->part();
@@ -104,19 +89,19 @@ void Command::execCommand()
 		case CAP:
 			break;
 		case MODE:
-			Command::Mode();
+			this->Mode();
 			break;
 		case TOPIC:
-			Command::Topic();
+			this->Topic();
 			break;
 		case LIST:
-			Command::List();
+			this->List();
 			break;
 		case KICK:
-			Command::Kick();
+			this->Kick();
 			break;
 		case PRIVMSG:
-			Command::Privmsg();
+			this->Privmsg();
 			break;
 		case PASS:
 			this->pass();
@@ -125,16 +110,16 @@ void Command::execCommand()
 			this->welcome();
 			break;
 		case WHO:
-			Command::Who();
+			this->Who();
 			break;
 		case NOTICE:
-			Command::Notice();
+			this->Notice();
 			break;	
 		case KILL:
-			Command::Kill();
+			this->Kill();
 			break;
 		case INVITE:
-			Command::Invite();
+			this->Invite();
 			break;
 		case 0:
 			send_message(*this->client, ERR_UNKNOWNCOMMAND(cmdType));
@@ -143,7 +128,17 @@ void Command::execCommand()
 }
 
 void	send_message(Client &cl, std::string message)
-{
-	send(cl.getFd(), message.c_str(), message.size(), MSG_NOSIGNAL);
+{ 
+	int ret = send(cl.getFd(), message.c_str(), message.size(), MSG_NOSIGNAL);
+	int size = message.size();
+	std::cout << "size " << size << " ret " << ret << std::endl;
+	while (ret < size)
+	{
+		message.substr(ret, message.size());
+		size = message.size();
+		ret = send(cl.getFd(), message.c_str(), size, MSG_NOSIGNAL);
+		std::cout << "size " << size << " ret " << ret << std::endl;
+
+	}
 	std::cout << "message envoye a " << cl.getNickname() << ": " << message << std::endl; 
 }

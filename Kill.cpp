@@ -5,10 +5,16 @@ void    Command::Kill()
 {
         
     int nb_param = parameters.size();
-
+    std::string message;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     if (nb_param <= 0) 
     {
-        std::string message =this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "KILL :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
+        message =this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "KILL :Not enough parameters\r\n"; // ERR_NEEDMOREPARAMS (461)
         send_message(*this->client, message);
         return;
     }
@@ -19,7 +25,7 @@ void    Command::Kill()
         std::cout << "client status : " << clientStat << std::endl;
         if (searchIfMode('o', clientStat) != 1) // si client n'est pas operateur
         {
-            std::string message = this->client->getPrefixe() + " 481 " + this->client->getNickname() + " :Permission Denied- You're not an IRC operator\r\n";
+            message = this->client->getPrefixe() + " 481 " + this->client->getNickname() + " :Permission Denied- You're not an IRC operator\r\n";
             send_message(*this->client, message);
             // :admin!admin@localhost 481 admin :Permission Denied- You're not an IRC operator
         }
@@ -31,7 +37,7 @@ void    Command::Kill()
             {
                 if ((*it).second.getNickname() == this->parameters[0])
                 {
-                NickOnServer = 1;
+                    NickOnServer = 1;
                 } 
             }
 
@@ -43,14 +49,10 @@ void    Command::Kill()
             }
 
             int id = server->getClient(parameters[0]).getFd();
-            // std::string message3 = this->client->getPrefixe()  + " KILL " + parameters[0] + " :"+ argLine + "\r\n";
-            std::string message = server->getClient(id).getPrefixe()  + " QUIT " + parameters[0] + " :"+ argLine + "\r\n";
+            message = server->getClient(id).getPrefixe()  + " QUIT " + parameters[0] + " :"+ argLine + "\r\n";
             send_message(*this->client, message);
-            // send_message(*this->client, message3);
-
             std::string message2 = this->client->getPrefixe() + " KILL " + parameters[0] + " :" + argLine + "\r\n";
             send_message(server->getClient(parameters[0]), message2);
-            
             server->deleteClient(id);
 
             

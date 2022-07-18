@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/07 17:49:10 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/18 13:13:33 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,9 @@ class Client
         std::string     realname;
         struct pollfd   fd;
         std::map<std::string, std::string> channel_list;
-
         Client();
-        void write(std::string message);
-
         
     public:
-        // lien avec poll
-        // liste des channel
         Client(struct pollfd newfd);
         ~Client();
 
@@ -56,7 +51,6 @@ class Client
         bool getCheckPass();
         int getFd();
 
-        // void Client::sendTo(Client &toClient, std::string message);
         std::string getPrefixe();
 
         std::map<std::string, std::string> getChanList();

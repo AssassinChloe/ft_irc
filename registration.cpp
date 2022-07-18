@@ -23,7 +23,7 @@ int Command::isvalidname()
 }
 void Command::nick()
 {
-    std::string rep;
+    std::string message;
 
     if (isvalidname() < 0)
         return ;
@@ -35,18 +35,18 @@ void Command::nick()
           return ;
         } 
     }
-    rep = this->client->getPrefixe() + "NICK " + this->parameters[0] + "\r\n";
+    message = this->client->getPrefixe() + "NICK " + this->parameters[0] + "\r\n";
     this->client->setNickname(this->parameters[0]);
     if (this->client->getChanList().size() > 0)
     {
         std::map<std::string, std::string> tmp = this->client->getChanList();
         for (std::map<std::string, std::string>::iterator it = tmp.begin(); it != tmp.end(); it++)
         {
-            this->server->getChannel((*it).first).broadcast(rep);
+            this->server->getChannel((*it).first).broadcast(message);
         }
     }
     else
-        send_message(*this->client, rep);
+        send_message(*this->client, message);
 }
 
 void Command::user()

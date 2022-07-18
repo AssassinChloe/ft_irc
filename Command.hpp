@@ -2,10 +2,26 @@
 # define COMMANDS_HPP
 # include "ft_irc.hpp"
 
-//define invalid character as for username
+# define NICK 1
+# define JOIN 2
+# define USER 3
+# define OPER 4
+# define QUIT 5
+# define CAP 6
+# define PING 7
+# define MODE 9
+# define TOPIC 10
+# define LIST 11
+# define KICK 12
+# define PRIVMSG 13
+# define KILL 14
+# define PASS 15
+# define PART 16
+# define WELCOME 17
+# define WHO 18
+# define NOTICE 19
+# define INVITE 20
 # define NICKNAME_VALID_CHAR "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_[]{}\\`|"
-
-//define channel chars
 # define CHANNEL_VALID_CHAR "#&!+"
 
 /*
@@ -13,23 +29,13 @@
 */
 
 # define ERR_NOSUCHNICK(prefixe, nick, arg) (prefixe + "401 " + nick + " " + arg + " :No such nick\r\n") //401
-// # define ERR_NOSUCHSERVER(server) (server + " :No such server\r\n") //402
 # define ERR_NOSUCHCHANNEL(prefixe, nick, channel) (prefixe + "403 " + nick + " " + channel + " :No such channel\r\n")
-// # define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel\r\n") //404
-// # define ERR_TOOMANYCHANNELS(channel) (channel + " :You have joined too many channels\r\n") //405
-// # define ERR_WASNOSUCHNICK(nickname) (nickname + " :There was no such nickname\r\n") //406
-// # define ERR_WILDTOPLEVEL(mask) (mask + " :Wildcard in toplevel domain\r\n")
  # define ERR_UNKNOWNCOMMAND(command) (command + " :Unknown command\r\n")
-// # define ERR_NOMOTD() (":MOTD File is missing\r\n")
-
 # define ERR_NONICKNAMEGIVEN(prefixe) (prefixe + "431 :No nickname given\r\n")
 # define ERR_ERRONEUSNICKNAME(nick) (nick + " :Erroneus nickname\r\n")
 # define ERR_NICKNAMEINUSE(nick) (nick + " :Nickname is already in use\r\n")
-
-// # define ERR_USERNOTINCHANNEL(pseudo, channel) (pseudo + " :Is not on channel " + channel + "\r\n")
 # define ERR_NOTONCHANNEL(channel) (channel + " :You're not on that channel\r\n")
-// # define ERR_USERONCHANNEL(user, channel) (user + channel + " :User is already on that channel\r\n")
-// # define ERR_NOTREGISTERED() (":You have not registered\r\n")
+# define ERR_NOTREGISTERED(prefixe, nick) (prefixe + "451 " + nick + " :You have not registered\r\n")
 # define ERR_NEEDMOREPARAMS(prefixe, nick, command) (prefixe + "461 " + nick + " " + command + " :Not enough parameters\r\n")
 # define ERR_ALREADYREGISTRED(prefixe, nick) (prefixe + "462 " + nick + " :You may not reregister\r\n")
 // # define ERR_NOPERMFORHOST() (":Your host isn't among the privileged\r\n")
@@ -99,8 +105,6 @@ class Command
 		std::string cmdType;
 		std::vector<std::string> parameters;
 		std::string argLine; 
-		std::string query; 
-
 		bool st;
 
 		std::string getReplies(unsigned short code, std::string arg1, std::string arg2, std::string arg3, std::string arg4, std::string arg5, std::string arg6, std::string arg7);
@@ -110,41 +114,40 @@ class Command
 		~Command();
 
 		Client &getClient();
-		// Server &getServer();
 
 		std::string getCmdType();
 		std::vector<std::string> getParameters();
 		std::string getArgLine();
-		std::string getQuery();
 
-		void setStop(bool st);
-		bool getStop();
-		void execCommand();
+		void	setStop(bool st);
+		bool	getStop();
+		void	execCommand();
+		int		checkRegistration();
 
-		void Ping();
-		void Pong();
-		void nick();
+		void	Ping();
+		// void	Pong(); a supprimer?
+		void	nick();
 			int isvalidname();
 
-		void user();
-		void pass();
-		void Join();
+		void	user();
+		void	pass();
+		void 	Join();
 			void names(int index, std::string chanName);
-		void welcome();
-		void Mode();
+		void	welcome();
+		void	Mode();
 			int changeChannelMode(std::string modifier, int index);
 
-		void Who();
-		void Privmsg();
-		void oper();
-		void part();
-		void quit();
-		void Topic();
-		void Notice();
-		void Kick();
-		void List();
-		void Kill();
-		void Invite();
+		void	Who();
+		void	Privmsg();
+		void	oper();
+		void	part();
+		void	quit();
+		void	Topic();
+		void	Notice();
+		void	Kick();
+		void	List();
+		void	Kill();
+		void	Invite();
 
 };
 

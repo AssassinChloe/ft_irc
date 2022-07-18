@@ -43,10 +43,16 @@ bool channelExist(Server *server, std::string chanName)
 
 void Command::Join()
 {
-
+    std::string message;
+    if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     if (this->getParameters().size() == 0)
     {
-        std::string message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "JOIN :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
+        message = this->client->getPrefixe() + " 461 " + this->getClient().getNickname() + " " + "JOIN :Not enough parameters\r\n"; // ERR_ #461 ERR_NEEDMOREPARAMS
         send_message(*this->client, message);
         return;
     }
@@ -92,23 +98,22 @@ void Command::Join()
                 }
                 if (isInvited == 0 )
                 {
-                    std::string message =  joinChan[i] + " :Cannot join channel (+i)\r\n";
+                    message =  joinChan[i] + " :Cannot join channel (+i)\r\n";
                     send_message(*this->client, message); // ERR_INVITEONLYCHAN (473)
                 }
             }
-            if (isInvited== 1)
+            if (isInvited == 1)
             {
-                server->getChannel(index).addClient(this->getClient()); // voir le ;ode par defaut
+                server->getChannel(index).addClient(this->getClient());
                 std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-
-                // message JOIN
-                std::string message = this->client->getPrefixe() + "JOIN :" + joinChan[i] + "\r\n" ;
+                message = this->client->getPrefixe() + "JOIN :" + joinChan[i] + "\r\n" ;
                 send_message(*this->client, message);
+
                 if (this->server->getChannel(index).getClients().size() == 1)
                     this->client->addChannel(joinChan[i], "O");
                 else
                     this->client->addChannel(joinChan[i], "+");
-                // message topic
+
                 message = joinChan[i] + " :" + server->getChannel(index).getTopic() + "\r\n";
                 send_message(*this->client, message);
 

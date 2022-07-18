@@ -26,7 +26,13 @@ void    Command::Notice()
     
     int i = 0;
     int nb_param = parameters.size();
-
+    std::string message;
+	if (checkRegistration() != 0)
+    {
+        message = ERR_NOTREGISTERED(this->client->getPrefixe(), check_params(this->client->getNickname()));
+        send_message(*this->client, message);
+        return;
+    }
     if (nb_param == 0) 
             return;
 
@@ -39,9 +45,7 @@ void    Command::Notice()
         {
 
 
-            std::string message = this->client->getPrefixe() + "PRIVMSG " +  target[i] + " :" + this->getArgLine() + " \r\n";
-            std::cout << message << std::endl;
-
+            message = this->client->getPrefixe() + "PRIVMSG " +  target[i] + " :" + this->getArgLine() + " \r\n";
             int index = server->getChannelIndex(target[i]);
 
             if (index != -1) // = si le channel a ete trouve
@@ -75,9 +79,8 @@ void    Command::Notice()
                 if ((*it).second.getNickname() == target[i])
                 {
                     int id = (it)->second.getFd();
-                    std::string message = this->client->getPrefixe() + "PRIVMSG " + target[i] + " :" + this->getArgLine() + " \r\n";
+                    message = this->client->getPrefixe() + "PRIVMSG " + target[i] + " :" + this->getArgLine() + " \r\n";
                     send(id, message.c_str(), message.size(), 0);
-                    std::cout <<"message individuel : " << message << std::endl;
                 }
             }
         }     
