@@ -57,6 +57,8 @@ int	get_cmd_id(const std::string s)
 	else if (s == "NOTICE")   	return NOTICE;
 	else if (s == "KILL")   	return KILL;
 	else if (s == "INVITE")   	return INVITE;
+	else if (s == "REHASH")   	return REHASH;
+	else if (s == "RESTART")   	return RESTART;
 	return 0;
 }
 
@@ -120,6 +122,12 @@ void Command::execCommand()
 			break;
 		case INVITE:
 			this->Invite();
+			break;
+		case REHASH:
+			this->Rehash();
+			break;
+		case RESTART:
+			this->Restart();
 			break;
 		case 0:
 			send_message(*this->client, ERR_UNKNOWNCOMMAND(cmdType));

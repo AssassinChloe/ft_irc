@@ -122,7 +122,7 @@ int Server::reception_concatenation(int i, std::string *buffer)
 
     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
     *buffer = static_cast<std::string>(buff);
-    std::cout << "buffer: " << buff <<std::endl;
+    std::cout << "buffer: " << buff <<std::endl; // a commenter pour version finale
     if (nbytes <= 0)
         return (this->retRecv(_poll_fd[i].fd, nbytes));
     else
@@ -322,3 +322,5 @@ std::vector<struct pollfd> Server::getPollFdList()
 {
     return (this->_poll_fd);
 }
+
+int Server::getSocketFd() { return _socket.fd;}

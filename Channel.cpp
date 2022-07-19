@@ -32,7 +32,8 @@ int Channel::formatName(std::string name)
 
 //truc a faire ici? :
 Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
-: topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
+: mode("n")
+// : topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
 	{
 		if (formatName(namechan))
 		{

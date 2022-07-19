@@ -1,7 +1,7 @@
 SRCS		:=  main.cpp Server.cpp Command.cpp Client.cpp Message.cpp Utils.cpp Channel.cpp\
 				Join.cpp registration.cpp PingPong.cpp welcome.cpp Mode.cpp Who.cpp Privmsg.cpp oper.cpp\
 				Part.cpp quit.cpp Topic.cpp Notice.cpp Kick.cpp List.cpp Kill.cpp names.cpp Invite.cpp\
-				Config.cpp
+				Config.cpp Rehash.cpp Restart.cpp
 
 HEAD		:=	ft_irc.hpp Command.hpp Client.hpp Message.hpp Channel.hpp
 
