@@ -2,7 +2,6 @@
 
 int Command::isvalidname()
 {
-    std::cout << "isvalidname" << std::endl;
     std::string charset(NICKNAME_VALID_CHAR);
     size_t position;
     
@@ -11,7 +10,6 @@ int Command::isvalidname()
         send_message(*this->client, ERR_ERRONEUSNICKNAME(this->parameters[0]));
         return (-1);
     } 
-    std::cout << "isvalidname middle" << std::endl;
     for (unsigned int i = 0; i < this->parameters[0].size(); i++)
     {
 	    if ((position = charset.find(this->parameters[0][i])) == std::string::npos)
@@ -21,13 +19,11 @@ int Command::isvalidname()
         }
             
     }
-    std::cout << "isvalidname end" << std::endl;
     return (0);
 }
 void Command::nick()
 {
     std::string message;
-    std::cout << "nick" << std::endl;
 
     if (isvalidname() < 0)
         return ;
@@ -55,7 +51,6 @@ void Command::nick()
 
 void Command::user()
 {
-    std::cout << "user" << std::endl;
     if (this->parameters.size() < 3)
     {
         send_message(*this->client, ERR_NEEDMOREPARAMS(this->client->getPrefixe(), check_params(this->client->getNickname()), "USER "));
@@ -75,7 +70,6 @@ void Command::user()
 
 void Command::pass()
 {
-    std::cout << "pass" << std::endl;
     if (this->client->getStatus() == UNREGISTERED)
     {
         if (this->parameters[0] == this->server->getPass())

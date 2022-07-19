@@ -32,16 +32,16 @@ int Channel::formatName(std::string name)
 
 //truc a faire ici? :
 Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
-: mode("n")
-// : topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
+// : mode("n")
+: topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
 	{
 		if (formatName(namechan))
 		{
 			name = namechan;
-			std::cout << "channel added to chan list of server " << std::endl;
+			// std::cout << "channel added to chan list of server " << std::endl;
 		}
-		else
-			std::cout << "bad channel name" << std::endl;
+		// else // message Bad Channel Mask envoye au client lors de la tentative de join
+		// 	std::cout << "bad channel name" << std::endl;
 	}
 
 Channel::~Channel() { }
@@ -83,9 +83,8 @@ void Channel::removeClient(Client &client)
 {
 	clients.erase(clients.find(client.getFd()));
 
-
 	// rajouter un check pour voir s'il n'y a plus de client -> effacer le channel ?
-	//check fait dans remove client du serveur. a deplacer ici?
+	//check fait dans remove client du serveur. a deplacer ici? -> fait dans la partie kick et part
 }
 
 void Channel::removeClient(std::string const &nick) // idem ci dessus
