@@ -18,6 +18,12 @@ class Server
         std::vector<struct pollfd>  _poll_fd;             
         std::map<int, Client>       _clients;
         std::vector<class Channel>  _channels;
+        std::string                 _host;
+        std::string                 _name;
+        std::string                 _version;
+        std::string                 _oper_name;
+        std::string                 _oper_pass;
+        std::string                 _bannerpath;
 
     public:
         Server(std::string port, std::string pass);
@@ -47,6 +53,14 @@ class Server
         int getChannelIndex(std::string chanName);
         int getChannelNb();
         std::vector<struct pollfd> getPollFdList();
+        int init_config(std::string configpath);
+        const char *getBanner();
+        std::string getHost();
+        std::string getName();
+        std::string getVersion();
+        std::string getOperName();
+        std::string getOperPass();
+
 
 };
 

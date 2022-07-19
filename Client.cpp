@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/18 13:11:48 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/19 11:19:32 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 
 Client::Client() {}
-Client::Client(struct pollfd newfd)
-: username(""), nickname(""), status(UNREGISTERED), hostaddr(HOST), hostname(SERVER_NAME), pass_checked(false), realname("norealname"), fd(newfd)
+Client::Client(struct pollfd newfd, Server *ganesh)
+: server(ganesh), username(""), nickname(""), status(UNREGISTERED), hostaddr(this->server->getHost()), hostname(this->server->getName()), pass_checked(false), realname("norealname"), fd(newfd)
 {}
 
 Client::~Client() { }

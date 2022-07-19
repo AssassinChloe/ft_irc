@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/14 16:00:00 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/19 11:04:55 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,21 @@
 # include "Client.hpp"
 # include "Channel.hpp"
 # include "Command.hpp"
+# include <sys/stat.h>
+# include <stdio.h>
 
-#include <sys/stat.h>
-#include <stdio.h>
-
-# define HOST "localhost"
-# define SERVER_NAME "Ganesh's_Daugthers"
-# define VERSION " 0.1 "
-
+// # define HOST "localhost"
+// # define SERVER_NAME "Ganesh's_Daugthers"
+// # define VERSION " 0.1 "
+# define CONFIG_FILE "config.txt"
 # define USER_MODE "o"
 # define CHAN_USER_MODE "Oo"
 # define CHAN_MODE "nit"
 # define UNREGISTERED "U"
 # define GANESH_FRIEND "g"
 
-# define OPER_NAME "Ganesh_Army"
-# define OPER_PASS "securisedpassword" 
+// # define OPER_NAME "Ganesh_Army"
+// # define OPER_PASS "securisedpassword" 
 
 
 extern int g_stop;

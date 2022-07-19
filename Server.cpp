@@ -19,6 +19,12 @@ int Server::init()
     int ret;
     struct addrinfo *res;
     struct addrinfo *tmp;
+
+    if (init_config(CONFIG_FILE) == -1)
+    {
+        std::cerr << "error while reading config file" << std::endl;
+        return (-1);
+    }
           
     if ((ret = getaddrinfo(NULL, this->_port.c_str(), &(this->_info), &res)) != 0)
     {
@@ -90,7 +96,7 @@ int Server::accept_client(int i)
             tmp.fd = newfd;
             tmp.events = POLLIN;
             _poll_fd.push_back(tmp);
-            Client newclient(tmp);
+            Client newclient(tmp, this);
             handle_client_request((_poll_fd.size() - 1), newclient);
             _clients.insert(std::make_pair(tmp.fd, newclient));
         }
@@ -116,6 +122,7 @@ int Server::reception_concatenation(int i, std::string *buffer)
 
     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
     *buffer = static_cast<std::string>(buff);
+    std::cout << "buffer: " << buff <<std::endl;
     if (nbytes <= 0)
         return (this->retRecv(_poll_fd[i].fd, nbytes));
     else

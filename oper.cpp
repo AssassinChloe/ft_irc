@@ -16,9 +16,9 @@ void Command::oper()
         return ;
     }
 
-    if (this->parameters[0] == OPER_NAME)
+    if (this->parameters[0] == this->server->getOperName())
     {
-        if (this->parameters[1] != OPER_PASS)
+        if (this->parameters[1] != this->server->getOperPass())
         {
             message = ERR_PASSWDMISMATCH(this->client->getPrefixe(), this->client->getNickname());
             send_message(*this->client, message);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/18 13:13:33 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/19 11:18:20 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,14 @@
 
 # include "ft_irc.hpp"
 
+class Server;
+
 class Client 
 {
     private:
         
+        
+        Server *server;
         std::string     username;
         std::string     nickname;
         std::string     status; 
@@ -30,9 +34,10 @@ class Client
         struct pollfd   fd;
         std::map<std::string, std::string> channel_list;
         Client();
+
         
     public:
-        Client(struct pollfd newfd);
+        Client(struct pollfd newfd, Server *ganesh);
         ~Client();
 
 		void setUsername(std::string username);

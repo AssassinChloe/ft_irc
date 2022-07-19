@@ -1,7 +1,7 @@
-general
+general :
 - nettoyer nos fichiers des fonctions inutiles et affichages divers
 //- interception signaux (sigpipe ?) //OK
--sigpipe: on laisse le std<<cout??
+-sigpipe- on laisse le std<<cout??
 - verifier, fonction par fonction, les ERR et RPL a envoyer
 - verifier leaks dans cas particuliers
 //- securiser les envois de messages pour etre sur d'avoir transmis le bon nb de bytes
@@ -44,13 +44,13 @@ kick
 //-comment on dit au client que qqun est devenu channel operator?
 //-limiter la rpl_modeis a si il y a effectivement eu un changement sur les modes?
 
-//Invite
+//Invite :
 - un IRC operator ne peut pas join un chan +i, ca parait ballot non?
 
 //part
 //- voir cas d'erreur (channel non existant, pas sur channel ?)
 
-privmsg
+privmsg :
 -quand on envoie le 1er message prive le client ne met pas les ":" entre le nom de la personne et le texte == message d'erreur
 au lieu d'envoyer le message alors que rien dans la doc dit de mettre les ":" pour appeler ?privmsg
 
@@ -72,10 +72,10 @@ who
 //- ajout RPL
 
 commades a gere pour oper :
-//   KICK: Eject a client from the channel
-//   MODE: Change the channel’s modes
-//   INVITE: Invite a client to an invite-only channel (mode +i)
-//    TOPIC: Change the channel topic in a mode +t channel
+//   KICK- Eject a client from the channel
+//   MODE- Change the channel’s modes
+//   INVITE- Invite a client to an invite-only channel (mode +i)
+//    TOPIC- Change the channel topic in a mode +t channel
 
 commandes a gerer pour operator server
  //   KILL message (qui doit recevoir le message a part le killed ? pas sure)

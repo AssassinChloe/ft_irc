@@ -1,0 +1,6 @@
+HOST=localhost
+SERVER_NAME=Ganesh's_Daugthers
+VERSION=0.1
+OPER_NAME=Ganesh_Army
+OPER_PASS=securisedpassword
+BANNER_PATH=banner_ganesh.txt
