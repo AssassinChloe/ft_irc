@@ -35,9 +35,9 @@ class Server
         int handle_client_request(int i, Client &client);
         int accept_client(int i);
         void deleteClient(int fd);
-        int reception_concatenation(int fd, std::string *buffer);
+        int reception_concatenation(int fd);
         int retRecv(int i, int nbytes);
-        void dispatch(Client &client, std::string buff);
+        void dispatch(Client &client);
 
         Client &getClient(int fd);
         Client &getClient(std::string name);

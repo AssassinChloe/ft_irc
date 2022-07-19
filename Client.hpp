@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/19 11:18:20 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/19 13:20:29 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class Client
         time_t          last_ping;
         std::string     realname;
         struct pollfd   fd;
+        std::string     buffer;
         std::map<std::string, std::string> channel_list;
         Client();
 
@@ -46,7 +47,9 @@ class Client
         void setStatus(std::string new_status);
         void setLastPing(time_t lastping);
         void setCheckPass(bool checked);
+        void setBuffer(std::string str);
 
+        std::string getBuffer();
 		std::string getUsername();
 		std::string getNickname();
 		std::string getRealname();
@@ -60,6 +63,7 @@ class Client
 
         std::map<std::string, std::string> getChanList();
         std::string getChanMode(std::string name);
+        void addBuffer(char *str);
         void addChannel(std::string name, std::string mode);
         void delChannel(std::string name);
         
