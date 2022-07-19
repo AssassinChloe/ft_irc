@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/19 11:04:55 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/19 16:40:51 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,15 @@
 // # define HOST "localhost"
 // # define SERVER_NAME "Ganesh's_Daugthers"
 // # define VERSION " 0.1 "
+// # define OPER_NAME "Ganesh_Army"
+// # define OPER_PASS "securisedpassword" 
+
 # define CONFIG_FILE "config.txt"
 # define USER_MODE "o"
 # define CHAN_USER_MODE "Oo"
 # define CHAN_MODE "nit"
 # define UNREGISTERED "U"
 # define GANESH_FRIEND "g"
-
-// # define OPER_NAME "Ganesh_Army"
-// # define OPER_PASS "securisedpassword" 
 
 
 extern int g_stop;
@@ -69,5 +69,6 @@ std::string check_params(std::string param);
 int check_if_channel(std::string name);
 int searchIfMode(std::string tofind, std::string target);
 int searchIfMode(char tofind, std::string target);
+void sighandler(int sig);
             
 #endif

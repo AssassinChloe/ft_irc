@@ -82,6 +82,8 @@ void Channel::addClient(Client &client) { clients[client.getFd()] = &client; }
 void Channel::removeClient(Client &client) 
 {
 	clients.erase(clients.find(client.getFd()));
+
+
 	// rajouter un check pour voir s'il n'y a plus de client -> effacer le channel ?
 	//check fait dans remove client du serveur. a deplacer ici?
 }

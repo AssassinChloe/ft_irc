@@ -118,6 +118,7 @@ int Server::handle_client_request(int i, Client &client)
     if (nbytes <= 0)
         return (this->retRecv(_poll_fd[i].fd, nbytes));
     client.addBuffer(buff);
+    std::cout << "buff " << buff << std::endl;
     if ((position = client.getBuffer().find("\n")) != std::string::npos)
     {
         this->dispatch(client);
@@ -341,3 +342,27 @@ std::vector<struct pollfd> Server::getPollFdList()
 }
 
 int Server::getSocketFd() { return _socket.fd;}
+
+void Server::cleanClose() 
+{ 
+    close(_socket.fd);
+    std::cout <<"controle inopine" <<std::endl;
+ 
+    std::vector<int> FDs;
+    int i = 0;
+    for (std::map<int, Client>::iterator it = getClientList().begin(); it != getClientList().end(); it++)
+            {
+                std::cout << "it.first " << it->first <<std::endl;
+                FDs.push_back(it->first);
+                // std::cout << "FD[i] " << FDs[i] <<std::endl;
+                i++;
+                // std::cout <<"1 client to delete" <<std::endl;
+            }
+    // std::cout << "fin de la boucle 1" <<std::endl;
+
+    for (int j = 0; j<i; j++)
+    {
+        deleteClient(FDs[j]);
+        // std::cout <<"1 client deleted" <<std::endl;
+    }
+}

@@ -87,13 +87,22 @@ void Command::Join()
             std::string modeChan = server->getChannel(index).getMode();
             // SI channel en mode i : verification de presence sur liste d'invites
             int isInvited = 1;
+            std::cout << "modechan :" << modeChan << std::endl;
+            std::cout << "searchuf mode :" << searchIfMode('i', modeChan) << std::endl;
             if (searchIfMode('i', modeChan) == 1)
             {
+                std::string modeClientSurServer = client->getStatus();
+                std::cout << "modeclientsurserver : " << modeClientSurServer << std::endl;
+                std::cout << "searchifmode o :"<< searchIfMode('o', modeClientSurServer) << std::endl;
+                if (searchIfMode('o', modeClientSurServer) == 1)
+                    isInvited = 1;
+                else
+                    isInvited = 0;
+
                 int nb = server->getChannel(index).getInvitedNb();
-                isInvited = 0;
                 for (int i=0; i<nb; i++)
                 {
-                    if (this->client->getNickname() == server->getChannel(index).getInvited(i))
+                    if (this->client->getNickname() == server->getChannel(index).getInvited(i) )
                         isInvited = 1;
                 }
                 if (isInvited == 0 )

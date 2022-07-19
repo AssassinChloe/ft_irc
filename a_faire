@@ -29,8 +29,8 @@ general :
 //- command list geee uniquement pour appel simple (/LIST sans parametre)
 
 kick
-- rajouter les droits (pour l'instant booleen fixe)
--check channel vide ?
+//- rajouter les droits (pour l'instant booleen fixe)
+//-check channel vide ?
 
 //channel
 //- nb max de client sur channel ? // pas a gerer
@@ -45,12 +45,12 @@ kick
 //-limiter la rpl_modeis a si il y a effectivement eu un changement sur les modes?
 
 //Invite :
-- un IRC operator ne peut pas join un chan +i, ca parait ballot non?
+//- un IRC operator ne peut pas join un chan +i, ca parait ballot non?
 
 //part
 //- voir cas d'erreur (channel non existant, pas sur channel ?)
 
-privmsg :
+//privmsg :
 -quand on envoie le 1er message prive le client ne met pas les ":" entre le nom de la personne et le texte == message d'erreur
 au lieu d'envoyer le message alors que rien dans la doc dit de mettre les ":" pour appeler ?privmsg
 
@@ -71,7 +71,7 @@ who
 //quit
 //- ajout RPL
 
-commades a gere pour oper :
+// commades a gere pour oper 
 //   KICK- Eject a client from the channel
 //   MODE- Change the channel’s modes
 //   INVITE- Invite a client to an invite-only channel (mode +i)
@@ -79,8 +79,10 @@ commades a gere pour oper :
 
 commandes a gerer pour operator server
  //   KILL message (qui doit recevoir le message a part le killed ? pas sure)
-    REHASH message // besoin de faire un fichier de config a relire
-    RESTART message // optionnel car considere comme a risque
+ //   REHASH message // besoin de faire un fichier de config a relire
+    RESTART : message // optionnel car considere comme a risque - probleme de reconnexion sur les anciens clients...parfois
  //   SQUIT message // neconcerne que le network
 
 client : a la construction recup adresse via getaddrinfo? plutot que HOST en dur ==> a peaufiner
+
+reconnect : on segfault quand on se reconnect via le menu hexchat...
