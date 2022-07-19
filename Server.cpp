@@ -57,6 +57,7 @@ int Server::accept_client(int i)
     int newfd;
     struct sockaddr distaddr;
     socklen_t size = sizeof(distaddr);
+    int ret;
 
     if (_poll_fd[i].fd == this->_socket.fd) 
     {
@@ -97,8 +98,11 @@ int Server::accept_client(int i)
             tmp.events = POLLIN;
             _poll_fd.push_back(tmp);
             Client newclient(tmp, this);
-            handle_client_request((_poll_fd.size() - 1), newclient);
-            _clients.insert(std::make_pair(tmp.fd, newclient));
+            ret = handle_client_request((_poll_fd.size() - 1), newclient) < 0;
+            if (ret < 0)
+                return (-1);
+            else if (ret == 0)
+                _clients.insert(std::make_pair(tmp.fd, newclient));
         }
     }
     return (0);
@@ -106,35 +110,47 @@ int Server::accept_client(int i)
 
 int Server::handle_client_request(int i, Client &client)
 {
-    std::string buffer;
-
-    if (this->reception_concatenation(i, &buffer) < 0)
-        return -1;
-    this->dispatch(client, buffer);
-    return (0);
-}
-
-int Server::reception_concatenation(int i, std::string *buffer)
-{
     char buff[BUFFER_SIZE] = {0};
     int nbytes;
     size_t position;
-
+    
     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
-    *buffer = static_cast<std::string>(buff);
-    std::cout << "buffer: " << buff <<std::endl;
     if (nbytes <= 0)
         return (this->retRecv(_poll_fd[i].fd, nbytes));
-    else
+    client.addBuffer(buff);
+    if ((position = client.getBuffer().find("\n")) != std::string::npos)
     {
-        while ((position = buffer->find("\n")) == std::string::npos)
-        {
-            nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
-            *buffer += static_cast<std::string>(buff);
-        } 
+        this->dispatch(client);
+        return (0);
     }
-    return (0);
+    return (1);
 }
+
+// int Server::reception_concatenation(int i)
+// {
+//     char buff[BUFFER_SIZE] = {0};
+//     int nbytes;
+//     size_t position;
+
+//     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
+//     *buffer = static_cast<std::string>(buff);
+//     std::cout << "buffer: " << buff << " : " << nbytes << std::endl;
+//     if (nbytes <= 0)
+//         return (this->retRecv(_poll_fd[i].fd, nbytes));
+//     else
+//     {
+//         while ((position = buffer->find("\n")) == std::string::npos)
+//         {
+//             nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
+//             if (nbytes <= 0)
+//                 return (this->retRecv(_poll_fd[i].fd, nbytes));
+//             *buffer += static_cast<std::string>(buff);
+//             std::cout << "buff: " << buff << " buffer: " << buffer <<std::endl;
+
+//         } 
+//     }
+//     return (0);
+// }
 
 void Server::deleteClient(int fd)
 {
@@ -212,17 +228,18 @@ std::string Server::getPass() const
     return (this->_password);
 }
 
-void Server::dispatch(Client &client, std::string buff)
+void Server::dispatch(Client &client)
 {
     std::vector<std::string> lines;
     
-    lines = ftsplit(buff, "\r\n");
+    lines = ftsplit(client.getBuffer(), "\r\n");
     for (unsigned long k = 0; k < lines.size(); k++)
     {
         Command command_line(client, this, lines[k]);
         command_line.execCommand();
     }
     lines.clear();
+    client.setBuffer(" ");
     if (client.getStatus() == UNREGISTERED && client.getCheckPass() == true
         && client.getNickname().size() > 0 && client.getUsername().size() > 0)
     {
