@@ -233,7 +233,7 @@ void Server::dispatch(Client &client)
 {
     std::vector<std::string> lines;
     
-    lines = ftsplit(client.getBuffer(), "\r\n");
+    lines = ftsplit(client.getBuffer(), "\r\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
     for (unsigned long k = 0; k < lines.size(); k++)
     {
         Command command_line(client, this, lines[k]);
@@ -278,10 +278,6 @@ void Server::addChannel(std::string chanName)
         std::cout << "channel ajoute a la liste" << std::endl;
     }
 
-// petite verif
-    // int nb = getChannelNb();
-    // for (int i=0; i<nb; i++)
-    // std::cout << i << " : " <<_channels[i].getCName() << std::endl;
 }
 
 void Server::delChannel(std::string chanName)
@@ -327,7 +323,7 @@ Channel &Server::getChannel(std::string chanName)
         if (_channels[i].getCName() == chanName)
             return (_channels[i]);
     }
-    return (_channels[0]); // attention a modifier !!!
+    return (_channels[0]); // attention a modifier !!! Ne me semble etre utilise que dans fonction quit -> a modifier ou s'assurer qu'iln'y a pas d'erreur possible
 }
 
 
@@ -346,23 +342,17 @@ int Server::getSocketFd() { return _socket.fd;}
 void Server::cleanClose() 
 { 
     close(_socket.fd);
-    std::cout <<"controle inopine" <<std::endl;
  
     std::vector<int> FDs;
     int i = 0;
     for (std::map<int, Client>::iterator it = getClientList().begin(); it != getClientList().end(); it++)
             {
-                std::cout << "it.first " << it->first <<std::endl;
                 FDs.push_back(it->first);
-                // std::cout << "FD[i] " << FDs[i] <<std::endl;
                 i++;
-                // std::cout <<"1 client to delete" <<std::endl;
             }
-    // std::cout << "fin de la boucle 1" <<std::endl;
 
     for (int j = 0; j<i; j++)
     {
         deleteClient(FDs[j]);
-        // std::cout <<"1 client deleted" <<std::endl;
     }
 }

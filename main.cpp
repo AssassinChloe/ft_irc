@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/19 15:06:54 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/20 15:49:35 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ int main(int argc, char **argv)
     {
         server.run();
 	}
+    server.cleanClose();
     return (0);
 }

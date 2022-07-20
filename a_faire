@@ -68,8 +68,9 @@ who
 //pong PONG supprime de la commande list 
 //- Servers MUST send a <server> parameter, and clients SHOULD ignore it. It exists for historical reasons, and indicates the name of the server sending the PONG.
 
-//quit
+quit :
 //- ajout RPL
+- beaucu de lignes sous valgrind qund quit
 
 // commades a gere pour oper 
 //   KICK- Eject a client from the channel
@@ -86,3 +87,5 @@ commandes a gerer pour operator server
 client : a la construction recup adresse via getaddrinfo? plutot que HOST en dur ==> a peaufiner
 
 reconnect : on segfault quand on se reconnect via le menu hexchat...
+
+j'ai commente le getChannel by chaname (Channel &Server::getChannel(std::string chanName)) qui est bqncql et qui ne me semble pqs utilise, a voir a l'usage 
