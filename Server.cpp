@@ -269,13 +269,10 @@ std::string Server::getCreation() const
 
 void Server::addChannel(std::string chanName)
 {
-    std::cout << "debut du add channel" << std::endl;
     Channel NewChan(chanName);//(this, chanName);
     if (NewChan.getCName() != "")
     {
-        std::cout << "channel cree" << std::endl;
         _channels.push_back(NewChan);
-        std::cout << "channel ajoute a la liste" << std::endl;
     }
 
 }

@@ -86,7 +86,6 @@ void    Command::Privmsg()
                     std::string message = this->client->getPrefixe() + "PRIVMSG " + target[i] + " :" + this->getArgLine() + " \r\n";
                     send(id, message.c_str(), message.size(), 0);
                     find = 1;
-                    std::cout <<"message individuel : " << message << std::endl;
                 }
             }
             if (find == 0)

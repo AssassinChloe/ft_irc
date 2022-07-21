@@ -22,12 +22,10 @@ void    Command::Kill()
     else
     {
         std::string clientStat = this->client->getStatus();
-        std::cout << "client status : " << clientStat << std::endl;
         if (searchIfMode('o', clientStat) != 1) // si client n'est pas operateur
         {
             message = this->client->getPrefixe() + " 481 " + this->client->getNickname() + " :Permission Denied- You're not an IRC operator\r\n";
             send_message(*this->client, message);
-            // :admin!admin@localhost 481 admin :Permission Denied- You're not an IRC operator
         }
         else
         {
@@ -54,10 +52,6 @@ void    Command::Kill()
             std::string message2 = this->client->getPrefixe() + " KILL " + parameters[0] + " :" + argLine + "\r\n";
             send_message(server->getClient(parameters[0]), message2);
             server->deleteClient(id);
-
-            
-
-            // emnover messge de quit a tous les autres connectes ? // 4 > :lilin!liliu@localhost QUIT :il ne me plait pas
 
         }
     }

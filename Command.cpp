@@ -12,7 +12,7 @@ Command::Command(Client &client, Server *ganesh, std::string line)
 		argLine = line;
 		line = tmp;
 	}
-	if (line[line.size()-1] == '\r') //pour le cas ou on split selon \n et pas selon \r\n
+	if (line[line.size()-1] == '\r') 
 		line.resize(line.size()-1);
 	parameters = ftsplit(line, " ");
 	cmdType = *(parameters.begin());
