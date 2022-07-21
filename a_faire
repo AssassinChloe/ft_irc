@@ -141,3 +141,11 @@ un cas de segfault apres tentative connexion meme nikname et meme username PUIS 
     buff QUIT :Leaving
     buff JOIN #test
     zsh: segmentation fault (core dumped)  ./ircserv 6667 mdp
+
+un cas desegfault apres 2eme quit (2 clients) sans pbl particulier avant (quit par fermeture de fenetre hexchat)
+    buff QUIT :Leaving
+
+    buff QUIT :Leaving
+
+    free(): invalid pointer
+    zsh: abort (core dumped)  ./ircserv 6667 mdp
