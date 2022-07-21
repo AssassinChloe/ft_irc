@@ -12,8 +12,8 @@ Command::Command(Client &client, Server *ganesh, std::string line)
 		argLine = line;
 		line = tmp;
 	}
-	// if (line[line.size()-1] == '\r') //pour le cas ou on split selon \n et pas selon \r\n
-	// 	line.resize(line.size()-1);
+	if (line[line.size()-1] == '\r') //pour le cas ou on split selon \n et pas selon \r\n
+		line.resize(line.size()-1);
 	parameters = ftsplit(line, " ");
 	cmdType = *(parameters.begin());
 	parameters.erase(parameters.begin());
@@ -36,8 +36,11 @@ int Command::checkRegistration()
 	return (-1);
 
 }
-int	get_cmd_id(const std::string s)
+int	get_cmd_id(std::string s)
 {
+	if (s[0] == '/')
+		s.erase(0,1);
+
 	if (s == "NICK")			return NICK;
 	else if (s == "JOIN")		return JOIN;
 	else if (s == "USER")		return USER;
@@ -140,14 +143,14 @@ void	send_message(Client &cl, std::string message)
 { 
 	int ret = send(cl.getFd(), message.c_str(), message.size(), MSG_NOSIGNAL);
 	int size = message.size();
-	std::cout << "size " << size << " ret " << ret << std::endl;
+	std::cout << "size " << size << " ret " << ret << " / ";
 	while (ret < size)
 	{
 		message.substr(ret, message.size());
 		size = message.size();
 		ret = send(cl.getFd(), message.c_str(), size, MSG_NOSIGNAL);
-		std::cout << "size " << size << " ret " << ret << std::endl;
+		std::cout << "size " << size << " ret " << ret << " / ";
 
 	}
-	std::cout << "message envoye a " << cl.getNickname() << ": " << message << std::endl; 
+	std::cout << "msg sent to " << cl.getNickname() << ": " << message; 
 }

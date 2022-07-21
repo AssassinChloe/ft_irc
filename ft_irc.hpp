@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/19 16:40:51 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/21 10:02:26 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include <string.h>
 # include <iostream>
 # include <csignal>
-# include <errno.h> 
+# include <errno.h> //inutile ?
 # include <stdio.h> 
 # include <vector>
 # include <deque>

@@ -233,7 +233,7 @@ void Server::dispatch(Client &client)
 {
     std::vector<std::string> lines;
     
-    lines = ftsplit(client.getBuffer(), "\r\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
+    lines = ftsplit(client.getBuffer(), "\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
     for (unsigned long k = 0; k < lines.size(); k++)
     {
         Command command_line(client, this, lines[k]);
