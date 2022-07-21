@@ -9,12 +9,10 @@ void    Command::Restart()
         std::string message = this->client->getPrefixe() + " 481 " + this->client->getNickname() + " :Permission Denied- You're not an IRC operator\r\n";
         send_message(*this->client, message);
         return ;
-        // :admin!admin@localhost 481 admin :Permission Denied- You're not an IRC operator
     }
     
     this->server->cleanClose();
     // close(this->server->getSocketFd());
-    // std::cout <<"controle inopine" <<std::endl;
  
     // std::vector<int> FDs;
     // int i = 0;
@@ -44,15 +42,5 @@ void    Command::Restart()
         this->server->run();
 	}
     return ;
-	// 	return ;
-    
-    // if (this->server->init_config(CONFIG_FILE) < 0)
-	// 	return;
-	// while (g_stop == 0)
-    // {
-    //     this->server->run();
-	// }
-    // return ;
-    
-    // std::string RPL_REHASHING(std::string file) { return file + " :Rehashing"; }
+
 }

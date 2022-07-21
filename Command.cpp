@@ -93,6 +93,7 @@ void Command::execCommand()
 			this->quit(); 
 			break;
 		case CAP:
+			// this->Cap(); 
 			break;
 		case MODE:
 			this->Mode();

@@ -152,6 +152,7 @@ class Command
 		void	Invite();
 		void	Rehash();
 		void	Restart();
+		void	Cap();
 
 };
 

@@ -78,3 +78,15 @@ void Command::pass()
             send_message(*this->client, ERR_PASSWDMISMATCH(this->client->getPrefixe(), check_params(this->client->getNickname())));
     }
 }
+
+
+void    Command::Cap()
+{
+    if (parameters[0] == "LS")
+    {
+        std::string message = this->client->getPrefixe() + " CAP * LS : \r\n";
+        send_message(*this->client, message);
+        return;
+    
+    }
+}
