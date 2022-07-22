@@ -1,16 +1,16 @@
 general :
 - nettoyer nos fichiers des fonctions inutiles et affichages divers
 //- interception signaux (sigpipe ?) //OK
--sigpipe- on laisse le std<<cout?? // moi je dirai oui pour qu'on sache que c'est arrive, ca ne me parait pas genant
+//-sigpipe- on laisse le std<<cout?? // moi je dirai oui pour qu'on sache que c'est arrive, ca ne me parait pas genant
 - verifier, fonction par fonction, les ERR et RPL a envoyer
 - verifier leaks dans cas particuliers // pbl avec quit 
 //- securiser les envois de messages pour etre sur d'avoir transmis le bon nb de bytes
 - tests divers :
  //   - envoi de texte > taille du buffer (concaténation du buffer…) // envoi en plusieurs fois par le serveur
-    - envoi d’une ligne sans commande hors channel // pas de soucis sur hexchat, a voir avec nc PBL avec debut a : puis split sur ligne vide
+ //   - envoi d’une ligne sans commande hors channel // pas de soucis sur hexchat, a voir avec nc PBL avec debut a : puis split sur ligne vide
  //   - channels avec meme nom sauf majuscule minuscule ? // Hexchat les considere comme pareil, mais pas nous donc historique mais pas de communication...
-    - 2 clients avec meme username, nickname different // segfault !! cf plus bas
-    - 2 clients avec meme username et nickname: // pas de connexion possible mais segfault !!! cf plus bas
+ //   - 2 clients avec meme username, nickname different // segfault !! cf plus bas
+ //   - 2 clients avec meme username et nickname: // pas de connexion possible mais segfault !!! cf plus bas
     //- test ajout plus de cliens que de places dans pollfd // complique...
     - test avec nc // ca marche 
     - derouler la fiche de correction
@@ -54,7 +54,7 @@ general :
 //-quand on envoie le 1er message prive le client ne met pas les ":" entre le nom de la personne et le texte == message d'erreur
 //au lieu d'envoyer le message alors que rien dans la doc dit de mettre les ":" pour appeler ?privmsg // OK format de texte normal suivant norme irc
 
-who
+//who
 //- rajouter user mode 
 //- changer la lettre H en fonction du mode + @ si operator
 //- pourquoi maintenant le client nous envoie des who toutes les 30 secondes?
@@ -78,69 +78,69 @@ quit :
 //   INVITE- Invite a client to an invite-only channel (mode +i)
 //    TOPIC- Change the channel topic in a mode +t channel
 
-commandes a gerer pour operator server
+//commandes a gerer pour operator server
  //   KILL message (qui doit recevoir le message a part le killed ? pas sure)
  //   REHASH message // besoin de faire un fichier de config a relire
-    RESTART : message // optionnel car considere comme a risque - probleme de reconnexion sur les anciens clients...parfois, pas tous + blocable ^C
-    on bloque souvent apres la phase CAP, connexion peut etre relancee qd un nouveau client arrive, ou pas
+ //   RESTART : message // optionnel car considere comme a risque - probleme de reconnexion sur les anciens clients...parfois, pas tous + blocable ^C
+  //  on bloque souvent apres la phase CAP, connexion peut etre relancee qd un nouveau client arrive, ou pas
  //   SQUIT message // neconcerne que le network
 
 client : a la construction recup adresse via getaddrinfo? plutot que HOST en dur ==> a peaufiner
 
-reconnect : on segfault quand on se reconnect via le menu hexchat...
-    difference avec connection initiale: les infos sont envoyees en une fois avec plusirurs lignes au lieu de plusieurs buffer -> probleme a la decoupe et gestion
-    buff CAP LS 302
-    PASS mdp
-    NICK vmercier
-    USER vmercier 0 * :realname -> segfault
+//reconnect : on segfault quand on se reconnect via le menu hexchat...
+    // difference avec connection initiale: les infos sont envoyees en une fois avec plusirurs lignes au lieu de plusieurs buffer -> probleme a la decoupe et gestion
+    // buff CAP LS 302
+    // PASS mdp
+    // NICK vmercier
+    // USER vmercier 0 * :realname -> segfault
 
-    au lieu de 
-    buff CAP LS 302
+    // au lieu de 
+    // buff CAP LS 302
 
-    buff PASS mdp
+    // buff PASS mdp
 
-    buff NICK vmercier2
-    USER vmercier2 0 * :realname -> pas segfault
+    // buff NICK vmercier2
+    // USER vmercier2 0 * :realname -> pas segfault
 
-le getChannel by chaname (Channel &Server::getChannel(std::string chanName)) qui est bancal et n est utilise que dans une fonction, voir si securise ou a supprimer
+//le getChannel by chaname (Channel &Server::getChannel(std::string chanName)) qui est bancal et n est utilise que dans une fonction, voir si securise ou a supprimer
 
-un cas de segfault avec nikname differents mais meme username
-    buff PASS mdp
-    NICK vmercier2
-    USER vmercier2 0 * :realname
+///un cas de segfault avec nikname differents mais meme username
+    // buff PASS mdp
+    // NICK vmercier2
+    // USER vmercier2 0 * :realname
 
-    size 39 ret 39 / msg sent to : vmercier2 :Nickname is already in use
-    buff QUIT :Leaving
+    // size 39 ret 39 / msg sent to : vmercier2 :Nickname is already in use
+    // buff QUIT :Leaving
 
-    IP 127.0.0.1
-    name 127.0.0.1
-    addr 0 
-    buff CAP LS 302
-    PASS mdp
-    NICK vmercier
-    USER vmercier2 0 * :realname
+    // IP 127.0.0.1
+    // name 127.0.0.1
+    // addr 0 
+    // buff CAP LS 302
+    // PASS mdp
+    // NICK vmercier
+    // USER vmercier2 0 * :realname
 
 un cas de segfault avec fermeture hexchat apres relance du serveur suite a un segfaut sur nick already in use
     buff QUIT :Leaving
     free(): invalid pointer
     zsh: abort (core dumped)  ./ircserv 6667 mdp
 
-un cas de segfault apres tentative connexion meme nikname et meme username PUIS join #test
-    buff PASS mdp
-    NICK vmercier2
-    USER vmercier2 0 * :realname
-    ...
-    IP 127.0.0.1
-    name 127.0.0.1
-    addr 0 
-    buff CAP LS 302
-    buff PASS mdp
-    NICK vmercier2
-    USER vmercier2 0 * :realname
-    size 39 ret 39 / msg sent to : vmercier2 :Nickname is already in use
-    buff QUIT :Leaving
-    buff JOIN #test
-    zsh: segmentation fault (core dumped)  ./ircserv 6667 mdp
+// un cas de segfault apres tentative connexion meme nikname et meme username PUIS join #test
+//     buff PASS mdp
+//     NICK vmercier2
+//     USER vmercier2 0 * :realname
+//     ...
+//     IP 127.0.0.1
+//     name 127.0.0.1
+//     addr 0 
+//     buff CAP LS 302
+//     buff PASS mdp
+//     NICK vmercier2
+//     USER vmercier2 0 * :realname
+//     size 39 ret 39 / msg sent to : vmercier2 :Nickname is already in use
+//     buff QUIT :Leaving
+//     buff JOIN #test
+//     zsh: segmentation fault (core dumped)  ./ircserv 6667 mdp
 
 un cas desegfault apres 2eme quit (2 clients) sans pbl particulier avant (quit par fermeture de fenetre hexchat)
     buff QUIT :Leaving

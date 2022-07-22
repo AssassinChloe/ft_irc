@@ -32,9 +32,9 @@ void    Command::Restart()
     //     // std::cout <<"1 client deleted" <<std::endl;
     // }
 
-    g_stop = 0;
-	signal(SIGINT, sighandler);
-    signal(SIGPIPE, sighandler); 
+    // g_stop = 0;
+	// signal(SIGINT, sighandler);
+    // signal(SIGPIPE, sighandler); 
 	if (this->server->init() < 0)
 		return;
 	while (g_stop == 0)
