@@ -55,7 +55,7 @@ int Server::init()
 
 void Server::run()
 {
-    unsigned int connexions;
+    int fd;
     int nb_event = poll(&_poll_fd[0], _poll_fd.size(), -1);
     if (nb_event < 0)
     {
@@ -68,8 +68,7 @@ void Server::run()
             return ;
         }
     }
-    connexions = _poll_fd.size();
-    for (unsigned long i = 0; i < connexions; i++)
+    for (unsigned long i = 0; i < this->_poll_fd.size(); i++)
     {
         if (nb_event == 0)
                 break ;
@@ -78,17 +77,30 @@ void Server::run()
             nb_event--;
             if (_poll_fd[i].fd == this->_socket.fd)
             {
-                accept_client(i);
+                fd = accept_client(i);
             }
             else
             {
-                handle_client_request(i, this->getClient(_poll_fd[i].fd));
+                int fd = _poll_fd[i].fd;
+                handle_client_request(i, this->getClient(fd));
             }
-            connexions = _poll_fd.size();
+            checkReg(fd);
         }
     }
 }
 
+void Server::checkReg(int fd)
+{
+    if (fd < 0 || this->_clients.find(fd) == this->_clients.end())
+        return ;
+    else if (this->getClient(fd).getStatus() == UNREGISTERED && this->getClient(fd).getCheckPass() == true
+        && this->getClient(fd).getNickname().size() > 0 && this->getClient(fd).getUsername().size() > 0)
+    {
+        Command command_line(this->getClient(fd), this, "WELCOME");
+        command_line.execCommand();
+        this->getClient(fd).setStatus(GANESH_FRIEND);
+    } 
+}
 int Server::accept_client(int i)
 {
     int newfd;
@@ -98,9 +110,7 @@ int Server::accept_client(int i)
 
     if (_poll_fd[i].fd == this->_socket.fd) 
     {
-        std::cout << "plop accept" << std::endl;
         newfd = accept(this->_socket.fd, &distaddr, &size);
-        std::cout << "plop accept" << std::endl;
         if (newfd == -1)
         {
             std::cerr << "Error accept" << std::endl;
@@ -142,9 +152,10 @@ int Server::accept_client(int i)
                 return (-1);
             else if (ret == 0)
                 _clients.insert(std::make_pair(tmp.fd, newclient));
+            return (newfd);
         }
     }
-    return (0);
+    return (-1);
 }
 
 int Server::handle_client_request(int i, Client &client)
@@ -169,48 +180,14 @@ int Server::handle_client_request(int i, Client &client)
 void Server::dispatch(Client *client)
 {
     std::vector<std::string> lines;
-    
-    lines = ftsplit(client->getBuffer(), "\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
+    lines = ftsplit(client->getBuffer(), "\n");
     for (unsigned long k = 0; k < lines.size(); k++)
     {
         Command command_line(*client, this, lines[k]);
         command_line.execCommand();
     }
     lines.clear();
-    if (client->getStatus() == UNREGISTERED && client->getCheckPass() == true
-        && client->getNickname().size() > 0 && client->getUsername().size() > 0)
-    {
-        Command command_line(*client, this, "WELCOME");
-        command_line.execCommand();
-        client->setStatus(GANESH_FRIEND);
-    } 
 }
-
-// int Server::reception_concatenation(int i)
-// {
-//     char buff[BUFFER_SIZE] = {0};
-//     int nbytes;
-//     size_t position;
-
-//     nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
-//     *buffer = static_cast<std::string>(buff);
-//     std::cout << "buffer: " << buff << " : " << nbytes << std::endl;
-//     if (nbytes <= 0)
-//         return (this->retRecv(_poll_fd[i].fd, nbytes));
-//     else
-//     {
-//         while ((position = buffer->find("\n")) == std::string::npos)
-//         {
-//             nbytes = recv(_poll_fd[i].fd, buff, sizeof(buff), 0);
-//             if (nbytes <= 0)
-//                 return (this->retRecv(_poll_fd[i].fd, nbytes));
-//             *buffer += static_cast<std::string>(buff);
-//             std::cout << "buff: " << buff << " buffer: " << buffer <<std::endl;
-
-//         } 
-//     }
-//     return (0);
-// }
 
 void Server::deleteClient(int fd)
 {
@@ -323,20 +300,8 @@ int Server::getChannelIndex(std::string chanName)
         if (_channels[i].getCName() == chanName)
             return (i);
     }
-    return (-1); // 
+    return (-1);
 }
-
-Channel &Server::getChannel(std::string chanName)
-{
-    int nb = getChannelNb();
-    for (int i = 0; i < nb; i++)
-    {
-        if (_channels[i].getCName() == chanName)
-            return (_channels[i]);
-    }
-    return (_channels[0]); // attention a modifier !!! Ne me semble etre utilise que dans fonction quit -> a modifier ou s'assurer qu'iln'y a pas d'erreur possible
-}
-
 
 std::string Server::getChannelName(int index)
 {

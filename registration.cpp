@@ -24,6 +24,7 @@ int Command::isvalidname()
 void Command::nick()
 {
     std::string message;
+    int index;
 
     if (isvalidname() < 0)
         return ;
@@ -42,7 +43,9 @@ void Command::nick()
         std::map<std::string, std::string> tmp = this->client->getChanList();
         for (std::map<std::string, std::string>::iterator it = tmp.begin(); it != tmp.end(); it++)
         {
-            this->server->getChannel((*it).first).broadcast(message);
+            index = this->server->getChannelIndex((*it).first);
+            if (index >= 0)
+                this->server->getChannel(index).broadcast(message);
         }
     }
     else

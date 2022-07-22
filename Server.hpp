@@ -48,7 +48,6 @@ class Server
         void addChannel(std::string chanName);
         void delChannel(std::string chanName);
         Channel &getChannel(int i);
-        Channel &getChannel(std::string chanName);
         std::string getChannelName(int index);
         int getChannelIndex(std::string chanName);
         int getChannelNb();
@@ -62,6 +61,7 @@ class Server
         std::string getOperPass();
         int getSocketFd();
         void cleanClose();
+        void checkReg(int fd);
 
 
 };
