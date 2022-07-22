@@ -34,9 +34,9 @@ void    Command::Kick()
             send_message(*this->client, message);
             return;
         }
-
-        std::string modeClient = client->getChanMode(parameters[0]);
-        if (modeClient.size() == 0 || !(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 )) // client n'a pas les droits sur le channel
+        std::string modeClientSurChan = client->getChanMode(parameters[0]);
+        std::string modeClientSurServer = client->getStatus();
+        if (searchIfMode('o', modeClientSurServer) != 1  && (modeClientSurChan.size() == 0 || !(searchIfMode('o', modeClientSurChan) == 1 || searchIfMode('O', modeClientSurChan) == 1 ))) // client n'a pas les droits sur le channel
         {
             message = this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[0] + " :You're not channel operator\r\n";
             send_message(*this->client, message); //ERR_CHANOPRIVSNEEDED (482)
@@ -61,8 +61,11 @@ void    Command::Kick()
                     message = message + "\r\n";
                     server->getChannel(index).broadcast(message);
                     server->getChannel(index).removeClient(kickedClients[i]);
-                    // vu que le check de si le channel est vide est fait dans le removeClient() de la class server, il faudrait le faire ici 
-                    //aussi ou alors effectivement le mettre dans la fct removeClient de channel
+
+                    // check de si le channel est vide et remove le channel du server
+	                if(server->getChannel(index).getNbClients() == 0)
+                        server->delChannel(parameters[0]);
+
                     find = 1;
                 }
             }

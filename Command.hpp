@@ -21,6 +21,8 @@
 # define WHO 18
 # define NOTICE 19
 # define INVITE 20
+# define REHASH 21
+# define RESTART 22
 # define NICKNAME_VALID_CHAR "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_[]{}\\`|"
 # define CHANNEL_VALID_CHAR "#&!+"
 
@@ -148,6 +150,9 @@ class Command
 		void	List();
 		void	Kill();
 		void	Invite();
+		void	Rehash();
+		void	Restart();
+		void	Cap();
 
 };
 

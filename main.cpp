@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/19 14:13:16 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/22 10:39:00 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ int main(int argc, char **argv)
     {
         server.run();
 	}
+    server.cleanClose();
     return (0);
 }

@@ -60,6 +60,8 @@ class Server
         std::string getVersion();
         std::string getOperName();
         std::string getOperPass();
+        int getSocketFd();
+        void cleanClose();
 
 
 };

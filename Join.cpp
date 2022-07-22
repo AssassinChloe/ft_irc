@@ -89,11 +89,16 @@ void Command::Join()
             int isInvited = 1;
             if (searchIfMode('i', modeChan) == 1)
             {
+                std::string modeClientSurServer = client->getStatus();
+                if (searchIfMode('o', modeClientSurServer) == 1)
+                    isInvited = 1;
+                else
+                    isInvited = 0;
+
                 int nb = server->getChannel(index).getInvitedNb();
-                isInvited = 0;
                 for (int i=0; i<nb; i++)
                 {
-                    if (this->client->getNickname() == server->getChannel(index).getInvited(i))
+                    if (this->client->getNickname() == server->getChannel(index).getInvited(i) )
                         isInvited = 1;
                 }
                 if (isInvited == 0 )

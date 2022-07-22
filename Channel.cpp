@@ -23,24 +23,20 @@ int Channel::formatName(std::string name)
 
 	for (int i = 1; i< length; i++)
 	{
-		if (name[i] == ' ' || (name[i] == '^' && name[i+1] && name[i+1] == 'G') 
+		if (name[i] == ' ' || (name[i] == 7) 
 			|| name[i] == ',' || name[i] == ':')
 			return (0);
 	}
 	return (1);
 }
 
-//truc a faire ici? :
 Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
+// : mode("n") // si on veut tester sans mettre un topic par defaut
 : topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
 	{
 		if (formatName(namechan))
-		{
 			name = namechan;
-			std::cout << "channel added to chan list of server " << std::endl;
-		}
-		else
-			std::cout << "bad channel name" << std::endl;
+
 	}
 
 Channel::~Channel() { }
@@ -81,8 +77,9 @@ void Channel::addClient(Client &client) { clients[client.getFd()] = &client; }
 void Channel::removeClient(Client &client) 
 {
 	clients.erase(clients.find(client.getFd()));
+
 	// rajouter un check pour voir s'il n'y a plus de client -> effacer le channel ?
-	//check fait dans remove client du serveur. a deplacer ici?
+	//check fait dans remove client du serveur. a deplacer ici? -> fait dans la partie kick et part
 }
 
 void Channel::removeClient(std::string const &nick) // idem ci dessus

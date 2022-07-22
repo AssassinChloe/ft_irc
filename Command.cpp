@@ -12,7 +12,8 @@ Command::Command(Client &client, Server *ganesh, std::string line)
 		argLine = line;
 		line = tmp;
 	}
-
+	if (line[line.size()-1] == '\r') 
+		line.resize(line.size()-1);
 	parameters = ftsplit(line, " ");
 	cmdType = *(parameters.begin());
 	parameters.erase(parameters.begin());
@@ -35,8 +36,11 @@ int Command::checkRegistration()
 	return (-1);
 
 }
-int	get_cmd_id(const std::string s)
+int	get_cmd_id(std::string s)
 {
+	if (s[0] == '/')
+		s.erase(0,1);
+
 	if (s == "NICK")			return NICK;
 	else if (s == "JOIN")		return JOIN;
 	else if (s == "USER")		return USER;
@@ -57,6 +61,8 @@ int	get_cmd_id(const std::string s)
 	else if (s == "NOTICE")   	return NOTICE;
 	else if (s == "KILL")   	return KILL;
 	else if (s == "INVITE")   	return INVITE;
+	else if (s == "REHASH")   	return REHASH;
+	else if (s == "RESTART")   	return RESTART;
 	return 0;
 }
 
@@ -87,6 +93,7 @@ void Command::execCommand()
 			this->quit(); 
 			break;
 		case CAP:
+			// this->Cap(); 
 			break;
 		case MODE:
 			this->Mode();
@@ -121,6 +128,12 @@ void Command::execCommand()
 		case INVITE:
 			this->Invite();
 			break;
+		case REHASH:
+			this->Rehash();
+			break;
+		case RESTART:
+			this->Restart();
+			break;
 		case 0:
 			send_message(*this->client, ERR_UNKNOWNCOMMAND(cmdType));
 	}
@@ -131,14 +144,14 @@ void	send_message(Client &cl, std::string message)
 { 
 	int ret = send(cl.getFd(), message.c_str(), message.size(), MSG_NOSIGNAL);
 	int size = message.size();
-	std::cout << "size " << size << " ret " << ret << std::endl;
+	std::cout << "size " << size << " ret " << ret << " / ";
 	while (ret < size)
 	{
 		message.substr(ret, message.size());
 		size = message.size();
 		ret = send(cl.getFd(), message.c_str(), size, MSG_NOSIGNAL);
-		std::cout << "size " << size << " ret " << ret << std::endl;
+		std::cout << "size " << size << " ret " << ret << " / ";
 
 	}
-	std::cout << "message envoye a " << cl.getNickname() << ": " << message << std::endl; 
+	std::cout << "msg sent to " << cl.getNickname() << ": " << message; 
 }

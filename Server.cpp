@@ -118,6 +118,7 @@ int Server::handle_client_request(int i, Client &client)
     if (nbytes <= 0)
         return (this->retRecv(_poll_fd[i].fd, nbytes));
     client.addBuffer(buff);
+    std::cout << "buff " << buff << std::endl;
     if ((position = client.getBuffer().find("\n")) != std::string::npos)
     {
         this->dispatch(client);
@@ -232,7 +233,7 @@ void Server::dispatch(Client &client)
 {
     std::vector<std::string> lines;
     
-    lines = ftsplit(client.getBuffer(), "\r\n");
+    lines = ftsplit(client.getBuffer(), "\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
     for (unsigned long k = 0; k < lines.size(); k++)
     {
         Command command_line(client, this, lines[k]);
@@ -268,19 +269,12 @@ std::string Server::getCreation() const
 
 void Server::addChannel(std::string chanName)
 {
-    std::cout << "debut du add channel" << std::endl;
     Channel NewChan(chanName);//(this, chanName);
     if (NewChan.getCName() != "")
     {
-        std::cout << "channel cree" << std::endl;
         _channels.push_back(NewChan);
-        std::cout << "channel ajoute a la liste" << std::endl;
     }
 
-// petite verif
-    // int nb = getChannelNb();
-    // for (int i=0; i<nb; i++)
-    // std::cout << i << " : " <<_channels[i].getCName() << std::endl;
 }
 
 void Server::delChannel(std::string chanName)
@@ -326,7 +320,7 @@ Channel &Server::getChannel(std::string chanName)
         if (_channels[i].getCName() == chanName)
             return (_channels[i]);
     }
-    return (_channels[0]); // attention a modifier !!!
+    return (_channels[0]); // attention a modifier !!! Ne me semble etre utilise que dans fonction quit -> a modifier ou s'assurer qu'iln'y a pas d'erreur possible
 }
 
 
@@ -338,4 +332,24 @@ std::string Server::getChannelName(int index)
 std::vector<struct pollfd> Server::getPollFdList()
 {
     return (this->_poll_fd);
+}
+
+int Server::getSocketFd() { return _socket.fd;}
+
+void Server::cleanClose() 
+{ 
+    close(_socket.fd);
+ 
+    std::vector<int> FDs;
+    int i = 0;
+    for (std::map<int, Client>::iterator it = getClientList().begin(); it != getClientList().end(); it++)
+            {
+                FDs.push_back(it->first);
+                i++;
+            }
+
+    for (int j = 0; j<i; j++)
+    {
+        deleteClient(FDs[j]);
+    }
 }
