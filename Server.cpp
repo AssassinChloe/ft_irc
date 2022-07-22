@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Server::Server(std::string port, std::string pass): _creation(time(0)), _port(port), _password(pass)
+Server::Server(std::string port, std::string pass): _creation(time(0)), _port(port), _password(pass), _clients(std::map<int, Client>())
 {
     memset(&_info, 0, sizeof(struct addrinfo));
     _info.ai_family = AF_INET;
@@ -78,20 +78,22 @@ void Server::run()
             if (_poll_fd[i].fd == this->_socket.fd)
             {
                 fd = accept_client(i);
+                checkReg(fd);
             }
             else
             {
                 int fd = _poll_fd[i].fd;
                 handle_client_request(i, this->getClient(fd));
+                checkReg(fd);
             }
-            checkReg(fd);
+            
         }
     }
 }
 
 void Server::checkReg(int fd)
 {
-    if (fd < 0 || this->_clients.find(fd) == this->_clients.end())
+    if (fd < 0 || this->_clients.size() == 0 || this->_clients.find(fd) == this->_clients.end())
         return ;
     else if (this->getClient(fd).getStatus() == UNREGISTERED && this->getClient(fd).getCheckPass() == true
         && this->getClient(fd).getNickname().size() > 0 && this->getClient(fd).getUsername().size() > 0)
@@ -152,6 +154,8 @@ int Server::accept_client(int i)
                 return (-1);
             else if (ret == 0)
                 _clients.insert(std::make_pair(tmp.fd, newclient));
+
+            std::cout << _clients.size() << std::endl;
             return (newfd);
         }
     }
