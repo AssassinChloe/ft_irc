@@ -15,6 +15,8 @@ Command::Command(Client &client, Server *ganesh, std::string line)
 	if (line[line.size()-1] == '\r') 
 		line.resize(line.size()-1);
 	parameters = ftsplit(line, " ");
+	if (parameters.size() == 0)
+		parameters.push_back(" ");
 	cmdType = *(parameters.begin());
 	parameters.erase(parameters.begin());
 

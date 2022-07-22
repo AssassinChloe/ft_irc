@@ -7,8 +7,8 @@ general :
 //- securiser les envois de messages pour etre sur d'avoir transmis le bon nb de bytes
 - tests divers :
  //   - envoi de texte > taille du buffer (concaténation du buffer…) // envoi en plusieurs fois par le serveur
-    - envoi d’une ligne sans commande hors channel // pas de soucis sur hexchat, a voir avec nc
-    - channels avec meme nom sauf majuscule minuscule ? // Hexchat les considere comme pareil, mais pas nous donc historique mais pas de communication...
+    - envoi d’une ligne sans commande hors channel // pas de soucis sur hexchat, a voir avec nc PBL avec debut a : puis split sur ligne vide
+ //   - channels avec meme nom sauf majuscule minuscule ? // Hexchat les considere comme pareil, mais pas nous donc historique mais pas de communication...
     - 2 clients avec meme username, nickname different // segfault !! cf plus bas
     - 2 clients avec meme username et nickname: // pas de connexion possible mais segfault !!! cf plus bas
     //- test ajout plus de cliens que de places dans pollfd // complique...
