@@ -52,6 +52,40 @@ int Server::init()
     return (0);
 }
 
+void Server::run()
+{
+    int nb_event = poll(&_poll_fd[0], _poll_fd.size(), -1);
+    if (nb_event < 0)
+    {
+        if (g_stop != 0)
+            return ;
+        else
+        {
+           g_stop = 3;
+            std::cerr << "Error poll" << std::endl;
+            return ;
+        }
+    }
+    for (unsigned long i = 0; i < _poll_fd.size(); i++)
+    {
+        if (nb_event == 0)
+                break ;
+        if (_poll_fd[i].revents & POLLIN)
+        {
+            nb_event--;
+            if (_poll_fd[i].fd == this->_socket.fd)
+            {
+                accept_client(i);
+            }
+            else
+            {
+                handle_client_request(i, this->getClient(_poll_fd[i].fd));
+            }
+
+        }
+    }
+}
+
 int Server::accept_client(int i)
 {
     int newfd;
@@ -78,19 +112,19 @@ int Server::accept_client(int i)
             //else
             //      host = autre;
             // et on donne pas les droit OPER et che pas quoi a autre --> mais need deux ordi pour test ce qu'on a comme info
-            struct sockaddr_in *plop = (struct sockaddr_in *)&distaddr; //changer plop et le cast a l'arrache
-            std::cout << "IP " << inet_ntoa(plop->sin_addr) << std::endl;
-            struct hostent *test = gethostbyname(inet_ntoa(plop->sin_addr));
+            // struct sockaddr_in *plop = (struct sockaddr_in *)&distaddr; //changer plop et le cast a l'arrache
+            // std::cout << "IP " << inet_ntoa(plop->sin_addr) << std::endl;
+            // struct hostent *test = gethostbyname(inet_ntoa(plop->sin_addr));
 
-            std::cout << "name " << test->h_name << std::endl;
-            for (int i = 0; test->h_aliases[i] != NULL; i++)
-            {
-                std::cout << "alias " << i << " " << test->h_aliases[i] << std::endl;
-            }
-            for (int i = 0; test->h_addr_list[i] != NULL; i++)
-            {
-                std::cout << "addr " << i << " " << test->h_addr_list[i] << std::endl;
-            }
+            // std::cout << "name " << test->h_name << std::endl;
+            // for (int i = 0; test->h_aliases[i] != NULL; i++)
+            // {
+            //     std::cout << "alias " << i << " " << test->h_aliases[i] << std::endl;
+            // }
+            // for (int i = 0; test->h_addr_list[i] != NULL; i++)
+            // {
+            //     std::cout << "addr " << i << " " << test->h_addr_list[i] << std::endl;
+            // }
             //end test
 
             struct pollfd tmp;
@@ -125,6 +159,26 @@ int Server::handle_client_request(int i, Client &client)
         return (0);
     }
     return (1);
+}
+
+void Server::dispatch(Client &client)
+{
+    std::vector<std::string> lines;
+    
+    lines = ftsplit(client.getBuffer(), "\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
+    for (unsigned long k = 0; k < lines.size(); k++)
+    {
+        Command command_line(client, this, lines[k]);
+        command_line.execCommand();
+    }
+    lines.clear();
+    if (client.getStatus() == UNREGISTERED && client.getCheckPass() == true
+        && client.getNickname().size() > 0 && client.getUsername().size() > 0)
+    {
+        Command command_line(client, this, "WELCOME");
+        command_line.execCommand();
+        client.setStatus(GANESH_FRIEND);
+    } 
 }
 
 // int Server::reception_concatenation(int i)
@@ -162,7 +216,7 @@ void Server::deleteClient(int fd)
     }
     close(fd);
     if (_clients.size() > 0)
-    _clients.erase(fd);
+        _clients.erase(fd);
     for (std::vector<struct pollfd>::iterator it = this->_poll_fd.begin(); it != this->_poll_fd.end(); it++)
     {
         if ((*it).fd == fd)
@@ -173,34 +227,6 @@ void Server::deleteClient(int fd)
     }
 }
 
-void Server::run()
-{
-    int nb_event = poll(&_poll_fd[0], _poll_fd.size(), -1);
-    if (nb_event < 0)
-    {
-        if (g_stop != 0)
-            return ;
-        else
-        {
-           g_stop = 3;
-            std::cerr << "Error poll" << std::endl;
-            return ;
-        }
-    }
-    for (unsigned long i = 0; i < _poll_fd.size(); i++)
-    {
-        if (nb_event == 0)
-                break ;
-        if (_poll_fd[i].revents & POLLIN)
-        {
-            nb_event--;
-            if (_poll_fd[i].fd == this->_socket.fd)
-                accept_client(i);
-            else
-                handle_client_request(i, this->getClient(_poll_fd[i].fd));
-        }
-    }
-}
 
 Client & Server::getClient(int fd)
 {
@@ -229,26 +255,7 @@ std::string Server::getPass() const
     return (this->_password);
 }
 
-void Server::dispatch(Client &client)
-{
-    std::vector<std::string> lines;
-    
-    lines = ftsplit(client.getBuffer(), "\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
-    for (unsigned long k = 0; k < lines.size(); k++)
-    {
-        Command command_line(client, this, lines[k]);
-        command_line.execCommand();
-    }
-    lines.clear();
-    client.setBuffer(" ");
-    if (client.getStatus() == UNREGISTERED && client.getCheckPass() == true
-        && client.getNickname().size() > 0 && client.getUsername().size() > 0)
-    {
-        Command command_line(client, this, "WELCOME");
-        command_line.execCommand();
-        client.setStatus(GANESH_FRIEND);
-    } 
-}
+
 
 int Server::retRecv(int fd, int nbytes)
 {
@@ -337,9 +344,8 @@ std::vector<struct pollfd> Server::getPollFdList()
 int Server::getSocketFd() { return _socket.fd;}
 
 void Server::cleanClose() 
-{ 
-    close(_socket.fd);
- 
+{
+    close(_socket.fd); 
     std::vector<int> FDs;
     int i = 0;
     for (std::map<int, Client>::iterator it = getClientList().begin(); it != getClientList().end(); it++)

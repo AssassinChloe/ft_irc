@@ -22,6 +22,7 @@ Command::Command(Client &client, Server *ganesh, std::string line)
 	for (size_t x = 0; x < cmdType.length(); ++x)
 		cmdType[x] = std::toupper(cmdType[x]);
 }
+
 Command::~Command() { }
 
 Client &Command::getClient() { return *client; }
@@ -67,9 +68,9 @@ int	get_cmd_id(std::string s)
 }
 
 void Command::execCommand()
-{
+{	
+    this->client->setBuffer("");
 
-	
 	switch (get_cmd_id(cmdType)){
 		case PING:
 			this->Ping();

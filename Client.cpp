@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/19 13:20:39 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/22 12:33:25 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 Client::Client() {}
 Client::Client(struct pollfd newfd, Server *ganesh)
 : server(ganesh), username(""), nickname(""), status(UNREGISTERED), hostaddr(this->server->getHost()),
-hostname(this->server->getName()), pass_checked(false), realname("norealname"), fd(newfd), buffer(" ")
+hostname(this->server->getName()), pass_checked(false), realname("norealname"), fd(newfd), buffer("")
 {}
 
 Client::~Client() { }
@@ -50,7 +50,12 @@ std::map<std::string, std::string> Client::getChanList()
     return (this->channel_list);
 }
 
-void Client::addBuffer(char *str) {this->buffer += static_cast<std::string>(str);}
+void Client::addBuffer(char *str)
+{
+    if (str[0] == '\r')
+        return ;
+    this->buffer += static_cast<std::string>(str);
+}
 
 void Client::addChannel(std::string name, std::string mode)
 {
