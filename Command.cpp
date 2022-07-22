@@ -39,6 +39,7 @@ int Command::checkRegistration()
 	return (-1);
 
 }
+
 int	get_cmd_id(std::string s)
 {
 	if (s[0] == '/')
@@ -72,7 +73,6 @@ int	get_cmd_id(std::string s)
 void Command::execCommand()
 {	
     this->client->setBuffer("");
-
 	switch (get_cmd_id(cmdType)){
 		case PING:
 			this->Ping();

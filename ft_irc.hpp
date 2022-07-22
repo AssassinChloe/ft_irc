@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/21 17:07:31 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/22 13:57:17 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,7 @@
 # include "Command.hpp"
 # include <sys/stat.h>
 # include <stdio.h>
-
-// # define HOST "localhost"
-// # define SERVER_NAME "Ganesh's_Daugthers"
-// # define VERSION " 0.1 "
-// # define OPER_NAME "Ganesh_Army"
-// # define OPER_PASS "securisedpassword" 
+# include <fcntl.h>
 
 # define CONFIG_FILE "config.txt"
 # define USER_MODE "o"

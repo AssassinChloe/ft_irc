@@ -47,6 +47,7 @@ int Server::init()
     freeaddrinfo(res); 
     if (tmp == NULL || this->_socket.fd < 0 || listen(this->_socket.fd, BACKLOG) == -1)
         return (-1); 
+    fcntl(this->_socket.fd, F_SETFL, O_NONBLOCK);
     this->_socket.events = POLLIN;
     _poll_fd.push_back(this->_socket);
     return (0);
@@ -54,6 +55,7 @@ int Server::init()
 
 void Server::run()
 {
+    unsigned int connexions;
     int nb_event = poll(&_poll_fd[0], _poll_fd.size(), -1);
     if (nb_event < 0)
     {
@@ -66,7 +68,8 @@ void Server::run()
             return ;
         }
     }
-    for (unsigned long i = 0; i < _poll_fd.size(); i++)
+    connexions = _poll_fd.size();
+    for (unsigned long i = 0; i < connexions; i++)
     {
         if (nb_event == 0)
                 break ;
@@ -81,7 +84,7 @@ void Server::run()
             {
                 handle_client_request(i, this->getClient(_poll_fd[i].fd));
             }
-
+            connexions = _poll_fd.size();
         }
     }
 }
@@ -95,7 +98,9 @@ int Server::accept_client(int i)
 
     if (_poll_fd[i].fd == this->_socket.fd) 
     {
+        std::cout << "plop accept" << std::endl;
         newfd = accept(this->_socket.fd, &distaddr, &size);
+        std::cout << "plop accept" << std::endl;
         if (newfd == -1)
         {
             std::cerr << "Error accept" << std::endl;
@@ -155,29 +160,29 @@ int Server::handle_client_request(int i, Client &client)
     std::cout << "buff " << buff << std::endl;
     if ((position = client.getBuffer().find("\n")) != std::string::npos)
     {
-        this->dispatch(client);
+        this->dispatch(&client);
         return (0);
     }
     return (1);
 }
 
-void Server::dispatch(Client &client)
+void Server::dispatch(Client *client)
 {
     std::vector<std::string> lines;
     
-    lines = ftsplit(client.getBuffer(), "\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
+    lines = ftsplit(client->getBuffer(), "\n"); // "\r\n" ou \n ? pour regler le probleme de reconnection par hexchat ?
     for (unsigned long k = 0; k < lines.size(); k++)
     {
-        Command command_line(client, this, lines[k]);
+        Command command_line(*client, this, lines[k]);
         command_line.execCommand();
     }
     lines.clear();
-    if (client.getStatus() == UNREGISTERED && client.getCheckPass() == true
-        && client.getNickname().size() > 0 && client.getUsername().size() > 0)
+    if (client->getStatus() == UNREGISTERED && client->getCheckPass() == true
+        && client->getNickname().size() > 0 && client->getUsername().size() > 0)
     {
-        Command command_line(client, this, "WELCOME");
+        Command command_line(*client, this, "WELCOME");
         command_line.execCommand();
-        client.setStatus(GANESH_FRIEND);
+        client->setStatus(GANESH_FRIEND);
     } 
 }
 
@@ -216,7 +221,9 @@ void Server::deleteClient(int fd)
     }
     close(fd);
     if (_clients.size() > 0)
+    {
         _clients.erase(fd);
+    }
     for (std::vector<struct pollfd>::iterator it = this->_poll_fd.begin(); it != this->_poll_fd.end(); it++)
     {
         if ((*it).fd == fd)

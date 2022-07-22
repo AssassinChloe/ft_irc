@@ -6,13 +6,11 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/22 12:33:25 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/22 13:17:53 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
-
-
 
 Client::Client() {}
 Client::Client(struct pollfd newfd, Server *ganesh)

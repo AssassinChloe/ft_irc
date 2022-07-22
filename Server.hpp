@@ -37,7 +37,7 @@ class Server
         void deleteClient(int fd);
         int reception_concatenation(int fd);
         int retRecv(int i, int nbytes);
-        void dispatch(Client &client);
+        void dispatch(Client *client);
 
         Client &getClient(int fd);
         Client &getClient(std::string name);
