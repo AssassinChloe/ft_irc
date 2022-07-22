@@ -16,6 +16,7 @@ void    Command::Invite()
         return;
     }
 
+    parameters[1] = lowercase(parameters[1]); // gestion case-sensitivity
     int index = this->server->getChannelIndex(parameters[1]);
     if (index == -1 || server->getChannel(index).getNbClients() == 0)
     {

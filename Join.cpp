@@ -74,15 +74,15 @@ void Command::Join()
     int nbChan = joinChan.size();
     for (int i = 0; i < nbChan; i++)
     {
-		
-        if (!channelExist(this->server, joinChan[i]))
+        std::string LowChan = lowercase(joinChan[i]); // gestion case-sensitivity
+        if (!channelExist(this->server, LowChan))
         {
-            server->addChannel(joinChan[i]); // penser a ajouter le client qui cree dans la liste des operateurs du channel
+            server->addChannel(LowChan); // penser a ajouter le client qui cree dans la liste des operateurs du channel
 
         }
-        if (channelExist(this->server, joinChan[i]))
+        if (channelExist(this->server, LowChan))
         { 
-            int index = server->getChannelIndex(joinChan[i]);
+            int index = server->getChannelIndex(LowChan);
 
             std::string modeChan = server->getChannel(index).getMode();
             // SI channel en mode i : verification de presence sur liste d'invites
@@ -103,7 +103,7 @@ void Command::Join()
                 }
                 if (isInvited == 0 )
                 {
-                    message =  joinChan[i] + " :Cannot join channel (+i)\r\n";
+                    message =  LowChan + " :Cannot join channel (+i)\r\n";
                     send_message(*this->client, message); // ERR_INVITEONLYCHAN (473)
                 }
             }
@@ -111,41 +111,36 @@ void Command::Join()
             {
                 server->getChannel(index).addClient(this->getClient());
                 std::map<int, Client*>  client_list = server->getChannel(index).getClientMap();
-                message = this->client->getPrefixe() + "JOIN :" + joinChan[i] + "\r\n" ;
+                message = this->client->getPrefixe() + "JOIN :" + LowChan + "\r\n" ;
                 send_message(*this->client, message);
 
                 if (this->server->getChannel(index).getClients().size() == 1)
-                    this->client->addChannel(joinChan[i], "O");
+                    this->client->addChannel(LowChan, "O");
                 else
-                    this->client->addChannel(joinChan[i], "+");
+                    this->client->addChannel(LowChan, "+");
 
-                message = joinChan[i] + " :" + server->getChannel(index).getTopic() + "\r\n";
+                message = LowChan + " :" + server->getChannel(index).getTopic() + "\r\n";
                 send_message(*this->client, message);
-
-                // message users connectes
-                // names(index, joinChan[i]);
-                    // names(index, joinChan[i]);
-                // message end of list user
                 
                 std::string list = "";
 
                 for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
                 {
-                    if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(this->parameters[0])) == 1
+                    if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(LowChan)) == 1
                     || searchIfMode(USER_MODE, (*it).second->getStatus()) == 1)
                         list = list + "@" + (*it).second->getNickname() + " ";
                     else
                         list = list + (*it).second->getNickname() + " ";
                 }
-                for (int i = 0; i < this->server->getChannel(index).getNbClients(); i++)
+                for (int j = 0; j < this->server->getChannel(index).getNbClients(); j++)
                 {
-                    Client tmp = *(this->server->getChannel(index).getClients()[i]);
-                    std::string message = RPL_NAMREPLY(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0], list);
+                    Client tmp = *(this->server->getChannel(index).getClients()[j]);
+                    std::string message = RPL_NAMREPLY(tmp.getPrefixe(), tmp.getNickname(), LowChan, list);
                     send_message(tmp, message);
-                    message = RPL_ENDOFNAMES(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0]);
+                    message = RPL_ENDOFNAMES(tmp.getPrefixe(), tmp.getNickname(), LowChan);
                     send_message(tmp, message);
                 }
-                message = this->client->getPrefixe() + "JOIN :" + joinChan[i] + "\r\n" ;
+                message = this->client->getPrefixe() + "JOIN :" + LowChan + "\r\n" ;
                 for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
                 {
 
@@ -156,17 +151,17 @@ void Command::Join()
                         }
                 }
                 if (this->server->getChannel(index).getClients().size() == 1)
-                    this->client->addChannel(joinChan[i], "O");
+                    this->client->addChannel(LowChan, "O");
                 else if (searchIfMode(USER_MODE, this->client->getStatus()) == 1)
-                    this->client->addChannel(joinChan[i], "o");
+                    this->client->addChannel(LowChan, "o");
                 else
-                    this->client->addChannel(joinChan[i], "");
+                    this->client->addChannel(LowChan, "");
             }
 
         }
         else // correspond a erreur car impossibe de creer le channel
         {
-            std::string message = joinChan[i] + " :Bad Channel Mask\r\n";  // reply 476 ERR_BADCHANMASK
+            std::string message = LowChan + " :Bad Channel Mask\r\n";  // reply 476 ERR_BADCHANMASK
             send_message(*this->client, message);
         }
     }

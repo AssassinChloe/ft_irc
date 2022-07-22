@@ -26,7 +26,7 @@ void    Command::Kick()
     
     else
     {
-
+        parameters[0] = lowercase(parameters[0]); // gestion case-sensitivity
         int index = server->getChannelIndex(parameters[0]); // si channel n'existe pas = -1
         if (index == -1)
         {

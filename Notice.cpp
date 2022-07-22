@@ -44,7 +44,7 @@ void    Command::Notice()
         if (target[i][0] == '#' || target[i][0] == '&' || target[i][0] == '+' || target[i][0] ==  '!')
         {
 
-
+            target[i] = lowercase(target[i]); // gestion case-sensitivity
             message = this->client->getPrefixe() + "PRIVMSG " +  target[i] + " :" + this->getArgLine() + " \r\n";
             int index = server->getChannelIndex(target[i]);
 

@@ -75,3 +75,13 @@ int searchIfMode(char tofind, std::string target)
             return (1);
     return (0);
 }
+
+std::string lowercase(std::string s)
+{
+	int nb = s.size();
+	std::string ret;
+	for(int i = 0; i < nb; i++)
+		ret += tolower(s[i]);
+	std::cout << "string init : " << s << ", string lower : " << ret << std::endl;
+	return ret;
+}

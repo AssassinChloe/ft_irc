@@ -70,26 +70,27 @@ void    Command::Mode()
             send_message(*this->client, message);
             return;
     }
-    if (check_if_channel(this->parameters[0]) == 1)
+    parameters[0] = lowercase(parameters[0]); // gestion case-sensitivity
+    if (check_if_channel(parameters[0]) == 1)
     {
         int index = this->server->getChannelIndex(this->parameters[0]);
         if (index < 0)
         {
-            message = ERR_NOSUCHCHANNEL(this->client->getPrefixe(), this->client->getNickname(), this->parameters[0]);
+            message = ERR_NOSUCHCHANNEL(this->client->getPrefixe(), this->client->getNickname(), parameters[0]);
             send_message(*this->client, message);
             return ;
         }
         std::string mode = this->server->getChannel(index).getMode(); 
         if (this->parameters.size() == 1)
         {
-            message = RPL_CHANNELMODEIS(this->client->getPrefixe(), this->client->getNickname(), this->parameters[0], mode, ""); //dernier argument je sais pas ce qu'on doit/peut y mettre
+            message = RPL_CHANNELMODEIS(this->client->getPrefixe(), this->client->getNickname(), parameters[0], mode, ""); //dernier argument je sais pas ce qu'on doit/peut y mettre
             send_message(*this->client, message);
             return;
         }
         if (searchIfMode(CHAN_USER_MODE, this->client->getChanMode(this->parameters[0])) == 0 
             && searchIfMode(USER_MODE, this->client->getStatus()) == 0)
         {
-            message = ERR_CHANOPRIVSNEEDED(this->client->getPrefixe(), this->client->getNickname(), this->parameters[0]);
+            message = ERR_CHANOPRIVSNEEDED(this->client->getPrefixe(), this->client->getNickname(), parameters[0]);
             send_message(*this->client, message);
             return;
         }
@@ -100,7 +101,7 @@ void    Command::Mode()
 
             for (std::map<int, Client*>::iterator it = client_list.begin(); it != client_list.end(); it++)
             {
-                if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(this->parameters[0])) == 1
+                if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(parameters[0])) == 1
                 || searchIfMode(USER_MODE, (*it).second->getStatus()) == 1)
                     list = list + "@" + (*it).second->getNickname() + " ";
                 else
@@ -109,9 +110,9 @@ void    Command::Mode()
             for (int i = 0; i < this->server->getChannel(index).getNbClients(); i++)
             {
                 Client tmp = *(this->server->getChannel(index).getClients()[i]);
-                message = RPL_NAMREPLY(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0], list);
+                message = RPL_NAMREPLY(tmp.getPrefixe(), tmp.getNickname(), parameters[0], list);
                 send_message(tmp, message);
-                message = RPL_ENDOFNAMES(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0]);
+                message = RPL_ENDOFNAMES(tmp.getPrefixe(), tmp.getNickname(), parameters[0]);
                 send_message(tmp, message);
             }
         }
@@ -120,7 +121,7 @@ void    Command::Mode()
             for(int i = 0; i < this->server->getChannel(index).getNbClients(); i++)
             {
                 Client tmp = *(this->server->getChannel(index).getClients()[i]);
-                message = RPL_CHANNELMODEIS(tmp.getPrefixe(), tmp.getNickname(), this->parameters[0], this->server->getChannel(index).getMode(), "");
+                message = RPL_CHANNELMODEIS(tmp.getPrefixe(), tmp.getNickname(), parameters[0], this->server->getChannel(index).getMode(), "");
                 send_message(tmp, message);
             }
         }
@@ -131,10 +132,10 @@ void    Command::Mode()
         int sign = 1;
         for (std::map<int, Client>::iterator it = this->server->getClientList().begin(); it!= this->server->getClientList().end(); it++)
         {
-            if ((*it).second.getNickname() == this->parameters[0])
+            if ((*it).second.getNickname() == parameters[0])
             {
                 find = 1;
-                if(this->client->getNickname() != this->parameters[0])
+                if(this->client->getNickname() != parameters[0])
                 {
                     message = ERR_USERSDONTMATCH(this->client->getPrefixe(), this->client->getNickname());
                     send_message(*this->client, message);

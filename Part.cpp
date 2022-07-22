@@ -20,7 +20,7 @@ void Command::part()
     int nbChan = partChan.size();
     for (int i = 0; i < nbChan; i++)
     {
-
+        partChan[i] = lowercase(partChan[i]); // gestion case-sensitivity
         int index = server->getChannelIndex(partChan[i]);
         if (index == -1)
         {

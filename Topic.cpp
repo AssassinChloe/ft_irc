@@ -22,10 +22,11 @@ void    Command::Topic()
     
     else
     {
-        int index = server->getChannelIndex(parameters[0]);
+        std::string LowChan = lowercase(parameters[0]); // gestion case-sensitivity
+        int index = server->getChannelIndex(LowChan);
         if (index == -1)
         {
-            message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + parameters[0] + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
+            message = this->client->getPrefixe() + " 403 " + this->getClient().getNickname() + " " + LowChan + " :No such channel\r\n"; // ERR_NOSUCHCHANNEL (403)
             send_message(*this->client, message);
             return;
         }
@@ -37,7 +38,7 @@ void    Command::Topic()
                 std::string modeClient = server->getChannel(index).getClientMode(this->getClient());
                 if (!(searchIfMode('o', modeClient) == 1 || searchIfMode('O', modeClient) == 1 ))
                 {
-                    std::string message =  this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + parameters[0] + " :You're not channel operator\r\n";
+                    std::string message =  this->client->getPrefixe() + " 482 " + this->getClient().getNickname() + " " + LowChan + " :You're not channel operator\r\n";
                     send_message(*this->client, message);
                     return;
                 }
@@ -46,12 +47,12 @@ void    Command::Topic()
             {
                 if (server->getChannel(index).getTopic().length() != 0)
                 {
-                    message = parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
+                    message = LowChan + " :" + server->getChannel(index).getTopic() + "\r\n";
                     send_message(*this->client, message);
                 }
                 else 
                 {
-                    std::string message = parameters[0] + " :No topic is set\r\n";
+                    std::string message = LowChan + " :No topic is set\r\n";
                     send_message(*this->client, message);
                 }
                 // define ERR_NOTOPIC(channel) (channel + " :No topic is set\r\n")
@@ -70,7 +71,7 @@ void    Command::Topic()
                 std::stringstream ss;
                 ss << server->getChannel(index).getLastTopicSet();
                 std::string timestring = ss.str();
-                std::string message = this->client->getPrefixe() +" 333 "+ " server " + parameters[0] + " " ;
+                std::string message = this->client->getPrefixe() +" 333 "+ " server " + LowChan + " " ;
                 message = message + server->getChannel(index).getTopicSetter()->getNickname() + " " ;
                 message = message + timestring +  "\r\n";
                 // message = message + server->getChannel(index).getLastTopicSet() +  "\r\n";
@@ -82,7 +83,7 @@ void    Command::Topic()
                 {
                     // if (this->client != (*it).second) // condition a mettre si on ne veut pas envoyer a celui qui a change le topic
                     // {
-                        std::string message = this->client->getPrefixe() +" TOPIC "+parameters[0] + " :" + server->getChannel(index).getTopic() + "\r\n";
+                        std::string message = this->client->getPrefixe() +" TOPIC "+LowChan + " :" + server->getChannel(index).getTopic() + "\r\n";
                         // :lilin!liliu@localhost TOPIC #test :i love rockn roll
                         int id = (*it).second->getFd();
                         send(id, message.c_str(), message.size(), 0);
@@ -93,7 +94,7 @@ void    Command::Topic()
 
         else // client pas sur le channel
         {
-            std::string message = this->client->getPrefixe() +" 442 "+ this->client->getNickname() + " " + parameters[0] + " :You're not on that channel\r\n"; // # define ERR_NOTONCHANNEL(channel) (442)
+            std::string message = this->client->getPrefixe() +" 442 "+ this->client->getNickname() + " " + LowChan + " :You're not on that channel\r\n"; // # define ERR_NOTONCHANNEL(channel) (442)
             // :lilin!liliu@localhost 442 lilin #test :You're not on that channel
             send_message(*this->client, message);
         }

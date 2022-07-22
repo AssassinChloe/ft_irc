@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/21 10:02:26 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/21 17:07:31 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,6 @@ int check_if_channel(std::string name);
 int searchIfMode(std::string tofind, std::string target);
 int searchIfMode(char tofind, std::string target);
 void sighandler(int sig);
+std::string lowercase(std::string s);
             
 #endif
