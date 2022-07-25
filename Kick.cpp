@@ -60,6 +60,19 @@ void    Command::Kick()
                         message = message + ":" + argLine;
                     message = message + "\r\n";
                     server->getChannel(index).broadcast(message);
+
+
+                    std::string modeChan = server->getChannel(index).getMode();
+                    if (searchIfMode('i', modeChan) == 1)
+                    {
+                        int nb = server->getChannel(index).getInvitedNb();
+                        for (int j=0; j<nb; j++)
+                        {
+                            if (kickedClients[i] == server->getChannel(index).getInvited(j) )
+                                server->getChannel(index).delInvited(kickedClients[i]);
+                        }
+
+                    }
                     server->getChannel(index).removeClient(kickedClients[i]);
 
                     // check de si le channel est vide et remove le channel du server
@@ -79,6 +92,9 @@ void    Command::Kick()
 
     }
 }
+
+
+
 
 // KICK message
 

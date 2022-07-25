@@ -38,9 +38,14 @@ void Command::part()
                     send_message(*(*it).second, message);
                 }
                 this->server->getChannel(index).removeClient(*this->client);
+                  
                 if (this->server->getChannel(index).getNbClients() == 0)
+                {
+                    this->server->getChannel(index).delInvited(this->client->getNickname()); // suppression de la list des invites, a voir si on conserve
                     this->server->delChannel(partChan[i]);
-                this->server->getChannel(index).delInvited(this->client->getNickname()); // suppression de la list des invites, a voir si on conserve
+                }
+
+              
                 this->client->delChannel(partChan[i]);
             }
             else
