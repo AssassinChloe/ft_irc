@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   welcome.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:36:48 by cassassi          #+#    #+#             */
+/*   Updated: 2022/07/25 11:36:49 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Command.hpp"
 
 void Command::welcome()
@@ -10,7 +22,6 @@ void Command::welcome()
     send_message(*this->client, RPL_CREATED(this->client->getPrefixe(), this->client->getNickname(), this->server->getCreation()));
 	if (!input_file.is_open())
         return ;
-	//eventuellement mettre ca dans une commande MOTD (RPL 375 372 376) pour afficher le message du jour avec la commande /MOTD	
 	while (getline(input_file, line))
 	{
 		std::string message = this->client->getPrefixe() + " 372 " + this->client->getNickname() + " :" + line + "\r\n";

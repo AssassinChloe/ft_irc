@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:44:14 by cassassi          #+#    #+#             */
+/*   Updated: 2022/07/25 11:58:16 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Server.hpp"
+
+Server::Server() {}
 
 Server::Server(std::string port, std::string pass): _creation(time(0)), _port(port), _password(pass), _clients(std::map<int, Client>())
 {
@@ -9,9 +23,11 @@ Server::Server(std::string port, std::string pass): _creation(time(0)), _port(po
     _info.ai_protocol = 0;
 }
 
-Server::~Server()
-{
-}
+Server::~Server() {}
+
+Server::Server(const Server &src) {}
+
+Server &Server::operator=(Server const &rhs) {}
 
 int Server::init()
 {
@@ -120,30 +136,6 @@ int Server::accept_client(int i)
         }
         else
         {
-
-            //test : on arrive a recuperer l'addresse ip, gethostbyname arrive pas a retrouver qu'il s'agit de
-            //localhost (la ligne est presente dans /etc/hosts et devrait etre accedee) quid de ce que ca renvoit 
-            //depuis un autre utilisateur mais on peut toujour faire un 
-            //if (ip = 127.0.0.1) (ou avoir une liste d'IP "safe")
-            //     host = localhost;
-            //else
-            //      host = autre;
-            // et on donne pas les droit OPER et che pas quoi a autre --> mais need deux ordi pour test ce qu'on a comme info
-            // struct sockaddr_in *plop = (struct sockaddr_in *)&distaddr; //changer plop et le cast a l'arrache
-            // std::cout << "IP " << inet_ntoa(plop->sin_addr) << std::endl;
-            // struct hostent *test = gethostbyname(inet_ntoa(plop->sin_addr));
-
-            // std::cout << "name " << test->h_name << std::endl;
-            // for (int i = 0; test->h_aliases[i] != NULL; i++)
-            // {
-            //     std::cout << "alias " << i << " " << test->h_aliases[i] << std::endl;
-            // }
-            // for (int i = 0; test->h_addr_list[i] != NULL; i++)
-            // {
-            //     std::cout << "addr " << i << " " << test->h_addr_list[i] << std::endl;
-            // }
-            //end test
-
             struct pollfd tmp;
             tmp.fd = newfd;
             tmp.events = POLLIN;
@@ -172,7 +164,7 @@ int Server::handle_client_request(int i, Client &client)
     if (nbytes <= 0)
         return (this->retRecv(_poll_fd[i].fd, nbytes));
     client.addBuffer(buff);
-    std::cout << "buff " << buff << std::endl;
+    // std::cout << "buff " << buff << std::endl;
     if ((position = client.getBuffer().find("\n")) != std::string::npos)
     {
         this->dispatch(&client);
@@ -215,11 +207,7 @@ void Server::deleteClient(int fd)
     }
 }
 
-
-Client & Server::getClient(int fd)
-{
-    return((*(this->_clients.find(fd))).second);
-}
+Client & Server::getClient(int fd) { return((*(this->_clients.find(fd))).second); }
 
 Client & Server::getClient(std::string nickname)
 {
@@ -232,7 +220,6 @@ Client & Server::getClient(std::string nickname)
     return ((*it).second);
 }
 
-
 std::map<int, Client> & Server::getClientList()
 {
     return (this->_clients);
@@ -242,8 +229,6 @@ std::string Server::getPass() const
 {
     return (this->_password);
 }
-
-
 
 int Server::retRecv(int fd, int nbytes)
 {
@@ -264,7 +249,7 @@ std::string Server::getCreation() const
 
 void Server::addChannel(std::string chanName)
 {
-    Channel NewChan(chanName);//(this, chanName);
+    Channel NewChan(chanName);
     if (NewChan.getCName() != "")
     {
         _channels.push_back(NewChan);
@@ -284,17 +269,10 @@ void Server::delChannel(std::string chanName)
     }
 }
 
-
-Channel &Server::getChannel(int i)
-{
-    return((_channels[i]));
-}
+Channel &Server::getChannel(int i) { return((_channels[i])); }
 
 
-int Server::getChannelNb()
-{
-    return (_channels.size());
-}
+int Server::getChannelNb() { return (_channels.size()); }
 
 int Server::getChannelIndex(std::string chanName)
 {
@@ -307,17 +285,7 @@ int Server::getChannelIndex(std::string chanName)
     return (-1);
 }
 
-std::string Server::getChannelName(int index)
-{
-    return (_channels[index].getCName());
-}
-
-std::vector<struct pollfd> Server::getPollFdList()
-{
-    return (this->_poll_fd);
-}
-
-int Server::getSocketFd() { return _socket.fd;}
+std::string Server::getChannelName(int index) { return (_channels[index].getCName()); }
 
 void Server::cleanClose() 
 {
@@ -325,11 +293,10 @@ void Server::cleanClose()
     std::vector<int> FDs;
     int i = 0;
     for (std::map<int, Client>::iterator it = getClientList().begin(); it != getClientList().end(); it++)
-            {
-                FDs.push_back(it->first);
-                i++;
-            }
-
+    {
+        FDs.push_back(it->first);
+        i++;
+    }
     for (int j = 0; j<i; j++)
     {
         deleteClient(FDs[j]);

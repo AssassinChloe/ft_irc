@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Who.cpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:36:40 by cassassi          #+#    #+#             */
+/*   Updated: 2022/07/25 11:36:41 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Command.hpp"
 
 void    Command::Who()
@@ -12,7 +24,7 @@ void    Command::Who()
     }
     if (this->parameters.size() > 0) 
     {
-        std::string LowChan = lowercase(parameters[0]); // gestion case-sensitivity
+        std::string LowChan = lowercase(parameters[0]);
         if (check_if_channel(LowChan) == 1)
         {
             int index = this->server->getChannelIndex(LowChan);
@@ -47,7 +59,7 @@ void    Command::Who()
             }
         }
     }
-    std::string LowChan = lowercase(parameters[0]); // gestion case-sensitivity
+    std::string LowChan = lowercase(parameters[0]);
     message = RPL_ENDOFWHO(this->client->getPrefixe(), this->client->getNickname(), LowChan);
     send_message(*this->client, message);
     return;

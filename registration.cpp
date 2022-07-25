@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   registration.cpp                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 12:00:02 by cassassi          #+#    #+#             */
+/*   Updated: 2022/07/25 12:00:25 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Command.hpp"
 
 int Command::isvalidname()
@@ -21,6 +33,7 @@ int Command::isvalidname()
     }
     return (0);
 }
+
 void Command::nick()
 {
     std::string message;
@@ -81,7 +94,6 @@ void Command::pass()
             send_message(*this->client, ERR_PASSWDMISMATCH(this->client->getPrefixe(), check_params(this->client->getNickname())));
     }
 }
-
 
 void    Command::Cap()
 {

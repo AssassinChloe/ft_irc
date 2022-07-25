@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/22 13:57:17 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/25 11:38:47 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@
 # include <sys/stat.h>
 # include <stdio.h>
 # include <fcntl.h>
+# include <string>
 
 # define CONFIG_FILE "config.txt"
 # define USER_MODE "o"

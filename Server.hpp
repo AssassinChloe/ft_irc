@@ -1,12 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:44:10 by cassassi          #+#    #+#             */
+/*   Updated: 2022/07/25 11:57:56 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
 # include "ft_irc.hpp"
 
 class Client;
-
 class Channel;
-
 class Server
 {
     private:
@@ -24,6 +34,9 @@ class Server
         std::string                 _oper_name;
         std::string                 _oper_pass;
         std::string                 _bannerpath;
+        Server();
+        Server(const Server &src);
+		Server &operator=(Server const &rhs);
 
     public:
         Server(std::string port, std::string pass);
@@ -31,11 +44,9 @@ class Server
 
         int init();
         void run();
-        int using_poll();
         int handle_client_request(int i, Client &client);
         int accept_client(int i);
         void deleteClient(int fd);
-        int reception_concatenation(int fd);
         int retRecv(int i, int nbytes);
         void dispatch(Client *client);
 
@@ -44,14 +55,12 @@ class Server
         std::map<int, Client> &getClientList();
         std::string getPass() const;
         std::string getCreation() const;
-        // int getNbChannel(); // voir si on veut un nb max de channels
         void addChannel(std::string chanName);
         void delChannel(std::string chanName);
         Channel &getChannel(int i);
         std::string getChannelName(int index);
         int getChannelIndex(std::string chanName);
         int getChannelNb();
-        std::vector<struct pollfd> getPollFdList();
         int init_config(std::string configpath);
         const char *getBanner();
         std::string getHost();
@@ -59,11 +68,8 @@ class Server
         std::string getVersion();
         std::string getOperName();
         std::string getOperPass();
-        int getSocketFd();
         void cleanClose();
         void checkReg(int fd);
-
-
 };
 
 #endif

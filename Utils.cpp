@@ -1,12 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Utils.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:37:06 by cassassi          #+#    #+#             */
+/*   Updated: 2022/07/25 11:37:42 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_irc.hpp"
 
 std::vector<std::string>		ftsplit(std::string s, std::string splitter)
 {
 	std::vector<std::string>	now;
-	std::string					tmp;
 	size_t						ret = 0;
 	size_t						k = 0;
-	// size_t						i;
 
 	ret = 0;
 	if (splitter.empty())
@@ -32,12 +42,6 @@ std::vector<std::string>		ftsplit(std::string s, std::string splitter)
 			break;
 		ret += splitter.length();
 	}
-	// i = now.size();
-	// for (size_t j=i; j>=0; j--)
-	// {
-	// 	tmp = now[j];
-	// 	now[j] = tmp + "\0";
-	// }
 	return (now);
 }
 
@@ -82,6 +86,5 @@ std::string lowercase(std::string s)
 	std::string ret;
 	for(int i = 0; i < nb; i++)
 		ret += tolower(s[i]);
-	std::cout << "string init : " << s << ", string lower : " << ret << std::endl;
 	return ret;
 }
