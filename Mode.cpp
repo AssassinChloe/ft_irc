@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Mode.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:50:07 by vmercier          #+#    #+#             */
+/*   Updated: 2022/07/25 11:50:26 by vmercier         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "Command.hpp"
 
@@ -70,7 +81,7 @@ void    Command::Mode()
             send_message(*this->client, message);
             return;
     }
-    parameters[0] = lowercase(parameters[0]); // gestion case-sensitivity
+    parameters[0] = lowercase(parameters[0]); 
     if (check_if_channel(parameters[0]) == 1)
     {
         int index = this->server->getChannelIndex(this->parameters[0]);

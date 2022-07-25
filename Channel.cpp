@@ -1,16 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:36:52 by vmercier          #+#    #+#             */
+/*   Updated: 2022/07/25 12:16:35 by vmercier         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+
 #include "Channel.hpp"
-
-// Channels names are strings (beginning with a '&', '#', '+' or '!'
-//    character) of length up to fifty (50) characters.  Channel names are
-//    case insensitive.
-
-//    Apart from the the requirement that the first character being either
-//    '&', '#', '+' or '!' (hereafter called "channel prefix"). The only
-//    restriction on a channel name is that it SHALL NOT contain any spaces
-//    (' '), a control G (^G or ASCII 7), a comma (',' which is used as a
-//    list item separator by the protocol).  Also, a colon (':') is used as
-//    a delimiter for the channel mask.  The exact syntax of a channel name
-//    is defined in "IRC Server Protocol" 
 
 int Channel::formatName(std::string name)
 {
@@ -30,7 +32,7 @@ int Channel::formatName(std::string name)
 	return (1);
 }
 
-Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
+Channel::Channel(std::string namechan) 
 // : mode("n") // si on veut tester sans mettre un topic par defaut
 : topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
 	{
@@ -40,6 +42,8 @@ Channel::Channel(std::string namechan) //(Server *server, std::string namechan)
 	}
 
 Channel::~Channel() { }
+
+Channel::Channel () { }
 
 Channel::Channel(const Channel &src)
 {
@@ -77,12 +81,10 @@ void Channel::addClient(Client &client) { clients[client.getFd()] = &client; }
 void Channel::removeClient(Client &client) 
 {
 	clients.erase(clients.find(client.getFd()));
-
-	// rajouter un check pour voir s'il n'y a plus de client -> effacer le channel ?
-	//check fait dans remove client du serveur. a deplacer ici? -> fait dans la partie kick et part
 }
+	
 
-void Channel::removeClient(std::string const &nick) // idem ci dessus
+void Channel::removeClient(std::string const &nick) 
 {
 	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
@@ -96,7 +98,7 @@ void Channel::removeClient(std::string const &nick) // idem ci dessus
 
 std::vector<Client *> Channel::getClients()
 {
-	std::vector<Client *> clients = std::vector<Client *>(); // ligne pas == a std::vector<Client *> clients; ??
+	std::vector<Client *> clients = std::vector<Client *>(); 
 
 	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); ++it)
 		clients.push_back(it->second);

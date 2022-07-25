@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   names.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 12:34:32 by vmercier          #+#    #+#             */
+/*   Updated: 2022/07/25 12:34:33 by vmercier         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include "Command.hpp"
 
 void Command::names(int index, std::string chanName)
@@ -10,8 +23,6 @@ void Command::names(int index, std::string chanName)
         if (searchIfMode(CHAN_USER_MODE, (*it).second->getChanMode(chanName)) == 1 ||
         searchIfMode(USER_MODE, (*it).second->getStatus()) == 1)
             list = list + "@" + (*it).second->getNickname() + " ";
-        // else if (searchIfMode('O', (*it).second->getChanMode(parameters[0])) == 1)
-        //     message = message + "~" + (*it).second->getNickname() + " ";
         else
             list = list + (*it).second->getNickname() + " ";
     }

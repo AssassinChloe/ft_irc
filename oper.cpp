@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   oper.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 12:35:29 by vmercier          #+#    #+#             */
+/*   Updated: 2022/07/25 12:35:35 by vmercier         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Command.hpp"
 
 void Command::oper()
@@ -24,7 +36,7 @@ void Command::oper()
             send_message(*this->client, message);
             return ;  
         }
-        else if (this->client->getHostaddr() != "localhost") //pour le moment toujours vrai...
+        else if (this->client->getHostaddr() != "localhost") 
         {
             message = ERR_NOOPERHOST(this->client->getPrefixe(), this->client->getNickname());
             send_message(*this->client, message);

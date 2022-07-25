@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/19 13:20:29 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/25 13:41:36 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,14 @@ class Client
         struct pollfd   fd;
         std::string     buffer;
         std::map<std::string, std::string> channel_list;
+        
         Client();
+		Client &operator=(Client const &rhs);
 
         
     public:
+        
+        Client(const Client &src);
         Client(struct pollfd newfd, Server *ganesh);
         ~Client();
 
@@ -45,7 +49,7 @@ class Client
         void setNickname(std::string new_nick);
         void setRealname(std::string realname);
         void setStatus(std::string new_status);
-        void setLastPing(time_t lastping);
+        void setLastPing(time_t lastping); 
         void setCheckPass(bool checked);
         void setBuffer(std::string str);
 

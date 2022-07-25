@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:56:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/22 13:10:43 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/25 11:49:25 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void sighandler(int sig)
         g_stop = 1; 
     if (sig == SIGPIPE)
         std::cout << "signal SIGPIPE intercepte" << std::endl;
-        // g_stop = 2;
 }
 
 int main(int argc, char **argv)

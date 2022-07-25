@@ -1,8 +1,17 @@
-// #include "ft_irc.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Config.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:41:51 by vmercier          #+#    #+#             */
+/*   Updated: 2022/07/25 11:41:54 by vmercier         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Server.hpp"
-#include <fstream>
-#include <sstream>
-#include <cstdlib>
+
 
 int Server::init_config(std::string configpath)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/22 13:17:53 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/25 13:28:28 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,33 @@ hostname(this->server->getName()), pass_checked(false), realname("norealname"), 
 {}
 
 Client::~Client() { }
+
+Client::Client(const Client &src)
+{
+        this->server = src.server;
+        this->username = src.username;
+        this->nickname = src.nickname;
+        this->status = src.status;
+        this->hostaddr = src.hostaddr;
+        this->hostname = src.hostname;
+        this->pass_checked = src.pass_checked;
+        this->last_ping = src.last_ping;
+        this->realname = src.realname;
+        this->fd = src.fd;
+        this->buffer = src.buffer;
+        this->channel_list = src.channel_list;
+        
+    return;
+}
+
+Client &  Client::operator=(Client const &rhs)
+{
+    this->server = rhs.server;
+    this->username = rhs.username;
+    this->nickname = rhs.nickname;
+    this->hostname = rhs.hostname;
+    return *this;
+}
 
 void Client::setStatus(std::string status) { this->status = status; }
 void Client::setNickname(std::string nickname) { this->nickname = nickname; }
