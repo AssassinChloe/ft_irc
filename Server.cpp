@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 11:44:14 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/25 14:31:14 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/25 14:42:39 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,33 @@ Server::Server(std::string port, std::string pass): _creation(time(0)), _port(po
 
 Server::~Server() {}
 
-Server::Server(const Server &src) {}
+Server::Server(const Server &src) 
+{
+    *this = src;
+    return;    
+}
 
-Server &Server::operator=(Server const &rhs) {}
+Server &Server::operator=(Server const &rhs)
+{
+    if(this != &rhs)
+    {
+        this->_creation = rhs._creation;
+        this->_port = rhs._port;
+        this->_password = rhs._password;
+        this->_info = rhs._info;
+        this->_socket = rhs._socket;
+        this->_poll_fd = rhs._poll_fd;                       
+        this->_clients = rhs._clients;
+        this->_channels = rhs._channels;
+        this->_host = rhs._host;
+        this->_name = rhs._name;
+        this->_version = rhs._version;
+        this->_oper_name = rhs._oper_name;
+        this->_oper_pass = rhs._oper_pass;
+        this->_bannerpath = rhs._bannerpath;
+    }
+    return (*this);
+}
 
 int Server::init()
 {

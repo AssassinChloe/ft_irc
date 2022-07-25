@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 11:36:52 by vmercier          #+#    #+#             */
-/*   Updated: 2022/07/25 12:16:35 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/25 14:38:29 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #include "Channel.hpp"
 
@@ -35,11 +33,10 @@ int Channel::formatName(std::string name)
 Channel::Channel(std::string namechan) 
 // : mode("n") // si on veut tester sans mettre un topic par defaut
 : topic("en attente de la sagesse de Ganesh pour developper le topic"), mode("n")
-	{
-		if (formatName(namechan))
-			name = namechan;
-
-	}
+{
+	if (formatName(namechan))
+		name = namechan;
+}
 
 Channel::~Channel() { }
 
@@ -51,7 +48,7 @@ Channel::Channel(const Channel &src)
     return;
 }
 
-Channel &      Channel::operator=(Channel const &rhs)
+Channel &Channel::operator=(Channel const &rhs)
 {
     if(this != &rhs)
     {
