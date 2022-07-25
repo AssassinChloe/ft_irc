@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Command.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:37:25 by vmercier          #+#    #+#             */
+/*   Updated: 2022/07/25 12:12:59 by vmercier         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Command.hpp"
 
 Command::Command(Client &client, Server *ganesh, std::string line)
@@ -23,6 +35,20 @@ Command::Command(Client &client, Server *ganesh, std::string line)
 
 	for (size_t x = 0; x < cmdType.length(); ++x)
 		cmdType[x] = std::toupper(cmdType[x]);
+}
+
+Command::Command() {}
+
+Command::Command(const Command &src)
+{
+    *this = src;
+    return;
+}
+
+Command &  Command::operator=(Command const &rhs)
+{
+    this->server = rhs.server;
+	return *this;
 }
 
 Command::~Command() { }
@@ -96,7 +122,6 @@ void Command::execCommand()
 			this->quit(); 
 			break;
 		case CAP:
-			// this->Cap(); 
 			break;
 		case MODE:
 			this->Mode();

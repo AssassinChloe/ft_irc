@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:37:03 by vmercier          #+#    #+#             */
+/*   Updated: 2022/07/25 11:52:19 by vmercier         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
@@ -19,6 +32,7 @@ class Channel
 		Client		 				*topicSetter;
 		time_t          			lastTopicSet;
 		std::vector<std::string> 	invited;
+		Channel (); 
 
 	public:
 		Channel (std::string name); 

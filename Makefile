@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/07/25 11:49:35 by vmercier          #+#    #+#              #
+#    Updated: 2022/07/25 11:49:36 by vmercier         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 SRCS		:=  main.cpp Server.cpp Command.cpp Client.cpp Utils.cpp Channel.cpp\
 				Join.cpp registration.cpp PingPong.cpp welcome.cpp Mode.cpp Who.cpp Privmsg.cpp oper.cpp\
 				Part.cpp quit.cpp Topic.cpp Notice.cpp Kick.cpp List.cpp Kill.cpp names.cpp Invite.cpp\

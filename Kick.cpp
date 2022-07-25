@@ -1,10 +1,16 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Kick.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/25 11:46:35 by vmercier          #+#    #+#             */
+/*   Updated: 2022/07/25 11:46:38 by vmercier         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "Command.hpp"
-
-// ligne d'argument : parameters[0] = server OU #... (a ne pas mettre par l'utilisateur, fait par client si hexchat)
-//                    parameters[1] : user OU user1,user2 -> a split en cas de virgule voir ftsplit
-//                    argLine = tous les mots qui apparaissent apres les users (le client met les :avant)
 
 void    Command::Kick()
 {
@@ -93,46 +99,3 @@ void    Command::Kick()
     }
 }
 
-
-
-
-// KICK message
-
-//       Command: KICK
-//    Parameters: <channel> <user> *( "," <user> ) [<comment>]
-
-// The KICK command can be used to request the forced removal of a user from a channel. 
-// It causes the <user> to be removed from the <channel> by force. If no comment is given, 
-// the server SHOULD use a default message instead.
-
-// The server MUST NOT send KICK messages with multiple users to clients. This is necessary 
-// to maintain backward compatibility with existing client software.
-
-// Servers MAY limit the number of target users per KICK command via the TARGMAX parameter 
-// of RPL_ISUPPORT, and silently drop targets if the number of targets exceeds the limit.
-
-// Numeric Replies:
-
-//     ERR_NEEDMOREPARAMS (461)
-//     ERR_NOSUCHCHANNEL (403)
-//     ERR_CHANOPRIVSNEEDED (482)
-//     ERR_USERNOTINCHANNEL (441)
-//     ERR_NOTONCHANNEL (442)
-
-
-// Examples:
-
-//    KICK #Finnish Matthew           ; Command to kick Matthew from
-//                                    #Finnish
-
-//    KICK &Melbourne Matthew         ; Command to kick Matthew from
-//                                    &Melbourne
-
-//    KICK #Finnish John :Speaking English
-//                                    ; Command to kick John from #Finnish
-//                                    using "Speaking English" as the
-//                                    reason (comment).
-
-//    :WiZ!jto@tolsun.oulu.fi KICK #Finnish John
-//                                    ; KICK message on channel #Finnish
-//                                    from WiZ to remove John from channel

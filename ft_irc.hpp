@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/22 13:57:17 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/07/25 11:48:16 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 # include <string.h>
 # include <iostream>
 # include <csignal>
-# include <errno.h> //inutile ?
 # include <stdio.h> 
 # include <vector>
 # include <deque>
@@ -48,6 +47,10 @@
 # include <sys/stat.h>
 # include <stdio.h>
 # include <fcntl.h>
+# include <cstdlib>
+# include <string>
+
+
 
 # define CONFIG_FILE "config.txt"
 # define USER_MODE "o"
