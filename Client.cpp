@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 16:55:32 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/25 12:27:15 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/25 13:28:28 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,23 @@ hostname(this->server->getName()), pass_checked(false), realname("norealname"), 
 
 Client::~Client() { }
 
-// Client::Client(const Client &src)
-// {
-//     *this = src;
-//     return;
-// }
+Client::Client(const Client &src)
+{
+        this->server = src.server;
+        this->username = src.username;
+        this->nickname = src.nickname;
+        this->status = src.status;
+        this->hostaddr = src.hostaddr;
+        this->hostname = src.hostname;
+        this->pass_checked = src.pass_checked;
+        this->last_ping = src.last_ping;
+        this->realname = src.realname;
+        this->fd = src.fd;
+        this->buffer = src.buffer;
+        this->channel_list = src.channel_list;
+        
+    return;
+}
 
 Client &  Client::operator=(Client const &rhs)
 {

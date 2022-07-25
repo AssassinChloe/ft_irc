@@ -44,7 +44,6 @@ class Server
         std::map<int, Client> &getClientList();
         std::string getPass() const;
         std::string getCreation() const;
-        // int getNbChannel(); // voir si on veut un nb max de channels
         void addChannel(std::string chanName);
         void delChannel(std::string chanName);
         Channel &getChannel(int i);

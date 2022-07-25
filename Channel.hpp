@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 11:37:03 by vmercier          #+#    #+#             */
-/*   Updated: 2022/07/25 11:52:19 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/25 13:41:48 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ class Channel
 		void removeClient(Client &client);
 		void removeClient(std::string const &nick);
 		std::vector<Client *> getClients();
-		bool isClient(Client &client);
+		bool isClient(Client &client); // non utilise
 		bool isOnChannel(std::string const &nick);
 
 		void setMode(std::string);
@@ -59,7 +59,7 @@ class Channel
 		void addMode(char mode);
 		void delMode(char mode);
 
-		void setClientMode(Client &client, std::string mode);
+		void setClientMode(Client &client, std::string mode); // non utilise
 		std::string getClientMode(Client &client);
 		std::map<int, Client*> getClientMap();
 

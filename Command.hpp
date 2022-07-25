@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 11:38:21 by vmercier          #+#    #+#             */
-/*   Updated: 2022/07/25 12:03:31 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/25 13:38:26 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,6 @@ class Command
 		std::vector<std::string> getParameters();
 		std::string getArgLine();
 
-		void	setStop(bool st);
-		bool	getStop();
 		void	execCommand();
 		int		checkRegistration();
 

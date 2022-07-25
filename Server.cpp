@@ -121,29 +121,7 @@ int Server::accept_client(int i)
         else
         {
 
-            //test : on arrive a recuperer l'addresse ip, gethostbyname arrive pas a retrouver qu'il s'agit de
-            //localhost (la ligne est presente dans /etc/hosts et devrait etre accedee) quid de ce que ca renvoit 
-            //depuis un autre utilisateur mais on peut toujour faire un 
-            //if (ip = 127.0.0.1) (ou avoir une liste d'IP "safe")
-            //     host = localhost;
-            //else
-            //      host = autre;
-            // et on donne pas les droit OPER et che pas quoi a autre --> mais need deux ordi pour test ce qu'on a comme info
-            // struct sockaddr_in *plop = (struct sockaddr_in *)&distaddr; //changer plop et le cast a l'arrache
-            // std::cout << "IP " << inet_ntoa(plop->sin_addr) << std::endl;
-            // struct hostent *test = gethostbyname(inet_ntoa(plop->sin_addr));
-
-            // std::cout << "name " << test->h_name << std::endl;
-            // for (int i = 0; test->h_aliases[i] != NULL; i++)
-            // {
-            //     std::cout << "alias " << i << " " << test->h_aliases[i] << std::endl;
-            // }
-            // for (int i = 0; test->h_addr_list[i] != NULL; i++)
-            // {
-            //     std::cout << "addr " << i << " " << test->h_addr_list[i] << std::endl;
-            // }
-            //end test
-
+        
             struct pollfd tmp;
             tmp.fd = newfd;
             tmp.events = POLLIN;
@@ -264,7 +242,7 @@ std::string Server::getCreation() const
 
 void Server::addChannel(std::string chanName)
 {
-    Channel NewChan(chanName);//(this, chanName);
+    Channel NewChan(chanName);
     if (NewChan.getCName() != "")
     {
         _channels.push_back(NewChan);

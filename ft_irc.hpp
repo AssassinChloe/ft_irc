@@ -6,7 +6,7 @@
 /*   By: vmercier <vmercier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:25:57 by cassassi          #+#    #+#             */
-/*   Updated: 2022/07/25 11:48:16 by vmercier         ###   ########.fr       */
+/*   Updated: 2022/07/25 12:36:50 by vmercier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@
 # include <fcntl.h>
 # include <cstdlib>
 # include <string>
-
+# include <cstdlib> 
 
 
 # define CONFIG_FILE "config.txt"
